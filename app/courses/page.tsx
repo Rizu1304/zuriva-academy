@@ -151,7 +151,7 @@ export default function Courses() {
         }}>
           {/* Logo */}
           <div style={{ padding: "28px 24px 24px", display: "flex", alignItems: "baseline", gap: 6 }}>
-            <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.12em", color: navy }}}>ZURIVA</span>
+            <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.12em", color: navy }}>ZURIVA</span>
             <span style={{ fontSize: 12, fontWeight: 600, color: gold }}>academy</span>
           </div>
 
