@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import KIToolkit from "@/components/KIToolkit";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
@@ -120,6 +121,7 @@ export default function Pruefungen() {
           </div>
         </div>
       </div>
+      <KIToolkit context="pruefung" topic="Versicherungsprüfung" />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
+import KIToolkit from "@/components/KIToolkit";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
@@ -896,6 +897,7 @@ function Results({
           Zurück zur Lobby
         </button>
       </div>
+      <KIToolkit context="kahoot" topic="Versicherungs-Quiz" />
     </div>
   );
 }

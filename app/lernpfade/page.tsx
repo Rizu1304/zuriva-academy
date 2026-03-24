@@ -1,5 +1,7 @@
 "use client";
 
+import KIToolkit from "@/components/KIToolkit";
+
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
 
@@ -111,6 +113,7 @@ export default function Lernpfade() {
           </div>
         </div>
       </div>
+      <KIToolkit context="lernpfad" topic="VBV-Zertifizierung" />
     </div>
   );
 }
