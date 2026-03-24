@@ -11,3 +11,216 @@ enum Role {
   INSTRUCTOR
   LEARNER
 }
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ModuleType {
+  VIDEO
+  TEXT
+  QUIZ
+  DOCUMENT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(LEARNER)
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  coursesCreated  Course[]         @relation("CourseAuthor")
+  enrollments     Enrollment[]
+  examAttempts    ExamAttempt[]
+  certificates    Certificate[]
+  forumPosts      ForumPost[]
+  forumComments   ForumComment[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  color     String   @default("#022350")
+  icon      String   @default("\uD83D\uDCDA")
+  createdAt DateTime @default(now())
+
+  courses Course[]
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  slug        String       @unique
+  status      CourseStatus @default(DRAFT)
+  coverImage  String?
+  duration    Int          @default(0)
+  credits     Int          @default(0)
+  categoryId  String?
+  authorId    String
+  sortOrder   Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  category    Category?    @relation(fields: [categoryId], references: [id])
+  author      User         @relation("CourseAuthor", fields: [authorId], references: [id])
+  modules     Module[]
+  enrollments Enrollment[]
+  exams       Exam[]
+
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([status])
+}
+
+model Module {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  type        ModuleType @default(TEXT)
+  content     String?
+  videoUrl    String?
+  duration    Int        @default(0)
+  sortOrder   Int        @default(0)
+  courseId     String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId    String
+  progress   Int      @default(0)
+  startedAt  DateTime @default(now())
+  completedAt DateTime?
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId])
+}
+
+model Exam {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  courseId     String?
+  duration    Int      @default(30)
+  passScore   Int      @default(70)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course      Course?       @relation(fields: [courseId], references: [id])
+  questions   ExamQuestion[]
+  attempts    ExamAttempt[]
+
+  @@index([courseId])
+}
+
+model ExamQuestion {
+  id        String   @id @default(cuid())
+  question  String
+  options   String[]
+  correct   Int
+  points    Int      @default(1)
+  sortOrder Int      @default(0)
+  examId    String
+
+  exam Exam @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  @@index([examId])
+}
+
+model ExamAttempt {
+  id        String    @id @default(cuid())
+  userId    String
+  examId    String
+  score     Int
+  passed    Boolean
+  answers   Json?
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  exam Exam @relation(fields: [examId], references: [id])
+
+  @@index([userId])
+  @@index([examId])
+}
+
+model Certificate {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  issuer    String   @default("Zuriva Academy")
+  issuedAt  DateTime @default(now())
+  expiresAt DateTime?
+  pdfUrl    String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model LearningPath {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  coverImage  String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  steps LearningPathStep[]
+}
+
+model LearningPathStep {
+  id             String @id @default(cuid())
+  learningPathId String
+  courseId        String
+  sortOrder      Int    @default(0)
+
+  learningPath LearningPath @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+
+  @@index([learningPathId])
+}
+
+model ForumPost {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  authorId  String
+  pinned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User           @relation(fields: [authorId], references: [id])
+  comments ForumComment[]
+
+  @@index([authorId])
+}
+
+model ForumComment {
+  id        String   @id @default(cuid())
+  content   String
+  authorId  String
+  postId    String
+  createdAt DateTime @default(now())
+
+  author User      @relation(fields: [authorId], references: [id])
+  post   ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([authorId])
+}
