@@ -125,7 +125,7 @@ export default function Dashboard() {
             {/* Active Learning Programs */}
             <div style={{ background: "white", borderRadius: 16, border: "1px solid #F0ECE6", overflow: "hidden" }}>
               <div style={{ padding: "20px 24px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ fontSize: 14, fontWeight: 500, color: "#022350", fontFamily: h, fontSize: 16 }}>Aktive Lernprogramme</div>
+                <div style={{ fontSize: 16, fontWeight: 500, color: "#022350", fontFamily: h }}>Aktive Lernprogramme</div>
                 <a href="/courses" style={{ fontSize: 11, color: "#9A9AAA", textDecoration: "none" }}>↗</a>
               </div>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
