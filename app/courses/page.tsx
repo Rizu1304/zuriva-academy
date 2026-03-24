@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const categories = ["Alle", "Nicht-Leben", "Leben", "Gen. Faehigkeiten", "Krankenzusatz", "Compliance"];
+const categories = ["Alle", "Nicht-Leben", "Leben", "Gen. Faehigkeiten", "Krankenzusatz", "Compliance", "Verkauf & Kommunikation"];
 
 const courses = [
   { id: 1, title: "Grundlagen der Sachversicherung", category: "Nicht-Leben", duration: "2h 40min", modules: 6, credits: 8, progress: 68, img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80", color: "#022350" },
@@ -13,6 +13,8 @@ const courses = [
   { id: 7, title: "Vorsorge und Pensionskasse UVG BVG", category: "Leben", duration: "5h 00min", modules: 11, credits: 18, progress: 0, img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80", color: "#0FA4A0" },
   { id: 8, title: "Compliance im Versicherungsvertrieb", category: "Compliance", duration: "2h 15min", modules: 6, credits: 8, progress: 0, img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80", color: "#e74c3c" },
   { id: 9, title: "Digitale Tools im Beratungsgespraech", category: "Gen. Faehigkeiten", duration: "1h 45min", modules: 4, credits: 6, progress: 0, img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&q=80", color: "#C8A24D" },
+  { id: 10, title: "Telefontraining: Meisterklasse", category: "Verkauf & Kommunikation", duration: "40h 00min", modules: 10, credits: 80, progress: 0, img: "https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?w=600&q=80", color: "#0FA4A0", href: "/courses/telefontraining" },
+  { id: 11, title: "Verkaufstraining: Die Kunst des Verkaufens", category: "Verkauf & Kommunikation", duration: "40h 00min", modules: 10, credits: 80, progress: 0, img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80", color: "#C8A24D", href: "/courses/verkaufstraining" },
 ];
 
 export default function Courses() {
@@ -67,30 +69,40 @@ export default function Courses() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
-            {filtered.map(course => (
-              <div key={course.id} style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", overflow: "hidden", cursor: "pointer" }}>
-                <div style={{ height: 4, background: course.color }} />
-                <div style={{ height: 140, overflow: "hidden", position: "relative" }}>
-                  <img src={course.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.85)" }} />
-                  <div style={{ position: "absolute", top: 10, left: 12, background: "rgba(0,0,0,0.5)", color: "white", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20 }}>{course.category}</div>
-                  <div style={{ position: "absolute", top: 10, right: 12, background: "rgba(200,162,77,0.9)", color: "white", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20 }}>{course.credits} Credits</div>
-                </div>
-                <div style={{ padding: "14px 16px" }}>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: "#022350", marginBottom: 10, lineHeight: 1.35 }}>{course.title}</div>
-                  <div style={{ display: "flex", gap: 14, marginBottom: 12 }}>
-                    <span style={{ fontSize: 11, color: "#9A9AAA" }}>&#9200; {course.duration}</span>
-                    <span style={{ fontSize: 11, color: "#9A9AAA" }}>&#128218; {course.modules} Module</span>
+            {filtered.map(course => {
+              const CardWrapper = ({ children }: { children: React.ReactNode }) =>
+                (course as any).href ? (
+                  <a href={(course as any).href} style={{ textDecoration: "none", color: "inherit" }}>{children}</a>
+                ) : (
+                  <>{children}</>
+                );
+              return (
+                <CardWrapper key={course.id}>
+                  <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", overflow: "hidden", cursor: "pointer", transition: "transform 0.2s, box-shadow 0.2s" }}>
+                    <div style={{ height: 4, background: course.color }} />
+                    <div style={{ height: 140, overflow: "hidden", position: "relative" }}>
+                      <img src={course.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.85)" }} />
+                      <div style={{ position: "absolute", top: 10, left: 12, background: "rgba(0,0,0,0.5)", color: "white", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20 }}>{course.category}</div>
+                      <div style={{ position: "absolute", top: 10, right: 12, background: "rgba(200,162,77,0.9)", color: "white", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20 }}>{course.credits} Credits</div>
+                    </div>
+                    <div style={{ padding: "14px 16px" }}>
+                      <div style={{ fontSize: 14, fontWeight: 500, color: "#022350", marginBottom: 10, lineHeight: 1.35 }}>{course.title}</div>
+                      <div style={{ display: "flex", gap: 14, marginBottom: 12 }}>
+                        <span style={{ fontSize: 11, color: "#9A9AAA" }}>&#9200; {course.duration}</span>
+                        <span style={{ fontSize: 11, color: "#9A9AAA" }}>&#128218; {course.modules} Module</span>
+                      </div>
+                      <div style={{ background: "#eef0f3", height: 3, borderRadius: 2, marginBottom: 6 }}>
+                        <div style={{ height: 3, borderRadius: 2, background: course.color, width: course.progress + "%" }} />
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 11, color: "#9A9AAA" }}>{course.progress > 0 ? course.progress + "% abgeschlossen" : "Noch nicht gestartet"}</span>
+                        <button style={{ padding: "5px 12px", background: course.progress > 0 ? "#0FA4A0" : "#022350", color: "white", border: "none", borderRadius: 7, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "sans-serif" }}>{course.progress > 0 ? "Weiter" : "Starten"}</button>
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ background: "#eef0f3", height: 3, borderRadius: 2, marginBottom: 6 }}>
-                    <div style={{ height: 3, borderRadius: 2, background: course.color, width: course.progress + "%" }} />
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 11, color: "#9A9AAA" }}>{course.progress > 0 ? course.progress + "% abgeschlossen" : "Noch nicht gestartet"}</span>
-                    <button style={{ padding: "5px 12px", background: course.progress > 0 ? "#0FA4A0" : "#022350", color: "white", border: "none", borderRadius: 7, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "sans-serif" }}>{course.progress > 0 ? "Weiter" : "Starten"}</button>
-                  </div>
-                </div>
-              </div>
-            ))}
+                </CardWrapper>
+              );
+            })}
           </div>
         </div>
       </div>
