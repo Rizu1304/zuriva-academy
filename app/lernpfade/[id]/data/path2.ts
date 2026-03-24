@@ -1,0 +1,278 @@
+export const path2 = {
+  id: 2,
+  title: "VBV Grundausbildung",
+  courses: [
+    {
+      id: 1,
+      title: "Grundlagen der Sachversicherung",
+      lessons: [
+        {
+          id: 1,
+          title: "Was ist Sachversicherung?",
+          credits: 3,
+          duration: "25min",
+          slides: [
+            {
+              title: "Einfuehrung in die Sachversicherung",
+              image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200",
+              content: "<p>Die <strong>Sachversicherung</strong> schuetzt materielle Gueter gegen Beschaedigung, Zerstoerung oder Verlust. Sie ist eine der aeltesten Versicherungsformen ueberhaupt.</p>",
+              keyPoints: ["Schutz von Sachwerten", "Ersatz bei Beschaedigung oder Verlust", "Wichtigste Sparte im Nicht-Leben-Bereich"],
+            },
+            {
+              title: "Versicherbare Risiken",
+              image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200",
+              content: "<p>Nicht jedes Risiko ist versicherbar. Damit ein Risiko versichert werden kann, muss es folgende Kriterien erfuellen:</p><ul><li>Zufaelligkeit des Eintritts</li><li>Schaetzbarkeit des Schadens</li><li>Unabhaengigkeit der Einzelrisiken</li><li>Eindeutige Bestimmbarkeit</li></ul>",
+              quiz: {
+                question: "Welches Kriterium muss ein versicherbares Risiko NICHT erfuellen?",
+                options: ["Zufaelligkeit", "Schaetzbarkeit", "Gewinngarantie", "Unabhaengigkeit"],
+                correct: 2,
+                explanation: "Eine Gewinngarantie ist kein Kriterium fuer versicherbare Risiken. Die Kriterien sind: Zufaelligkeit, Schaetzbarkeit, Unabhaengigkeit und Bestimmbarkeit.",
+              },
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: "Feuerversicherung",
+          credits: 3,
+          duration: "30min",
+          slides: [
+            {
+              title: "Grundlagen der Feuerversicherung",
+              image: "https://images.unsplash.com/photo-1486551937199-baf066858de7?w=1200",
+              content: "<p>Die <strong>Feuerversicherung</strong> deckt Schaeden durch Brand, Blitzschlag, Explosion und weitere definierte Gefahren. In der Schweiz ist sie fuer Gebaeude in den meisten Kantonen obligatorisch.</p>",
+              keyPoints: ["Brand, Blitz, Explosion als Kerngefahren", "Kantonale Gebaeudeversicherung", "Zusatzdeckungen moeglich"],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 2,
+      title: "Haftpflichtversicherung Basis",
+      lessons: [
+        {
+          id: 1,
+          title: "Grundlagen der Haftpflicht",
+          credits: 3,
+          duration: "20min",
+          slides: [
+            {
+              title: "Was ist Haftpflicht?",
+              image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200",
+              content: "<p><strong>Haftpflicht</strong> bedeutet: Wer einem anderen einen Schaden zufuegt, muss dafuer einstehen. Die Haftpflichtversicherung uebernimmt berechtigte Ansprueche und wehrt unberechtigte ab.</p>",
+              keyPoints: ["Verschuldenshaftung als Grundprinzip", "Doppelfunktion: Zahlung und Abwehr", "Pflichtversicherung in vielen Bereichen"],
+            },
+            {
+              title: "Arten der Haftpflichtversicherung",
+              image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200",
+              content: "<p>Die wichtigsten Formen:</p><ul><li><strong>Privathaftpflicht</strong> — fuer Schaeden im Alltag</li><li><strong>Berufshaftpflicht</strong> — fuer berufliche Taetigkeit</li><li><strong>Betriebshaftpflicht</strong> — fuer Unternehmen</li><li><strong>MFZ-Haftpflicht</strong> — obligatorisch fuer Fahrzeuge</li></ul>",
+              quiz: {
+                question: "Welche Haftpflichtversicherung ist fuer Fahrzeughalter obligatorisch?",
+                options: ["Privathaftpflicht", "Berufshaftpflicht", "MFZ-Haftpflicht", "Betriebshaftpflicht"],
+                correct: 2,
+                explanation: "Die Motorfahrzeug-Haftpflichtversicherung (MFZ-Haftpflicht) ist in der Schweiz fuer alle Fahrzeughalter obligatorisch.",
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: "Lebensversicherung Grundlagen",
+      lessons: [
+        {
+          id: 1,
+          title: "Einfuehrung Lebensversicherung",
+          credits: 4,
+          duration: "25min",
+          slides: [
+            {
+              title: "Lebensversicherung verstehen",
+              image: "https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?w=1200",
+              content: "<p>Die <strong>Lebensversicherung</strong> sichert finanzielle Risiken ab, die mit dem Leben einer Person verbunden sind: Tod, Erleben eines bestimmten Zeitpunkts oder Invaliditaet.</p>",
+              keyPoints: ["Absicherung fuer Hinterbliebene", "Kapitalbildung fuer das Alter", "Steuerliche Vorteile in der Schweiz"],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "Vorsorge 1. und 2. Saeule",
+      lessons: [
+        {
+          id: 1,
+          title: "Das Drei-Saeulen-System",
+          credits: 4,
+          duration: "25min",
+          slides: [
+            {
+              title: "Vorsorge in der Schweiz",
+              image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200",
+              content: "<p>Das <strong>Drei-Saeulen-System</strong> ist das Fundament der Schweizer Altersvorsorge: <strong>AHV</strong> (1. Saeule), <strong>BVG</strong> (2. Saeule) und <strong>private Vorsorge</strong> (3. Saeule).</p>",
+              keyPoints: ["1. Saeule: Staatliche Vorsorge (AHV/IV)", "2. Saeule: Berufliche Vorsorge (BVG)", "3. Saeule: Private Vorsorge (3a/3b)"],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 5,
+      title: "Krankenversicherung Basics",
+      lessons: [
+        {
+          id: 1,
+          title: "KVG Grundlagen",
+          credits: 3,
+          duration: "20min",
+          slides: [
+            {
+              title: "Krankenversicherung in der Schweiz",
+              image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200",
+              content: "<p>Die <strong>obligatorische Krankenpflegeversicherung (OKP)</strong> nach KVG gewaehrleistet allen in der Schweiz wohnhaften Personen Zugang zu medizinischer Grundversorgung.</p>",
+              keyPoints: ["Obligatorium fuer alle Einwohner", "Freie Wahl der Krankenkasse", "Franchise und Selbstbehalt"],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 6,
+      title: "Beratungsprozess und Dokumentation",
+      lessons: [
+        {
+          id: 1,
+          title: "Der Beratungsprozess",
+          credits: 3,
+          duration: "20min",
+          slides: [
+            {
+              title: "Strukturierte Beratung",
+              image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200",
+              content: "<p>Ein professioneller Beratungsprozess folgt einem klaren <strong>Ablauf</strong>: Bedarfsanalyse, Loesungsvorschlag, Entscheidung und Nachbetreuung.</p>",
+              keyPoints: ["Bedarfsanalyse als Ausgangspunkt", "Dokumentationspflicht beachten", "Nachbetreuung sichert Kundenbindung"],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 7,
+      title: "Rechtsgrundlagen VAG/VVG",
+      lessons: [
+        {
+          id: 1,
+          title: "Einfuehrung ins Versicherungsrecht",
+          credits: 4,
+          duration: "20min",
+          slides: [
+            {
+              title: "Rechtsquellen im Versicherungswesen",
+              image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200",
+              content: "<p>Das Schweizer Versicherungsrecht basiert auf mehreren <strong>Rechtsquellen</strong>. Die wichtigsten sind das <strong>VAG</strong> (Versicherungsaufsichtsgesetz) und das <strong>VVG</strong> (Versicherungsvertragsgesetz).</p>",
+              keyPoints: ["VAG regelt die Aufsicht ueber Versicherer", "VVG regelt den Vertrag zwischen Versicherer und Versicherungsnehmer", "Weitere Gesetze: OR, ZGB, FIDLEG"],
+            },
+            {
+              title: "Ueberblick Rechtsrahmen",
+              image: "https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1200",
+              content: "<p>Der <strong>Rechtsrahmen</strong> fuer Versicherungsvermittler umfasst:</p><ul><li>Aufsichtsrecht (VAG, AVO)</li><li>Vertragsrecht (VVG, OR)</li><li>Datenschutzrecht (DSG)</li><li>Geldwaeschereirecht (GwG)</li></ul>",
+              quiz: {
+                question: "Welches Gesetz regelt den Vertrag zwischen Versicherer und Versicherungsnehmer?",
+                options: ["VAG", "VVG", "OR", "DSG"],
+                correct: 1,
+                explanation: "Das VVG (Versicherungsvertragsgesetz) regelt die Rechte und Pflichten aus dem Versicherungsvertrag zwischen Versicherer und Versicherungsnehmer.",
+              },
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: "Das VAG im Detail",
+          credits: 4,
+          duration: "35min",
+          slides: [
+            {
+              title: "Versicherungsaufsichtsgesetz",
+              image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200",
+              content: "<p>Das <strong>VAG</strong> regelt die Aufsicht ueber Versicherungsunternehmen und Versicherungsvermittler in der Schweiz. Die Aufsicht wird durch die <strong>FINMA</strong> wahrgenommen.</p>",
+              keyPoints: ["FINMA als Aufsichtsbehoerde", "Bewilligungspflicht fuer Versicherer", "Registrierungspflicht fuer Vermittler"],
+            },
+            {
+              title: "Vermittlerregistrierung",
+              image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200",
+              content: "<p>Ungebundene Versicherungsvermittler muessen sich im <strong>FINMA-Register</strong> eintragen lassen. Voraussetzungen sind unter anderem:</p><ul><li>Ausreichende Ausbildung</li><li>Berufshaftpflichtversicherung</li><li>Keine Eintraege im Strafregister</li></ul>",
+              quiz: {
+                question: "Welche Behoerde fuehrt das Vermittlerregister in der Schweiz?",
+                options: ["BaFin", "FINMA", "SIF", "SECO"],
+                correct: 1,
+                explanation: "Die FINMA (Eidgenoessische Finanzmarktaufsicht) fuehrt das Register fuer ungebundene Versicherungsvermittler in der Schweiz.",
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 8,
+      title: "Kundenbedarfsanalyse Vertiefung",
+      lessons: [
+        {
+          id: 1,
+          title: "Analyse-Techniken",
+          credits: 4,
+          duration: "25min",
+          slides: [
+            {
+              title: "Fortgeschrittene Bedarfsanalyse",
+              image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200",
+              content: "<p>Die <strong>vertiefte Bedarfsanalyse</strong> geht ueber die Standardfragen hinaus und erfasst die gesamte finanzielle Situation des Kunden systematisch.</p>",
+              keyPoints: ["Ganzheitliche Finanzanalyse", "Risikoprofil erstellen", "Vorsorgeluecken identifizieren"],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 9,
+      title: "Compliance und Datenschutz",
+      lessons: [
+        {
+          id: 1,
+          title: "Compliance Grundlagen",
+          credits: 3,
+          duration: "20min",
+          slides: [
+            {
+              title: "Was bedeutet Compliance?",
+              image: "https://images.unsplash.com/photo-1563986768609-322da13575f2?w=1200",
+              content: "<p><strong>Compliance</strong> bedeutet die Einhaltung aller gesetzlichen Vorschriften, regulatorischen Standards und internen Richtlinien, die fuer unsere Taetigkeit relevant sind.</p>",
+              keyPoints: ["Gesetzliche Pflichten kennen", "Interne Richtlinien beachten", "Regelmaessige Schulung erforderlich"],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 10,
+      title: "Abschlusspruefung VBV",
+      lessons: [
+        {
+          id: 1,
+          title: "Pruefungsvorbereitung",
+          credits: 5,
+          duration: "30min",
+          slides: [
+            {
+              title: "Vorbereitung auf die VBV-Pruefung",
+              image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200",
+              content: "<p>Die <strong>VBV-Abschlusspruefung</strong> testet dein Wissen ueber alle behandelten Themengebiete. Eine gruendliche Vorbereitung ist der Schluessel zum Erfolg.</p>",
+              keyPoints: ["Alle Themengebiete repetieren", "Uebungspruefungen durcharbeiten", "Zeitmanagement beachten"],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
