@@ -1,7 +1,8 @@
-import { defineConfig } from "prisma/config"
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
+  earlyAccess: true,
   datasource: {
-    url: "postgresql://postgres:Zuriva2026!@db.ggtkqiuxgxrdlkupeyml.supabase.co:6543/postgres?pgbouncer=true",
+    url: process.env.DATABASE_URL || "postgresql://postgres:Zuriva2026!@db.ggtkqiuxgxrdlkupeyml.supabase.co:6543/postgres?pgbouncer=true",
   },
-})
+});
