@@ -34,6 +34,7 @@ export async function getCourseById(id: string) {
       where: { id },
       include: {
         category: true,
+        _count: { select: { modules: true, enrollments: true } },
         modules: {
           orderBy: { sortOrder: "asc" },
           include: { lessons: { orderBy: { sortOrder: "asc" } } },
