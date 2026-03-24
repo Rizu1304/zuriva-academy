@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
 
+const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
+const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
+
 const categories = ["Alle", "Nicht-Leben", "Leben", "Gen. Fähigkeiten", "Krankenzusatz", "Compliance"];
 
 const courses = [
@@ -15,9 +18,6 @@ const courses = [
   { id: 9, title: "Digitale Tools im Beratungsgespräch", category: "Gen. Fähigkeiten", duration: "1h 45min", modules: 4, credits: 6, progress: 0, img: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&q=80", color: "#C8A24D" },
 ];
 
-const heading = "var(--font-cormorant, 'Cormorant Garamond', serif)";
-const body = "var(--font-dm-sans, 'DM Sans', sans-serif)";
-
 export default function Courses() {
   const [activeCategory, setActiveCategory] = useState("Alle");
   const [search, setSearch] = useState("");
@@ -29,12 +29,13 @@ export default function Courses() {
   });
 
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: body, background: "#F0F2F5", overflow: "hidden" }}>
-      <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "0.5px solid #dce0e6", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "24px 22px 20px", borderBottom: "0.5px solid #dce0e6", display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 21, fontWeight: 700, letterSpacing: "0.12em", color: "#022350", fontFamily: heading }}>ZURIVA</span>
+    <div style={{ display: "flex", height: "100vh", fontFamily: b, background: "#FAF8F5", overflow: "hidden" }}>
+      <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "1px solid #F0ECE6", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "24px 22px 20px", borderBottom: "1px solid #F0ECE6", display: "flex", alignItems: "baseline", gap: 8 }}>
+          <span style={{ fontSize: 22, fontWeight: 400, letterSpacing: "0.18em", color: "#022350", fontFamily: h }}>ZURIVA</span>
           <span style={{ fontSize: 12, fontWeight: 500, color: "#C8A24D" }}>academy</span>
         </div>
+        <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", padding: "18px 22px 6px" }}>LERNEN</div>
         {[
           { name: "Dashboard", href: "/dashboard" },
           { name: "Kurse", href: "/courses", active: true },
@@ -43,43 +44,43 @@ export default function Courses() {
           { name: "Zertifikate", href: "/zertifikate" },
           { name: "Forum", href: "/forum" },
         ].map((item) => (
-          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#EEF5FF" : "transparent", borderLeft: item.active ? "2.5px solid #0FA4A0" : "2.5px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
+          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#FAF8F5" : "transparent", borderLeft: item.active ? "2px solid #C8A24D" : "2px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
         ))}
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A9AAA", padding: "18px 22px 6px" }}>Admin</div>
+        <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", padding: "18px 22px 6px" }}>ADMIN</div>
         {[
           { name: "Übersicht", href: "/admin" },
           { name: "Kurseditor", href: "/admin/kurse" },
           { name: "Prüfungseditor", href: "/admin/pruefungen" },
           { name: "Team", href: "/admin/team" },
         ].map((item) => (
-          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: "#4A4A5A", background: "transparent", borderLeft: "2.5px solid transparent", fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
+          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: "#4A4A5A", background: "transparent", borderLeft: "2px solid transparent", fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
         ))}
         <div style={{ flex: 1 }} />
-        <div style={{ padding: "14px 22px", borderTop: "0.5px solid #dce0e6", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #0FA4A0, #0a7a77)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>LM</div>
+        <div style={{ padding: "14px 22px", borderTop: "1px solid #F0ECE6", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#022350", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>LM</div>
           <div><div style={{ fontSize: 12.5, fontWeight: 500, color: "#022350" }}>Laura Meier</div><div style={{ fontSize: 11, color: "#9A9AAA" }}>Vermittlerin</div></div>
         </div>
       </aside>
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ background: "white", borderBottom: "0.5px solid #dce0e6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+        <div style={{ background: "white", borderBottom: "1px solid #F0ECE6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div>
-            <div style={{ fontSize: 17, fontWeight: 600, color: "#022350", fontFamily: heading }}>Alle Kurse</div>
+            <div style={{ fontSize: 22, fontWeight: 400, color: "#022350", fontFamily: h }}>Alle Kurse</div>
             <div style={{ fontSize: 12, color: "#9A9AAA" }}>{filtered.length} Kurse verfügbar</div>
           </div>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Kurse suchen..." style={{ padding: "8px 14px", border: "0.5px solid #dce0e6", borderRadius: 10, fontSize: 13, outline: "none", width: 220, background: "#F0F2F5", fontFamily: body }} />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Kurse suchen..." style={{ padding: "8px 14px", border: "1px solid #F0ECE6", borderRadius: 10, fontSize: 13, outline: "none", width: 220, background: "#FAF8F5", fontFamily: b }} />
         </div>
 
         <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px" }}>
           <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
             {categories.map(cat => (
-              <button key={cat} onClick={() => setActiveCategory(cat)} style={{ padding: "6px 16px", borderRadius: 20, border: "0.5px solid", borderColor: activeCategory === cat ? "#022350" : "#dce0e6", background: activeCategory === cat ? "#022350" : "white", color: activeCategory === cat ? "white" : "#4A4A5A", fontSize: 12.5, fontWeight: activeCategory === cat ? 600 : 400, cursor: "pointer", fontFamily: body }}>{cat}</button>
+              <button key={cat} onClick={() => setActiveCategory(cat)} style={{ padding: "6px 16px", borderRadius: 20, border: "1px solid", borderColor: activeCategory === cat ? "#022350" : "#F0ECE6", background: activeCategory === cat ? "#022350" : "white", color: activeCategory === cat ? "white" : "#4A4A5A", fontSize: 12.5, fontWeight: activeCategory === cat ? 600 : 400, cursor: "pointer", fontFamily: b }}>{cat}</button>
             ))}
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
             {filtered.map(course => (
-              <div key={course.id} style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", overflow: "hidden", cursor: "pointer" }}>
+              <div key={course.id} style={{ background: "white", borderRadius: 14, border: "1px solid #F0ECE6", overflow: "hidden", cursor: "pointer" }}>
                 <div style={{ height: 4, background: course.color }} />
                 <div style={{ height: 140, overflow: "hidden", position: "relative" }}>
                   <img src={course.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.85)" }} />
@@ -87,7 +88,7 @@ export default function Courses() {
                   <div style={{ position: "absolute", top: 10, right: 12, background: "rgba(200,162,77,0.9)", color: "white", fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20 }}>{course.credits} Credits</div>
                 </div>
                 <div style={{ padding: "14px 16px" }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "#022350", marginBottom: 10, lineHeight: 1.35, fontFamily: heading }}>{course.title}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "#022350", marginBottom: 10, lineHeight: 1.35, fontFamily: h }}>{course.title}</div>
                   <div style={{ display: "flex", gap: 14, marginBottom: 12 }}>
                     <span style={{ fontSize: 11, color: "#9A9AAA" }}>⏱ {course.duration}</span>
                     <span style={{ fontSize: 11, color: "#9A9AAA" }}>📖 {course.modules} Module</span>
@@ -97,7 +98,7 @@ export default function Courses() {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontSize: 11, color: "#9A9AAA" }}>{course.progress > 0 ? course.progress + "% abgeschlossen" : "Noch nicht gestartet"}</span>
-                    <button style={{ padding: "5px 12px", background: course.progress > 0 ? "#0FA4A0" : "#022350", color: "white", border: "none", borderRadius: 7, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: body }}>{course.progress > 0 ? "Weiter" : "Starten"}</button>
+                    <button style={{ padding: "5px 12px", background: course.progress > 0 ? "#0FA4A0" : "#022350", color: "white", border: "none", borderRadius: 7, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: b }}>{course.progress > 0 ? "Weiter" : "Starten"}</button>
                   </div>
                 </div>
               </div>
