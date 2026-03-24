@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
+const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
+
 type Question = {
   id: string;
   text: string;
@@ -200,45 +203,45 @@ export default function PruefungsEditor() {
   const avgPassing = exams.length > 0 ? Math.round(exams.reduce((sum, e) => sum + e.passingScore, 0) / exams.length) : 0;
 
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "var(--font-dm-sans, 'DM Sans', sans-serif)", background: "#F0F2F5", overflow: "hidden" }}>
+    <div style={{ display: "flex", height: "100vh", fontFamily: b, background: "#FAF8F5", overflow: "hidden" }}>
       {/* Sidebar */}
-      <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "0.5px solid #dce0e6", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "24px 22px 20px", borderBottom: "0.5px solid #dce0e6", display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 21, fontWeight: 700, letterSpacing: "0.12em", color: "#022350" }}>ZURIVA</span>
+      <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "1px solid #F0ECE6", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "24px 22px 20px", borderBottom: "1px solid #F0ECE6", display: "flex", alignItems: "baseline", gap: 8 }}>
+          <span style={{ fontSize: 22, fontWeight: 400, letterSpacing: "0.18em", color: "#022350", fontFamily: h }}>ZURIVA</span>
           <span style={{ fontSize: 12, fontWeight: 500, color: "#C8A24D" }}>academy</span>
         </div>
+        <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", padding: "18px 22px 6px" }}>LERNEN</div>
         {[
           { name: "Dashboard", href: "/dashboard" },
           { name: "Kurse", href: "/courses" },
           { name: "Lernpfade", href: "/lernpfade" },
-          { name: "Pruefungen", href: "/pruefungen" },
+          { name: "Prüfungen", href: "/pruefungen" },
           { name: "Zertifikate", href: "/zertifikate" },
           { name: "Forum", href: "/forum" },
         ].map((item) => (
-          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: "#4A4A5A", background: "transparent", borderLeft: "2.5px solid transparent", fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
+          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: "#4A4A5A", background: "transparent", borderLeft: "2px solid transparent", fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
         ))}
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A9AAA", padding: "18px 22px 6px" }}>Admin</div>
+        <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", padding: "18px 22px 6px" }}>ADMIN</div>
         {[
           { name: "Übersicht", href: "/admin" },
           { name: "Kurseditor", href: "/admin/kurse" },
           { name: "Prüfungseditor", href: "/admin/pruefungen", active: true },
           { name: "Team", href: "/admin/team" },
-          { name: "Analytics", href: "/admin/analytics" },
         ].map((item) => (
-          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: (item as { active?: boolean }).active ? "#022350" : "#4A4A5A", background: (item as { active?: boolean }).active ? "#EEF5FF" : "transparent", borderLeft: (item as { active?: boolean }).active ? "2.5px solid #0FA4A0" : "2.5px solid transparent", fontWeight: (item as { active?: boolean }).active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
+          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#FAF8F5" : "transparent", borderLeft: item.active ? "2px solid #C8A24D" : "2px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
         ))}
         <div style={{ flex: 1 }} />
-        <div style={{ padding: "14px 22px", borderTop: "0.5px solid #dce0e6", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#0FA4A0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>LM</div>
+        <div style={{ padding: "14px 22px", borderTop: "1px solid #F0ECE6", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#022350", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>LM</div>
           <div><div style={{ fontSize: 12.5, fontWeight: 500, color: "#022350" }}>Laura Meier</div><div style={{ fontSize: 11, color: "#9A9AAA" }}>Admin</div></div>
         </div>
       </aside>
 
       {/* Main */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ background: "white", borderBottom: "0.5px solid #dce0e6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+        <div style={{ background: "white", borderBottom: "1px solid #F0ECE6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 500, color: "#022350", fontFamily: "var(--font-cormorant, 'Cormorant Garamond', serif)" }}>
+            <div style={{ fontSize: 22, fontWeight: 400, color: "#022350", fontFamily: h }}>
               {view === "list" ? "Prüfungseditor" : view === "create" ? "Neue Prüfung" : "Prüfung bearbeiten"}
             </div>
             <div style={{ fontSize: 12, color: "#9A9AAA" }}>
@@ -247,9 +250,9 @@ export default function PruefungsEditor() {
           </div>
           <div style={{ display: "flex", gap: 8 }}>
             {view === "list" ? (
-              <button onClick={openCreate} style={{ padding: "8px 16px", background: "#022350", color: "white", borderRadius: 9, fontSize: 12.5, fontWeight: 500, border: "none", cursor: "pointer" }}>+ Neue Prüfung</button>
+              <button onClick={openCreate} style={{ padding: "8px 16px", background: "#022350", color: "white", borderRadius: 9, fontSize: 12.5, fontWeight: 500, border: "none", cursor: "pointer", fontFamily: b }}>+ Neue Prüfung</button>
             ) : (
-              <button onClick={() => { setView("list"); setEditExam(null); }} style={{ padding: "8px 16px", background: "white", color: "#4A4A5A", borderRadius: 9, fontSize: 12.5, fontWeight: 500, border: "0.5px solid #dce0e6", cursor: "pointer" }}>&#8592; Zurück</button>
+              <button onClick={() => { setView("list"); setEditExam(null); }} style={{ padding: "8px 16px", background: "white", color: "#4A4A5A", borderRadius: 9, fontSize: 12.5, fontWeight: 500, border: "1px solid #F0ECE6", cursor: "pointer", fontFamily: b }}>&#8592; Zurück</button>
             )}
           </div>
         </div>
@@ -259,9 +262,9 @@ export default function PruefungsEditor() {
           {view === "list" && (
             <>
               <div style={{ display: "flex", gap: 10, marginBottom: 20, alignItems: "center" }}>
-                <input placeholder="Prüfung suchen…" value={search} onChange={(e) => setSearch(e.target.value)} style={{ padding: "8px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, width: 260, outline: "none" }} />
+                <input placeholder="Prüfung suchen…" value={search} onChange={(e) => setSearch(e.target.value)} style={{ padding: "8px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, width: 260, outline: "none", fontFamily: b }} />
                 {["ALL", "DRAFT", "PUBLISHED"].map((s) => (
-                  <button key={s} onClick={() => setFilter(s)} style={{ padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 500, border: "0.5px solid #dce0e6", cursor: "pointer", background: filter === s ? "#022350" : "white", color: filter === s ? "white" : "#4A4A5A" }}>
+                  <button key={s} onClick={() => setFilter(s)} style={{ padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 500, border: "1px solid #F0ECE6", cursor: "pointer", background: filter === s ? "#022350" : "white", color: filter === s ? "white" : "#4A4A5A", fontFamily: b }}>
                     {s === "ALL" ? "Alle" : STATUS_LABELS[s].label}
                   </button>
                 ))}
@@ -275,8 +278,8 @@ export default function PruefungsEditor() {
                   { label: "Entwürfe", value: draftCount, color: "#C8A24D" },
                   { label: "Ø Bestehensquote", value: avgPassing + "%", color: "#9A9AAA" },
                 ].map((s, i) => (
-                  <div key={i} style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "20px 22px" }}>
-                    <div style={{ fontSize: 36, fontWeight: 700, color: s.color, lineHeight: 1, fontFamily: "var(--font-cormorant, 'Cormorant Garamond', serif)" }}>{s.value}</div>
+                  <div key={i} style={{ background: "white", borderRadius: 14, border: "1px solid #F0ECE6", padding: "20px 22px" }}>
+                    <div style={{ fontSize: 36, fontWeight: 700, color: s.color, lineHeight: 1, fontFamily: h }}>{s.value}</div>
                     <div style={{ fontSize: 12.5, color: "#4A4A5A", marginTop: 6 }}>{s.label}</div>
                   </div>
                 ))}
@@ -284,19 +287,19 @@ export default function PruefungsEditor() {
 
               {/* Table */}
               {filtered.length === 0 ? (
-                <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "60px 24px", textAlign: "center" }}>
+                <div style={{ background: "white", borderRadius: 14, border: "1px solid #F0ECE6", padding: "60px 24px", textAlign: "center" }}>
                   <div style={{ fontSize: 40, marginBottom: 12 }}>📝</div>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: "#022350", marginBottom: 4 }}>Keine Prüfungen gefunden</div>
+                  <div style={{ fontSize: 16, fontWeight: 500, color: "#022350", fontFamily: h, marginBottom: 4 }}>Keine Prüfungen gefunden</div>
                   <div style={{ fontSize: 13, color: "#9A9AAA", marginBottom: 16 }}>Erstellen Sie Ihre erste Prüfung.</div>
-                  <button onClick={openCreate} style={{ padding: "8px 20px", background: "#022350", color: "white", borderRadius: 9, fontSize: 12.5, fontWeight: 500, border: "none", cursor: "pointer" }}>+ Neue Prüfung</button>
+                  <button onClick={openCreate} style={{ padding: "8px 20px", background: "#022350", color: "white", borderRadius: 9, fontSize: 12.5, fontWeight: 500, border: "none", cursor: "pointer", fontFamily: b }}>+ Neue Prüfung</button>
                 </div>
               ) : (
-                <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", overflow: "hidden" }}>
+                <div style={{ background: "white", borderRadius: 14, border: "1px solid #F0ECE6", overflow: "hidden" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
                     <thead>
                       <tr style={{ background: "#f8f9fb" }}>
-                        {["Prüfung", "Kurs", "Bestehensquote", "Zeitlimit", "Fragen", "Status", "Aktionen"].map((h) => (
-                          <th key={h} style={{ padding: "10px 24px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#9A9AAA", letterSpacing: "0.05em", textTransform: "uppercase" }}>{h}</th>
+                        {["Prüfung", "Kurs", "Bestehensquote", "Zeitlimit", "Fragen", "Status", "Aktionen"].map((col) => (
+                          <th key={col} style={{ padding: "10px 24px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#9A9AAA", letterSpacing: "0.05em", textTransform: "uppercase" }}>{col}</th>
                         ))}
                       </tr>
                     </thead>
@@ -304,13 +307,13 @@ export default function PruefungsEditor() {
                       {filtered.map((exam) => {
                         const st = STATUS_LABELS[exam.status];
                         return (
-                          <tr key={exam.id} style={{ borderTop: "0.5px solid #dce0e6" }}>
+                          <tr key={exam.id} style={{ borderTop: "1px solid #F0ECE6" }}>
                             <td style={{ padding: "14px 24px" }}>
                               <div style={{ fontSize: 13.5, fontWeight: 500, color: "#022350" }}>{exam.title}</div>
                               {exam.description && <div style={{ fontSize: 12, color: "#9A9AAA", marginTop: 2, maxWidth: 260, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{exam.description}</div>}
                             </td>
                             <td style={{ padding: "14px 24px" }}>
-                              <span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 500, background: "#EEF5FF", color: "#022350" }}>{exam.courseName}</span>
+                              <span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 500, background: "#FAF8F5", color: "#022350" }}>{exam.courseName}</span>
                             </td>
                             <td style={{ padding: "14px 24px", fontSize: 13, fontWeight: 600, color: "#C8A24D" }}>{exam.passingScore}%</td>
                             <td style={{ padding: "14px 24px", fontSize: 13, color: "#4A4A5A" }}>{exam.timeLimit} Min.</td>
@@ -326,8 +329,8 @@ export default function PruefungsEditor() {
                             </td>
                             <td style={{ padding: "14px 24px" }}>
                               <div style={{ display: "flex", gap: 6 }}>
-                                <button onClick={() => openEdit(exam)} style={{ padding: "5px 12px", borderRadius: 7, border: "0.5px solid #dce0e6", background: "white", fontSize: 12, cursor: "pointer", color: "#022350" }}>Bearbeiten</button>
-                                <button onClick={() => handleDelete(exam.id)} style={{ padding: "5px 12px", borderRadius: 7, border: "0.5px solid #dce0e6", background: "white", fontSize: 12, cursor: "pointer", color: "#e74c3c" }}>Löschen</button>
+                                <button onClick={() => openEdit(exam)} style={{ padding: "5px 12px", borderRadius: 7, border: "1px solid #F0ECE6", background: "white", fontSize: 12, cursor: "pointer", color: "#022350", fontFamily: b }}>Bearbeiten</button>
+                                <button onClick={() => handleDelete(exam.id)} style={{ padding: "5px 12px", borderRadius: 7, border: "1px solid #F0ECE6", background: "white", fontSize: 12, cursor: "pointer", color: "#e74c3c", fontFamily: b }}>Löschen</button>
                               </div>
                             </td>
                           </tr>
@@ -344,22 +347,22 @@ export default function PruefungsEditor() {
           {(view === "create" || view === "edit") && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
               {/* Left: Exam Details */}
-              <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "28px 28px" }}>
-                <div style={{ fontSize: 16, fontWeight: 600, color: "#022350", marginBottom: 20, fontFamily: "var(--font-cormorant, 'Cormorant Garamond', serif)" }}>Prüfungsdetails</div>
+              <div style={{ background: "white", borderRadius: 14, border: "1px solid #F0ECE6", padding: "28px 28px" }}>
+                <div style={{ fontSize: 16, fontWeight: 500, color: "#022350", marginBottom: 20, fontFamily: h }}>Prüfungsdetails</div>
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Prüfungstitel *</label>
-                  <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="z.B. Grundlagen der Lebensversicherung" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+                  <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="z.B. Grundlagen der Lebensversicherung" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: b }} />
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Beschreibung</label>
-                  <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} placeholder="Kurze Beschreibung der Prüfung…" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", resize: "vertical", boxSizing: "border-box", fontFamily: "inherit" }} />
+                  <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} placeholder="Kurze Beschreibung der Prüfung…" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, outline: "none", resize: "vertical", boxSizing: "border-box", fontFamily: b }} />
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Kurs zuordnen</label>
-                  <select value={form.courseName} onChange={(e) => setForm({ ...form, courseName: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box" }}>
+                  <select value={form.courseName} onChange={(e) => setForm({ ...form, courseName: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box", fontFamily: b }}>
                     <option value="">Kurs auswählen…</option>
                     {COURSE_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
@@ -368,34 +371,34 @@ export default function PruefungsEditor() {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Bestehensquote (%)</label>
-                    <input type="number" min="0" max="100" value={form.passingScore} onChange={(e) => setForm({ ...form, passingScore: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+                    <input type="number" min="0" max="100" value={form.passingScore} onChange={(e) => setForm({ ...form, passingScore: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: b }} />
                   </div>
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Zeitlimit (Minuten)</label>
-                    <input type="number" min="1" value={form.timeLimit} onChange={(e) => setForm({ ...form, timeLimit: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+                    <input type="number" min="1" value={form.timeLimit} onChange={(e) => setForm({ ...form, timeLimit: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: b }} />
                   </div>
                 </div>
 
                 <div style={{ marginBottom: 24 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Status</label>
-                  <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box" }}>
+                  <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box", fontFamily: b }}>
                     <option value="DRAFT">Entwurf</option>
                     <option value="PUBLISHED">Veröffentlicht</option>
                   </select>
                 </div>
 
                 <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-                  <button onClick={() => { setView("list"); setEditExam(null); }} style={{ padding: "10px 20px", borderRadius: 9, border: "0.5px solid #dce0e6", background: "white", fontSize: 13, cursor: "pointer", color: "#4A4A5A" }}>Abbrechen</button>
-                  <button onClick={saveExam} disabled={!form.title.trim()} style={{ padding: "10px 24px", borderRadius: 9, border: "none", fontSize: 13, fontWeight: 500, cursor: "pointer", background: !form.title.trim() ? "#dce0e6" : "#022350", color: !form.title.trim() ? "#9A9AAA" : "white" }}>
+                  <button onClick={() => { setView("list"); setEditExam(null); }} style={{ padding: "10px 20px", borderRadius: 9, border: "1px solid #F0ECE6", background: "white", fontSize: 13, cursor: "pointer", color: "#4A4A5A", fontFamily: b }}>Abbrechen</button>
+                  <button onClick={saveExam} disabled={!form.title.trim()} style={{ padding: "10px 24px", borderRadius: 9, border: "none", fontSize: 13, fontWeight: 500, cursor: "pointer", background: !form.title.trim() ? "#F0ECE6" : "#022350", color: !form.title.trim() ? "#9A9AAA" : "white", fontFamily: b }}>
                     {view === "create" ? "Prüfung erstellen" : "Änderungen speichern"}
                   </button>
                 </div>
               </div>
 
               {/* Right: Questions */}
-              <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "28px 28px", display: "flex", flexDirection: "column" }}>
+              <div style={{ background: "white", borderRadius: 14, border: "1px solid #F0ECE6", padding: "28px 28px", display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: "#022350", fontFamily: "var(--font-cormorant, 'Cormorant Garamond', serif)" }}>Fragen</div>
+                  <div style={{ fontSize: 16, fontWeight: 500, color: "#022350", fontFamily: h }}>Fragen</div>
                   <span style={{ fontSize: 12, color: "#9A9AAA" }}>{questions.length} Fragen</span>
                 </div>
 
@@ -406,7 +409,7 @@ export default function PruefungsEditor() {
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                       {questions.map((q, idx) => (
-                        <div key={q.id} style={{ padding: "14px 18px", borderRadius: 10, border: "0.5px solid #dce0e6", background: "#f8f9fb" }}>
+                        <div key={q.id} style={{ padding: "14px 18px", borderRadius: 10, border: "1px solid #F0ECE6", background: "#f8f9fb" }}>
                           <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
                             <span style={{ width: 24, height: 24, borderRadius: "50%", background: "#022350", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, flexShrink: 0, marginTop: 1 }}>{idx + 1}</span>
                             <div style={{ flex: 1 }}>
@@ -414,7 +417,7 @@ export default function PruefungsEditor() {
                               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                                 {q.options.map((opt, oi) => (
                                   <div key={oi} style={{ fontSize: 12, color: oi === q.correctIndex ? "#0FA4A0" : "#4A4A5A", fontWeight: oi === q.correctIndex ? 600 : 400, display: "flex", alignItems: "center", gap: 6 }}>
-                                    <span style={{ width: 16, height: 16, borderRadius: "50%", border: oi === q.correctIndex ? "2px solid #0FA4A0" : "1.5px solid #dce0e6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: oi === q.correctIndex ? "#E8F8F7" : "white" }}>
+                                    <span style={{ width: 16, height: 16, borderRadius: "50%", border: oi === q.correctIndex ? "2px solid #0FA4A0" : "1.5px solid #F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: oi === q.correctIndex ? "#E8F8F7" : "white" }}>
                                       {oi === q.correctIndex && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0FA4A0" }} />}
                                     </span>
                                     {opt}
@@ -422,7 +425,7 @@ export default function PruefungsEditor() {
                                 ))}
                               </div>
                             </div>
-                            <button onClick={() => removeQuestion(q.id)} style={{ padding: "4px 10px", borderRadius: 6, border: "0.5px solid #dce0e6", background: "white", fontSize: 11, cursor: "pointer", color: "#e74c3c", flexShrink: 0 }}>&#215;</button>
+                            <button onClick={() => removeQuestion(q.id)} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #F0ECE6", background: "white", fontSize: 11, cursor: "pointer", color: "#e74c3c", flexShrink: 0, fontFamily: b }}>&#215;</button>
                           </div>
                         </div>
                       ))}
@@ -431,9 +434,9 @@ export default function PruefungsEditor() {
                 </div>
 
                 {/* Add question form */}
-                <div style={{ borderTop: "0.5px solid #dce0e6", paddingTop: 16 }}>
+                <div style={{ borderTop: "1px solid #F0ECE6", paddingTop: 16 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: "#022350", marginBottom: 10 }}>Neue Frage hinzufügen</div>
-                  <input value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} placeholder="Fragetext eingeben…" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box", marginBottom: 10 }} />
+                  <input value={newQuestion} onChange={(e) => setNewQuestion(e.target.value)} placeholder="Fragetext eingeben…" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, outline: "none", boxSizing: "border-box", marginBottom: 10, fontFamily: b }} />
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 10 }}>
                     {newOptions.map((opt, i) => (
                       <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -453,7 +456,7 @@ export default function PruefungsEditor() {
                             setNewOptions(updated);
                           }}
                           placeholder={`Option ${String.fromCharCode(65 + i)}`}
-                          style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "0.5px solid #dce0e6", fontSize: 12, outline: "none", boxSizing: "border-box" }}
+                          style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #F0ECE6", fontSize: 12, outline: "none", boxSizing: "border-box", fontFamily: b }}
                         />
                       </div>
                     ))}
@@ -469,9 +472,10 @@ export default function PruefungsEditor() {
                       fontSize: 12.5,
                       fontWeight: 500,
                       cursor: "pointer",
-                      background: newQuestion.trim() && newOptions.every((o) => o.trim()) ? "#0FA4A0" : "#dce0e6",
+                      background: newQuestion.trim() && newOptions.every((o) => o.trim()) ? "#0FA4A0" : "#F0ECE6",
                       color: newQuestion.trim() && newOptions.every((o) => o.trim()) ? "white" : "#9A9AAA",
                       width: "100%",
+                      fontFamily: b,
                     }}
                   >
                     + Frage hinzufügen
