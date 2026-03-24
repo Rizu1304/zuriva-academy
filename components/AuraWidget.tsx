@@ -21,7 +21,7 @@ export default function AuraWidget() {
 
   // Initialize position on mount
   useEffect(() => {
-    setPos({ x: window.innerWidth - 100, y: window.innerHeight - 120 });
+    setPos({ x: window.innerWidth - 120, y: window.innerHeight - 150 });
   }, []);
 
   // Auto-scroll chat
@@ -41,8 +41,8 @@ export default function AuraWidget() {
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragging) return;
     didDrag.current = true;
-    const newX = Math.max(0, Math.min(window.innerWidth - 80, e.clientX - dragOffset.current.x));
-    const newY = Math.max(0, Math.min(window.innerHeight - 80, e.clientY - dragOffset.current.y));
+    const newX = Math.max(0, Math.min(window.innerWidth - 100, e.clientX - dragOffset.current.x));
+    const newY = Math.max(0, Math.min(window.innerHeight - 120, e.clientY - dragOffset.current.y));
     setPos({ x: newX, y: newY });
   }, [dragging]);
 
@@ -91,51 +91,28 @@ export default function AuraWidget() {
           position: "fixed",
           left: pos.x,
           top: pos.y,
-          width: 72,
-          height: 72,
+          width: 100,
+          height: 120,
           zIndex: 99999,
           cursor: dragging ? "grabbing" : "grab",
           touchAction: "none",
           userSelect: "none",
-          transition: dragging ? "none" : "filter 0.2s ease",
-          filter: dragging ? "drop-shadow(0 8px 24px rgba(2,35,80,0.3))" : "drop-shadow(0 4px 16px rgba(2,35,80,0.2))",
+          transition: dragging ? "none" : "transform 0.2s ease, filter 0.2s ease",
+          filter: dragging ? "drop-shadow(0 12px 30px rgba(2,35,80,0.35))" : "drop-shadow(0 6px 20px rgba(2,35,80,0.2))",
+          transform: dragging ? "scale(1.1)" : "scale(1)",
         }}
       >
-        {/* Robot SVG/CSS representation */}
-        <div style={{
-          width: 72, height: 72, borderRadius: "50%",
-          background: "linear-gradient(135deg, #ffffff 0%, #e8e8e8 100%)",
-          border: "2px solid rgba(255,255,255,0.8)",
-          boxShadow: "0 4px 20px rgba(2,35,80,0.15), inset 0 -2px 6px rgba(0,0,0,0.05)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          position: "relative", overflow: "hidden",
-        }}>
-          {/* Visor */}
-          <div style={{
-            width: 44, height: 20, borderRadius: 12,
-            background: "linear-gradient(180deg, #1a1a2e 0%, #022350 100%)",
-            position: "absolute", top: 16,
-            boxShadow: "0 0 12px rgba(15,164,160,0.4), inset 0 1px 2px rgba(255,255,255,0.1)",
-          }}>
-            <div style={{ position: "absolute", top: 6, left: 8, width: 6, height: 6, borderRadius: "50%", background: "#0FA4A0", opacity: 0.8, animation: "auraPulse 2s infinite" }} />
-            <div style={{ position: "absolute", top: 6, right: 8, width: 6, height: 6, borderRadius: "50%", background: "#0FA4A0", opacity: 0.8, animation: "auraPulse 2s infinite 0.3s" }} />
-          </div>
-          {/* Antennas */}
-          <div style={{ position: "absolute", top: 2, left: 22, width: 2, height: 10, background: "#1a1a2e", borderRadius: 1, transform: "rotate(-15deg)" }} />
-          <div style={{ position: "absolute", top: 2, right: 22, width: 2, height: 10, background: "#1a1a2e", borderRadius: 1, transform: "rotate(15deg)" }} />
-          {/* Cape hint */}
-          <div style={{ position: "absolute", bottom: 0, left: 8, right: 8, height: 24, background: "linear-gradient(180deg, transparent, #022350)", borderRadius: "0 0 50% 50%", opacity: 0.3 }} />
-          {/* ZURIVA text */}
-          <div style={{ position: "absolute", bottom: 10, fontSize: 7, fontWeight: 600, letterSpacing: "0.1em", color: "#022350", fontFamily: h }}>ZURIVA</div>
-        </div>
-        {/* Pulse ring */}
-        {!open && (
-          <div style={{
-            position: "absolute", inset: -4, borderRadius: "50%",
-            border: "2px solid #0FA4A0", opacity: 0.4,
-            animation: "auraRing 2s infinite",
-          }} />
-        )}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/aura-bot.png"
+          alt="Aura AI Assistent"
+          draggable={false}
+          style={{
+            width: "100%", height: "100%", objectFit: "contain",
+            pointerEvents: "none",
+            animation: open ? "none" : "auraFloat 3s ease-in-out infinite",
+          }}
+        />
       </div>
 
       {/* CHAT PANEL */}
@@ -211,8 +188,7 @@ export default function AuraWidget() {
 
       {/* Animations */}
       <style>{`
-        @keyframes auraPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-        @keyframes auraRing { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 0; } }
+        @keyframes auraFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         @keyframes auraSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes dotPulse { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
       `}</style>
