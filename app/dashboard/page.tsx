@@ -22,9 +22,10 @@ const stats = [
 ];
 
 const courses = [
-  { img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80", tag: "Nicht-Leben", title: "Grundlagen Sachversicherung", p: 68, credits: 8 },
-  { img: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&q=80", tag: "Leben", title: "Lebensversicherungen", p: 33, credits: 12 },
-  { img: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80", tag: "Faehigkeiten", title: "Beratungskompetenz", p: 85, credits: 10 },
+  { img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80", tag: "Nicht-Leben", title: "Grundlagen Sachversicherung", p: 68, credits: 8, due: "28 Maer", rating: 4.6, color: "#0a2a4a", icon: "🛡️" },
+  { img: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&q=80", tag: "Produktkenntnisse", title: "Lebensversicherungen", p: 33, credits: 12, due: "15 Apr", rating: 4.2, color: "#0FA4A0", icon: "❤️" },
+  { img: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80", tag: "Gen. Faehigkeiten", title: "Beratungskompetenz", p: 85, credits: 10, due: "10 Feb", rating: 4.8, color: "#b8942a", icon: "🤝" },
+  { img: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80", tag: "Compliance", title: "FIDLEG und VAG 2026", p: 12, credits: 6, due: "30 Apr", rating: 3.9, color: "#3b82f6", icon: "📋" },
 ];
 
 const activities = [
@@ -134,27 +135,44 @@ export default function Dashboard() {
           </div>
 
           {/* 2 COLUMN LAYOUT */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 14 }}>
 
             {/* COURSES */}
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <div style={{ fontSize: 18, fontWeight: 600, color: "#022350" }}>Aktuelle Kurse</div>
-                <a href="/courses" style={{ fontSize: 12, color: "#0FA4A0", fontWeight: 500, textDecoration: "none" }}>Alle ansehen →</a>
+                <div style={{ fontSize: 18, fontWeight: 600, color: "#022350" }}>Aktive Lernprogramme</div>
+                <a href="/courses" style={{ fontSize: 12, color: "#9A9AAA", fontWeight: 500, textDecoration: "none", border: "0.5px solid #dce0e6", borderRadius: 20, padding: "5px 14px" }}>Alle Kurse →</a>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
                 {courses.map((c, i) => (
-                  <div key={i} style={{ borderRadius: 14, overflow: "hidden", position: "relative", minHeight: 180, cursor: "pointer" }}>
-                    <img src={c.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, filter: "brightness(0.45)" }} />
-                    <div style={{ position: "absolute", inset: 0, padding: "12px 12px 14px", display: "flex", flexDirection: "column", justifyContent: "flex-end", background: "linear-gradient(to top,rgba(2,25,60,0.92) 0%,transparent 50%)" }}>
-                      <div style={{ position: "absolute", top: 10, left: 10, background: "rgba(255,255,255,0.15)", color: "white", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 20 }}>{c.tag}</div>
-                      <div style={{ position: "absolute", top: 8, right: 10, fontSize: 13, fontWeight: 600, color: "#C8A24D" }}>{c.credits}</div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: "white", marginBottom: 6, lineHeight: 1.3 }}>{c.title}</div>
-                      <div style={{ background: "rgba(255,255,255,0.2)", height: 2.5, borderRadius: 2, marginBottom: 3 }}>
-                        <div style={{ height: 2.5, borderRadius: 2, background: "#0FA4A0", width: `${c.p}%` }} />
+                  <div key={i} style={{ borderRadius: 16, overflow: "hidden", background: "white", border: "0.5px solid #dce0e6", cursor: "pointer" }}>
+                    {/* Colored header with image */}
+                    <div style={{ height: 140, position: "relative", overflow: "hidden", background: c.color }}>
+                      <img src={c.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, opacity: 0.25, mixBlendMode: "luminosity" }} />
+                      {/* Decorative circles */}
+                      <div style={{ position: "absolute", top: -20, left: -20, width: 100, height: 100, borderRadius: "50%", border: "1.5px solid rgba(255,255,255,0.12)" }} />
+                      <div style={{ position: "absolute", bottom: -30, right: -10, width: 120, height: 120, borderRadius: "50%", border: "1.5px solid rgba(255,255,255,0.08)" }} />
+                      <div style={{ position: "absolute", top: 30, right: 40, width: 60, height: 60, borderRadius: "50%", border: "1.5px solid rgba(255,255,255,0.06)" }} />
+                      {/* Tag */}
+                      <div style={{ position: "absolute", top: 10, right: 10, background: "rgba(255,255,255,0.2)", backdropFilter: "blur(8px)", color: "white", fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>{c.tag}</div>
+                      {c.p >= 80 && <div style={{ position: "absolute", top: 10, left: 10, background: "#e74c3c", color: "white", fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>Fast fertig!</div>}
+                      {/* Icon */}
+                      <div style={{ position: "absolute", bottom: 12, left: 14, fontSize: 28, filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.2))" }}>{c.icon}</div>
+                    </div>
+                    {/* White body */}
+                    <div style={{ padding: "14px 16px 16px" }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: "#022350", marginBottom: 6, lineHeight: 1.35 }}>{c.title}</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                        <span style={{ fontSize: 11.5, color: "#9A9AAA" }}>Faellig: {c.due}</span>
+                        <span style={{ fontSize: 11.5, color: "#9A9AAA" }}>·</span>
+                        <span style={{ fontSize: 11.5, color: "#C8A24D", display: "flex", alignItems: "center", gap: 3 }}>⭐ {c.rating}</span>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "rgba(255,255,255,0.5)" }}>
-                        <span>Fortschritt</span><span style={{ color: "white" }}>{c.p}%</span>
+                      <div style={{ background: "#eef0f3", height: 4, borderRadius: 2, marginBottom: 8 }}>
+                        <div style={{ height: 4, borderRadius: 2, background: c.color, width: `${c.p}%`, transition: "width 0.3s" }} />
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "#022350" }}>{c.p}%</span>
+                        <a href="/courses" style={{ fontSize: 12, color: "#0FA4A0", fontWeight: 500, textDecoration: "none" }}>Weiterlernen →</a>
                       </div>
                     </div>
                   </div>
