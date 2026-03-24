@@ -126,7 +126,7 @@ export default function Lernpfade() {
                       )}
 
                       {path.status !== "locked" && (
-                        <a href="/courses" style={{ display: "inline-block", marginTop: 14, padding: "8px 20px", background: path.status === "done" ? "#f0f2f5" : path.color, color: path.status === "done" ? "#4A4A5A" : "white", borderRadius: 9, fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
+                        <a href={`/lernpfade/${path.id}`} style={{ display: "inline-block", marginTop: 14, padding: "8px 20px", background: path.status === "done" ? "#f0f2f5" : path.color, color: path.status === "done" ? "#4A4A5A" : "white", borderRadius: 9, fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
                           {path.status === "done" ? "Anzeigen" : "Weiterlernen"}
                         </a>
                       )}
