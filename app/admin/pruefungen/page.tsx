@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import KIToolkit from "@/components/KIToolkit";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
@@ -225,7 +226,9 @@ export default function PruefungsEditor() {
         {[
           { name: "Übersicht", href: "/admin" },
           { name: "Kurseditor", href: "/admin/kurse" },
+          { name: "Lernpfadeditor", href: "/admin/lernpfade" },
           { name: "Prüfungseditor", href: "/admin/pruefungen", active: true },
+          { name: "Kahoot-Editor", href: "/admin/kahoot" },
           { name: "Team", href: "/admin/team" },
         ].map((item) => (
           <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#FAF8F5" : "transparent", borderLeft: item.active ? "2px solid #C8A24D" : "2px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
@@ -486,6 +489,7 @@ export default function PruefungsEditor() {
           )}
         </div>
       </div>
+      <KIToolkit context="pruefung" topic={form.title || "Prüfungsfragen"} />
     </div>
   );
 }

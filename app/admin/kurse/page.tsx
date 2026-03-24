@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import KIToolkit from "@/components/KIToolkit";
 import {
   getCourses,
   getCategories,
@@ -173,7 +174,9 @@ export default function KursEditor() {
           {[
             { name: "Übersicht", href: "/admin" },
             { name: "Kurseditor", href: "/admin/kurse", active: true },
+            { name: "Lernpfadeditor", href: "/admin/lernpfade" },
             { name: "Prüfungseditor", href: "/admin/pruefungen" },
+            { name: "Kahoot-Editor", href: "/admin/kahoot" },
             { name: "Team", href: "/admin/team" },
           ].map((item) => (
             <a key={item.name} href={item.href} style={{ padding: "10px 14px", margin: "2px 0", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "rgba(255,255,255,0.8)" : "transparent", borderRadius: 12, boxShadow: item.active ? "0 1px 8px rgba(2,35,80,0.06)" : "none", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
@@ -390,6 +393,7 @@ export default function KursEditor() {
           )}
         </div>
       </div>
+      <KIToolkit context="lernpfad" topic={form.title || "Kursinhalt"} />
     </div>
   );
 }
