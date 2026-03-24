@@ -12,7 +12,7 @@ type Course = {
 };
 
 const TEMP_AUTHOR_ID = "admin-placeholder";
-const statusLabels: Record<string, string> = { DRAFT: "Entwurf", PUBLISHED: "Ver\u00f6ffentlicht", ARCHIVED: "Archiviert" };
+const statusLabels: Record<string, string> = { DRAFT: "Entwurf", PUBLISHED: "Veröffentlicht", ARCHIVED: "Archiviert" };
 const statusColors: Record<string, string> = { DRAFT: "#C8A24D", PUBLISHED: "#0FA4A0", ARCHIVED: "#9A9AAA" };
 const moduleTypeLabels: Record<string, string> = { VIDEO: "Video", TEXT: "Text", QUIZ: "Quiz", DOCUMENT: "Dokument" };
 
@@ -24,14 +24,17 @@ export default function Kurseditor() {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
 
+  // Editor state
   const [editing, setEditing] = useState<Course | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ title: "", description: "", status: "DRAFT", duration: 0, credits: 0, categoryId: "" });
   const [saving, setSaving] = useState(false);
 
+  // Module editor
   const [moduleForm, setModuleForm] = useState({ title: "", description: "", type: "TEXT", duration: 0, content: "", videoUrl: "" });
   const [showModuleForm, setShowModuleForm] = useState(false);
 
+  // Category creator
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
 
@@ -93,7 +96,7 @@ export default function Kurseditor() {
   };
 
   const deleteCourse = async (id: string) => {
-    if (!confirm("Kurs wirklich l\u00f6schen?")) return;
+    if (!confirm("Kurs wirklich löschen?")) return;
     await fetch(`/api/courses/${id}`, { method: "DELETE" });
     fetchData();
   };
@@ -107,6 +110,7 @@ export default function Kurseditor() {
     });
     setModuleForm({ title: "", description: "", type: "TEXT", duration: 0, content: "", videoUrl: "" });
     setShowModuleForm(false);
+    // Refresh course detail
     const res = await fetch(`/api/courses/${editing.id}`);
     const updated = await res.json();
     setEditing(updated);
@@ -138,6 +142,7 @@ export default function Kurseditor() {
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif", background: "#F0F2F5", overflow: "hidden" }}>
+      {/* Sidebar — gleiche Struktur wie Admin Übersicht */}
       <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "0.5px solid #dce0e6", display: "flex", flexDirection: "column" }}>
         <div style={{ padding: "24px 22px 20px", borderBottom: "0.5px solid #dce0e6", display: "flex", alignItems: "baseline", gap: 8 }}>
           <span style={{ fontSize: 21, fontWeight: 700, letterSpacing: "0.12em", color: "#022350" }}>ZURIVA</span>
@@ -155,9 +160,9 @@ export default function Kurseditor() {
         ))}
         <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A9AAA", padding: "18px 22px 6px" }}>Admin</div>
         {[
-          { name: "\u00dcbersicht", href: "/admin" },
+          { name: "Übersicht", href: "/admin" },
           { name: "Kurseditor", href: "/admin/kurse", active: true },
-          { name: "Pr\u00fcfungseditor", href: "/admin/pruefungen" },
+          { name: "Prüfungseditor", href: "/admin/pruefungen" },
           { name: "Team", href: "/admin/team" },
           { name: "Analytics", href: "/admin/analytics" },
         ].map((item) => (
@@ -170,7 +175,9 @@ export default function Kurseditor() {
         </div>
       </aside>
 
+      {/* Main content */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        {/* Top bar */}
         <div style={{ background: "white", borderBottom: "0.5px solid #dce0e6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 15, fontWeight: 500, color: "#022350" }}>Kurseditor</div>
@@ -183,12 +190,18 @@ export default function Kurseditor() {
         </div>
 
         <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px" }}>
+          {/* Filters */}
           <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
-            <input placeholder="Kurs suchen\u2026" value={search} onChange={(e) => setSearch(e.target.value)} style={{ flex: 1, padding: "10px 14px", borderRadius: 10, border: "1px solid #dce0e6", fontSize: 13, outline: "none", background: "white" }} />
+            <input
+              placeholder="Kurs suchen…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ flex: 1, padding: "10px 14px", borderRadius: 10, border: "1px solid #dce0e6", fontSize: 13, outline: "none", background: "white" }}
+            />
             <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid #dce0e6", fontSize: 13, background: "white", color: "#4A4A5A", cursor: "pointer" }}>
               <option value="">Alle Status</option>
               <option value="DRAFT">Entwurf</option>
-              <option value="PUBLISHED">Ver\u00f6ffentlicht</option>
+              <option value="PUBLISHED">Veröffentlicht</option>
               <option value="ARCHIVED">Archiviert</option>
             </select>
             <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid #dce0e6", fontSize: 13, background: "white", color: "#4A4A5A", cursor: "pointer" }}>
@@ -197,11 +210,12 @@ export default function Kurseditor() {
             </select>
           </div>
 
+          {/* Stats row */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 24 }}>
             {[
               { label: "Alle Kurse", value: courses.length, color: "#022350" },
-              { label: "Ver\u00f6ffentlicht", value: courses.filter(c => c.status === "PUBLISHED").length, color: "#0FA4A0" },
-              { label: "Entw\u00fcrfe", value: courses.filter(c => c.status === "DRAFT").length, color: "#C8A24D" },
+              { label: "Veröffentlicht", value: courses.filter(c => c.status === "PUBLISHED").length, color: "#0FA4A0" },
+              { label: "Entwürfe", value: courses.filter(c => c.status === "DRAFT").length, color: "#C8A24D" },
               { label: "Kategorien", value: categories.length, color: "#6366f1" },
             ].map((s, i) => (
               <div key={i} style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "20px 22px" }}>
@@ -211,11 +225,12 @@ export default function Kurseditor() {
             ))}
           </div>
 
+          {/* Course list */}
           {loading ? (
-            <div style={{ textAlign: "center", padding: 60, color: "#9A9AAA", fontSize: 14 }}>Kurse werden geladen\u2026</div>
+            <div style={{ textAlign: "center", padding: 60, color: "#9A9AAA", fontSize: 14 }}>Kurse werden geladen…</div>
           ) : courses.length === 0 ? (
             <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "60px 24px", textAlign: "center" }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>\uD83D\uDCDA</div>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>📚</div>
               <div style={{ fontSize: 16, fontWeight: 600, color: "#022350", marginBottom: 6 }}>Noch keine Kurse</div>
               <div style={{ fontSize: 13, color: "#9A9AAA", marginBottom: 16 }}>Erstelle deinen ersten Kurs, um loszulegen.</div>
               <button onClick={openNew} style={{ padding: "10px 20px", background: "#022350", color: "white", border: "none", borderRadius: 9, fontSize: 13, fontWeight: 500, cursor: "pointer" }}>+ Neuer Kurs</button>
@@ -243,7 +258,7 @@ export default function Kurseditor() {
                             {course.category.icon} {course.category.name}
                           </span>
                         ) : (
-                          <span style={{ fontSize: 11.5, color: "#9A9AAA" }}>\u2014</span>
+                          <span style={{ fontSize: 11.5, color: "#9A9AAA" }}>—</span>
                         )}
                       </td>
                       <td style={{ padding: "14px 20px" }}>
@@ -258,7 +273,7 @@ export default function Kurseditor() {
                       <td style={{ padding: "14px 20px" }}>
                         <div style={{ display: "flex", gap: 6 }}>
                           <button onClick={() => openEdit(course)} style={{ padding: "5px 12px", fontSize: 12, borderRadius: 7, border: "1px solid #dce0e6", background: "white", color: "#022350", cursor: "pointer", fontWeight: 500 }}>Bearbeiten</button>
-                          <button onClick={() => deleteCourse(course.id)} style={{ padding: "5px 12px", fontSize: 12, borderRadius: 7, border: "1px solid #e74c3c33", background: "#fef2f2", color: "#e74c3c", cursor: "pointer", fontWeight: 500 }}>L\u00f6schen</button>
+                          <button onClick={() => deleteCourse(course.id)} style={{ padding: "5px 12px", fontSize: 12, borderRadius: 7, border: "1px solid #e74c3c33", background: "#fef2f2", color: "#e74c3c", cursor: "pointer", fontWeight: 500 }}>Löschen</button>
                         </div>
                       </td>
                     </tr>
@@ -270,12 +285,13 @@ export default function Kurseditor() {
         </div>
       </div>
 
+      {/* Course form modal */}
       {showForm && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }} onClick={() => setShowForm(false)}>
           <div style={{ background: "white", borderRadius: 18, width: 600, maxHeight: "90vh", overflow: "auto", padding: 0 }} onClick={(e) => e.stopPropagation()}>
             <div style={{ padding: "24px 28px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ fontSize: 18, fontWeight: 600, color: "#022350" }}>{editing ? "Kurs bearbeiten" : "Neuer Kurs"}</div>
-              <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", fontSize: 20, color: "#9A9AAA", cursor: "pointer" }}>\u00d7</button>
+              <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", fontSize: 20, color: "#9A9AAA", cursor: "pointer" }}>×</button>
             </div>
 
             <div style={{ padding: "20px 28px 28px", display: "flex", flexDirection: "column", gap: 16 }}>
@@ -286,7 +302,7 @@ export default function Kurseditor() {
 
               <div>
                 <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", marginBottom: 4, display: "block" }}>Beschreibung</label>
-                <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} placeholder="Kursbeschreibung\u2026" style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid #dce0e6", fontSize: 13, outline: "none", resize: "vertical", boxSizing: "border-box", fontFamily: "inherit" }} />
+                <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} placeholder="Kursbeschreibung…" style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid #dce0e6", fontSize: 13, outline: "none", resize: "vertical", boxSizing: "border-box", fontFamily: "inherit" }} />
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -301,7 +317,7 @@ export default function Kurseditor() {
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", marginBottom: 4, display: "block" }}>Status</label>
                   <select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid #dce0e6", fontSize: 13, background: "white", cursor: "pointer" }}>
                     <option value="DRAFT">Entwurf</option>
-                    <option value="PUBLISHED">Ver\u00f6ffentlicht</option>
+                    <option value="PUBLISHED">Veröffentlicht</option>
                     <option value="ARCHIVED">Archiviert</option>
                   </select>
                 </div>
@@ -318,6 +334,7 @@ export default function Kurseditor() {
                 </div>
               </div>
 
+              {/* Module section — only when editing */}
               {editing && (
                 <div style={{ borderTop: "1px solid #eef0f3", paddingTop: 16 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
@@ -327,7 +344,7 @@ export default function Kurseditor() {
 
                   {editing.modules.length === 0 ? (
                     <div style={{ padding: "20px", textAlign: "center", color: "#9A9AAA", fontSize: 13, background: "#f8f9fb", borderRadius: 10 }}>
-                      Noch keine Module. F\u00fcge das erste Modul hinzu.
+                      Noch keine Module. Füge das erste Modul hinzu.
                     </div>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -337,15 +354,16 @@ export default function Kurseditor() {
                             <span style={{ fontSize: 12, color: "#9A9AAA", fontWeight: 600, width: 20 }}>{idx + 1}.</span>
                             <div>
                               <div style={{ fontSize: 13, fontWeight: 500, color: "#022350" }}>{mod.title}</div>
-                              <div style={{ fontSize: 11, color: "#9A9AAA" }}>{moduleTypeLabels[mod.type]} \u00b7 {mod.duration} Min</div>
+                              <div style={{ fontSize: 11, color: "#9A9AAA" }}>{moduleTypeLabels[mod.type]} · {mod.duration} Min</div>
                             </div>
                           </div>
-                          <button onClick={() => deleteModule(mod.id)} style={{ background: "none", border: "none", fontSize: 16, color: "#e74c3c", cursor: "pointer" }}>\u00d7</button>
+                          <button onClick={() => deleteModule(mod.id)} style={{ background: "none", border: "none", fontSize: 16, color: "#e74c3c", cursor: "pointer" }}>×</button>
                         </div>
                       ))}
                     </div>
                   )}
 
+                  {/* Add module form */}
                   {showModuleForm && (
                     <div style={{ marginTop: 12, padding: 16, background: "#f8f9fb", borderRadius: 12, display: "flex", flexDirection: "column", gap: 10 }}>
                       <input value={moduleForm.title} onChange={(e) => setModuleForm({ ...moduleForm, title: e.target.value })} placeholder="Modul-Titel" style={{ padding: "9px 12px", borderRadius: 8, border: "1px solid #dce0e6", fontSize: 13, outline: "none" }} />
@@ -361,7 +379,7 @@ export default function Kurseditor() {
                       </div>
                       <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
                         <button onClick={() => setShowModuleForm(false)} style={{ padding: "7px 14px", fontSize: 12, borderRadius: 7, border: "1px solid #dce0e6", background: "white", color: "#4A4A5A", cursor: "pointer" }}>Abbrechen</button>
-                        <button onClick={addModule} style={{ padding: "7px 14px", fontSize: 12, borderRadius: 7, border: "none", background: "#022350", color: "white", cursor: "pointer", fontWeight: 500 }}>Hinzuf\u00fcgen</button>
+                        <button onClick={addModule} style={{ padding: "7px 14px", fontSize: 12, borderRadius: 7, border: "none", background: "#022350", color: "white", cursor: "pointer", fontWeight: 500 }}>Hinzufügen</button>
                       </div>
                     </div>
                   )}
@@ -371,7 +389,7 @@ export default function Kurseditor() {
               <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 4 }}>
                 <button onClick={() => setShowForm(false)} style={{ padding: "10px 20px", fontSize: 13, borderRadius: 10, border: "1px solid #dce0e6", background: "white", color: "#4A4A5A", cursor: "pointer" }}>Abbrechen</button>
                 <button onClick={saveCourse} disabled={!formData.title || saving} style={{ padding: "10px 20px", fontSize: 13, borderRadius: 10, border: "none", background: !formData.title ? "#9A9AAA" : "#022350", color: "white", cursor: !formData.title ? "default" : "pointer", fontWeight: 500 }}>
-                  {saving ? "Speichern\u2026" : editing ? "Aktualisieren" : "Kurs erstellen"}
+                  {saving ? "Speichern…" : editing ? "Aktualisieren" : "Kurs erstellen"}
                 </button>
               </div>
             </div>
@@ -379,6 +397,7 @@ export default function Kurseditor() {
         </div>
       )}
 
+      {/* Category form modal */}
       {showCategoryForm && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }} onClick={() => setShowCategoryForm(false)}>
           <div style={{ background: "white", borderRadius: 18, width: 400, padding: "24px 28px" }} onClick={(e) => e.stopPropagation()}>

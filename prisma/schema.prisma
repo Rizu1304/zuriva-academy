@@ -47,7 +47,7 @@ model Category {
   name      String   @unique
   slug      String   @unique
   color     String   @default("#022350")
-  icon      String   @default("\uD83D\uDCDA")
+  icon      String   @default("📚")
   createdAt DateTime @default(now())
 
   courses Course[]
