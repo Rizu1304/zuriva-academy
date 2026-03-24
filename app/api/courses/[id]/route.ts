@@ -1,13 +1,19 @@
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+async function getDb() {
+  const { PrismaClient } = await import("@prisma/client");
+  return new PrismaClient();
+}
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const prisma = await getDb();
     const { id } = await params;
     const course = await prisma.course.findUnique({
       where: { id },
@@ -29,6 +35,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const prisma = await getDb();
     const { id } = await params;
     const body = await request.json();
     const course = await prisma.course.update({
@@ -55,6 +62,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const prisma = await getDb();
     const { id } = await params;
     await prisma.course.delete({ where: { id } });
     return NextResponse.json({ success: true });

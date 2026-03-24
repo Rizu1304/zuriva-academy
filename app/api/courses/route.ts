@@ -1,10 +1,16 @@
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+async function getDb() {
+  const { PrismaClient } = await import("@prisma/client");
+  return new PrismaClient();
+}
 
 export async function GET() {
   try {
+    const prisma = await getDb();
     const courses = await prisma.course.findMany({
       orderBy: { createdAt: "desc" },
       include: {
@@ -15,12 +21,13 @@ export async function GET() {
     return NextResponse.json(courses);
   } catch (e) {
     console.error("DB error:", e);
-    return NextResponse.json([], { status: 200 });
+    return NextResponse.json([]);
   }
 }
 
 export async function POST(request: Request) {
   try {
+    const prisma = await getDb();
     const body = await request.json();
     const course = await prisma.course.create({
       data: {
