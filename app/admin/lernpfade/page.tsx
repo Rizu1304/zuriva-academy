@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import KIToolkit from "@/components/KIToolkit";
+import EditorAI from "@/components/EditorAI";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
@@ -113,6 +113,16 @@ export default function LernpfadEditor() {
   };
 
   const removeStep = (id: string) => setSteps(prev => prev.filter(s => s.id !== id));
+
+  const handleAISteps = (items: Record<string, unknown>[]) => {
+    const newSteps: Step[] = items.map(item => ({
+      id: "s" + nextStepId++,
+      title: String(item.title || ""),
+      type: (["course", "exam", "activity"].includes(String(item.type)) ? String(item.type) : "course") as Step["type"],
+      duration: String(item.duration || "—"),
+    })).filter(s => s.title);
+    setSteps(prev => [...prev, ...newSteps]);
+  };
 
   const moveStep = (idx: number, dir: -1 | 1) => {
     const newIdx = idx + dir;
@@ -310,9 +320,17 @@ export default function LernpfadEditor() {
                   <span style={{ fontSize: 12, color: "#9A9AAA" }}>{steps.length} Schritte</span>
                 </div>
 
+                <EditorAI
+                  context="lernpfad"
+                  topic={form.title}
+                  itemLabel="Schritte"
+                  onItemsGenerated={handleAISteps}
+                  placeholder="z.B. Erstelle 8 Schritte für eine VBV-Grundausbildung mit Kursen und Prüfungen"
+                />
+
                 <div style={{ flex: 1, overflowY: "auto", marginBottom: 20 }}>
                   {steps.length === 0 ? (
-                    <div style={{ padding: "32px 0", textAlign: "center", color: "#9A9AAA", fontSize: 13 }}>Noch keine Schritte vorhanden. Nutze den KI-Werkzeugkasten um Schritte zu generieren!</div>
+                    <div style={{ padding: "32px 0", textAlign: "center", color: "#9A9AAA", fontSize: 13 }}>Noch keine Schritte vorhanden.</div>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       {steps.map((step, idx) => {
@@ -357,7 +375,6 @@ export default function LernpfadEditor() {
           )}
         </div>
       </div>
-      <KIToolkit context="lernpfad" topic={form.title || "Lernpfad"} />
     </div>
   );
 }

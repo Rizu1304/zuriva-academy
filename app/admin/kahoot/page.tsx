@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import KIToolkit from "@/components/KIToolkit";
+import EditorAI from "@/components/EditorAI";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
@@ -101,6 +101,18 @@ export default function KahootEditor() {
   };
 
   const removeQuestion = (id: string) => setQuestions(prev => prev.filter(q => q.id !== id));
+
+  const handleAIQuestions = (items: Record<string, unknown>[]) => {
+    const newQuestions: KahootQuestion[] = items.map(item => ({
+      id: "kq" + nextQId++,
+      text: String(item.text || ""),
+      options: Array.isArray(item.options) ? item.options.map(String) : ["", "", "", ""],
+      correctIndex: typeof item.correctIndex === "number" ? item.correctIndex : 0,
+      timeLimit: typeof item.timeLimit === "number" ? item.timeLimit : 20,
+      points: typeof item.points === "number" ? item.points : 1000,
+    })).filter(q => q.text);
+    setQuestions(prev => [...prev, ...newQuestions]);
+  };
 
   const filtered = quizzes.filter(q => {
     if (filter !== "ALL" && q.status !== filter) return false;
@@ -284,9 +296,17 @@ export default function KahootEditor() {
                   <span style={{ fontSize: 12, color: "#9A9AAA" }}>{questions.length} Fragen</span>
                 </div>
 
+                <EditorAI
+                  context="kahoot"
+                  topic={form.title || form.topic}
+                  itemLabel="Fragen"
+                  onItemsGenerated={handleAIQuestions}
+                  placeholder="z.B. Erstelle 10 lustige Quiz-Fragen über Schweizer Versicherungen"
+                />
+
                 <div style={{ flex: 1, overflowY: "auto", marginBottom: 20 }}>
                   {questions.length === 0 ? (
-                    <div style={{ padding: "32px 0", textAlign: "center", color: "#9A9AAA", fontSize: 13 }}>Noch keine Fragen. Nutze den KI-Werkzeugkasten um Fragen zu generieren!</div>
+                    <div style={{ padding: "32px 0", textAlign: "center", color: "#9A9AAA", fontSize: 13 }}>Noch keine Fragen vorhanden.</div>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                       {questions.map((q, idx) => (
@@ -345,7 +365,6 @@ export default function KahootEditor() {
           )}
         </div>
       </div>
-      <KIToolkit context="kahoot" topic={form.title || form.topic || "Kahoot-Quiz"} />
     </div>
   );
 }

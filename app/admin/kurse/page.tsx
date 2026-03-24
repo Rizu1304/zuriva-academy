@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import KIToolkit from "@/components/KIToolkit";
+import EditorAI from "@/components/EditorAI";
 import {
   getCourses,
   getCategories,
@@ -136,6 +136,17 @@ export default function KursEditor() {
     setEditCourse((prev) =>
       prev ? { ...prev, modules: prev.modules.filter((m) => m.id !== moduleId) } : null
     );
+  };
+
+  const handleAIModules = async (items: Record<string, unknown>[]) => {
+    if (!editCourse) return;
+    for (const item of items) {
+      const title = String(item.title || "Neues Modul");
+      const mod = await addModuleAction(editCourse.id, title);
+      setEditCourse((prev) =>
+        prev ? { ...prev, modules: [...prev.modules, { ...mod, lessons: mod.lessons || [] }] } : null
+      );
+    }
   };
 
   const filtered = courses.filter((c) => {
@@ -364,6 +375,14 @@ export default function KursEditor() {
                     <span style={{ fontSize: 12, color: "#9A9AAA" }}>{editCourse.modules.length} Module</span>
                   </div>
 
+                  <EditorAI
+                    context="kurs"
+                    topic={form.title}
+                    itemLabel="Module"
+                    onItemsGenerated={handleAIModules}
+                    placeholder="z.B. Erstelle 6 Module für diesen Kurs, inkl. Einführung und Abschluss"
+                  />
+
                   {editCourse.modules.length === 0 ? (
                     <div style={{ padding: "32px 0", textAlign: "center", color: "#9A9AAA", fontSize: 13 }}>Noch keine Module vorhanden.</div>
                   ) : (
@@ -393,7 +412,6 @@ export default function KursEditor() {
           )}
         </div>
       </div>
-      <KIToolkit context="lernpfad" topic={form.title || "Kursinhalt"} />
     </div>
   );
 }

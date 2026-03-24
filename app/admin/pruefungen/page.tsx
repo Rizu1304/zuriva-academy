@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import KIToolkit from "@/components/KIToolkit";
+import EditorAI from "@/components/EditorAI";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
@@ -190,6 +190,16 @@ export default function PruefungsEditor() {
 
   const removeQuestion = (qId: string) => {
     setQuestions((prev) => prev.filter((q) => q.id !== qId));
+  };
+
+  const handleAIQuestions = (items: Record<string, unknown>[]) => {
+    const newQuestions: Question[] = items.map(item => ({
+      id: "q" + nextQId++,
+      text: String(item.text || ""),
+      options: Array.isArray(item.options) ? item.options.map(String) : ["", "", "", ""],
+      correctIndex: typeof item.correctIndex === "number" ? item.correctIndex : 0,
+    })).filter(q => q.text);
+    setQuestions(prev => [...prev, ...newQuestions]);
   };
 
   const filtered = exams.filter((e) => {
@@ -405,6 +415,14 @@ export default function PruefungsEditor() {
                   <span style={{ fontSize: 12, color: "#9A9AAA" }}>{questions.length} Fragen</span>
                 </div>
 
+                <EditorAI
+                  context="pruefung"
+                  topic={form.title || form.courseName}
+                  itemLabel="Fragen"
+                  onItemsGenerated={handleAIQuestions}
+                  placeholder="z.B. Erstelle 10 Fragen über Lebensversicherungen, Schwierigkeitsgrad mittel"
+                />
+
                 {/* Existing questions */}
                 <div style={{ flex: 1, overflowY: "auto", marginBottom: 20 }}>
                   {questions.length === 0 ? (
@@ -489,7 +507,6 @@ export default function PruefungsEditor() {
           )}
         </div>
       </div>
-      <KIToolkit context="pruefung" topic={form.title || "Prüfungsfragen"} />
     </div>
   );
 }

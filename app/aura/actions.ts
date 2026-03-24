@@ -36,6 +36,72 @@ export async function chat({
   }
 }
 
+export async function generateEditorContent({
+  prompt,
+  context,
+  documentText,
+}: {
+  prompt: string;
+  context: "kurs" | "pruefung" | "lernpfad" | "kahoot";
+  documentText?: string;
+}): Promise<{ items: Record<string, unknown>[]; error: boolean }> {
+  const systemPrompts: Record<string, string> = {
+    kurs: `Du bist ein Experte für Kurserstellung im Schweizer Versicherungswesen (Zuriva GmbH).
+Der Benutzer beschreibt was er braucht. Generiere Module für einen Kurs.
+Antworte NUR mit einem JSON-Array. Kein anderer Text, keine Erklärungen, kein Markdown.
+Format: [{"title": "Modulname"}]
+Beispiel: [{"title": "Einführung in die Sachversicherung"}, {"title": "Policen und Deckungen"}]`,
+    pruefung: `Du bist ein Experte für Prüfungserstellung im Schweizer Versicherungswesen (Zuriva GmbH).
+Der Benutzer beschreibt was er braucht. Generiere Prüfungsfragen.
+Antworte NUR mit einem JSON-Array. Kein anderer Text, keine Erklärungen, kein Markdown.
+Format: [{"text": "Fragetext?", "options": ["Antwort A", "Antwort B", "Antwort C", "Antwort D"], "correctIndex": 0}]
+correctIndex ist der Index (0-3) der richtigen Antwort. Erstelle realistische, anspruchsvolle Fragen.`,
+    lernpfad: `Du bist ein Experte für Lernpfade im Schweizer Versicherungswesen (Zuriva GmbH).
+Der Benutzer beschreibt was er braucht. Generiere Schritte für einen Lernpfad.
+Antworte NUR mit einem JSON-Array. Kein anderer Text, keine Erklärungen, kein Markdown.
+Format: [{"title": "Schrittname", "type": "course", "duration": "2 Std"}]
+type kann sein: "course" (Kurs), "exam" (Prüfung), oder "activity" (Aktivität/Workshop).`,
+    kahoot: `Du bist ein Experte für Kahoot-Quizze im Schweizer Versicherungswesen (Zuriva GmbH).
+Der Benutzer beschreibt was er braucht. Generiere unterhaltsame Kahoot-Quizfragen.
+Antworte NUR mit einem JSON-Array. Kein anderer Text, keine Erklärungen, kein Markdown.
+Format: [{"text": "Fragetext?", "options": ["A", "B", "C", "D"], "correctIndex": 0, "timeLimit": 20, "points": 1000}]
+correctIndex: 0-3. timeLimit: 10-60 Sekunden. points: 500/1000/1500/2000. Fragen sollen Spass machen!`,
+  };
+
+  const docHint = documentText
+    ? `\n\nBasiere die Inhalte auf folgendem Dokument:\n---\n${documentText.slice(0, 12000)}\n---\n`
+    : "";
+
+  try {
+    const response = await client.messages.create({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 4096,
+      system: systemPrompts[context],
+      messages: [{ role: "user", content: prompt + docHint }],
+    });
+    const textBlock = response.content.find((block) => block.type === "text");
+    const raw = textBlock?.text ?? "[]";
+
+    // Parse JSON robustly
+    let items: Record<string, unknown>[] = [];
+    try {
+      items = JSON.parse(raw);
+    } catch {
+      const match = raw.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/) || raw.match(/\[[\s\S]*\]/);
+      if (match) {
+        try {
+          items = JSON.parse(match[1] || match[0]);
+        } catch { /* fallback empty */ }
+      }
+    }
+    if (!Array.isArray(items)) items = [];
+    return { items, error: false };
+  } catch (error) {
+    console.error("Editor generate error:", error);
+    return { items: [], error: true };
+  }
+}
+
 export async function generateContent({
   prompt,
   context,
