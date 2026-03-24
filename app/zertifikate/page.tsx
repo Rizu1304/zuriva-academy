@@ -8,6 +8,61 @@ const certs = [
   { id: 2, title: "Beratungskompetenz", course: "Beratungskompetenz und Kundenkommunikation", date: "15.02.2026", score: 88, credits: 10, verified: true },
 ];
 
+function downloadCert(cert: typeof certs[0]) {
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  body { margin: 0; font-family: 'DM Sans', sans-serif; }
+  .cert { width: 297mm; height: 210mm; position: relative; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+  .border { position: absolute; inset: 12mm; border: 2px solid #C8A24D; border-radius: 4px; }
+  .corner { position: absolute; width: 40px; height: 40px; border-color: #022350; border-style: solid; }
+  .tl { top: 8mm; left: 8mm; border-width: 3px 0 0 3px; }
+  .tr { top: 8mm; right: 8mm; border-width: 3px 3px 0 0; }
+  .bl { bottom: 8mm; left: 8mm; border-width: 0 0 3px 3px; }
+  .br { bottom: 8mm; right: 8mm; border-width: 0 3px 3px 0; }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; letter-spacing: 0.18em; color: #022350; font-weight: 400; }
+  .academy { font-size: 12px; color: #C8A24D; margin-left: 8px; font-weight: 500; }
+  .label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #C8A24D; font-weight: 600; margin-top: 24px; }
+  .title { font-family: 'Cormorant Garamond', serif; font-size: 42px; color: #022350; font-weight: 400; margin: 12px 0 8px; }
+  .name { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: #022350; margin: 20px 0 4px; }
+  .sub { font-size: 13px; color: #4A4A5A; }
+  .stats { display: flex; gap: 40px; margin-top: 28px; }
+  .stat-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #0FA4A0; font-weight: 600; }
+  .stat-label { font-size: 10px; color: #9A9AAA; margin-top: 2px; }
+  .stat-gold .stat-val { color: #C8A24D; }
+  .footer { position: absolute; bottom: 20mm; display: flex; gap: 60px; align-items: center; }
+  .line { width: 160px; border-top: 1px solid #022350; padding-top: 6px; font-size: 11px; color: #4A4A5A; text-align: center; }
+  .verified { margin-top: 20px; font-size: 11px; color: #0FA4A0; font-weight: 600; }
+  .date { font-size: 12px; color: #9A9AAA; margin-top: 4px; }
+</style></head><body>
+<div class="cert">
+  <div class="border"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div><span class="logo">ZURIVA</span><span class="academy">academy</span></div>
+  <div class="label">Zertifikat</div>
+  <div class="title">${cert.title}</div>
+  <div class="sub">Kurs: ${cert.course}</div>
+  <div class="name">Laura Meier</div>
+  <div class="sub">hat diesen Kurs erfolgreich abgeschlossen.</div>
+  <div class="stats">
+    <div><div class="stat-val">${cert.score}%</div><div class="stat-label">Score</div></div>
+    <div class="stat-gold"><div class="stat-val">${cert.credits}</div><div class="stat-label">Credits</div></div>
+  </div>
+  <div class="verified">✓ Verifiziert</div>
+  <div class="date">${cert.date} · Dübendorf, Zürich</div>
+  <div class="footer">
+    <div class="line">Zuriva GmbH</div>
+    <div class="line">Unterschrift</div>
+  </div>
+</div>
+<script>window.onload=()=>{window.print();}<\/script>
+</body></html>`;
+  const w = window.open("", "_blank");
+  if (w) { w.document.write(html); w.document.close(); }
+}
+
 export default function Zertifikate() {
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: b, background: "#FAF8F5", overflow: "hidden" }}>
@@ -83,7 +138,7 @@ export default function Zertifikate() {
                       )}
                     </div>
                   </div>
-                  <button style={{ width: "100%", padding: "10px", background: "#022350", color: "white", border: "none", borderRadius: 9, fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: b }}>
+                  <button onClick={() => downloadCert(cert)} style={{ width: "100%", padding: "10px", background: "#022350", color: "white", border: "none", borderRadius: 9, fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: b }}>
                     PDF herunterladen
                   </button>
                 </div>
