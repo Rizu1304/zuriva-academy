@@ -3,15 +3,11 @@ import { useState } from "react";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard", active: true },
-  { name: "Kurse", href: "/courses", active: false },
-  { name: "Lernpfade", href: "#", active: false },
-  { name: "Prüfungen", href: "#", active: false },
-  { name: "Zertifikate", href: "#", active: false },
-  { name: "Forum", href: "#", active: false },
-  { name: "Kahoot", href: "#", active: false },
-  { name: "KI-Studio", href: "#", active: false },
-  { name: "Team", href: "#", active: false },
-  { name: "Analytics", href: "#", active: false },
+  { name: "Kurse", href: "/courses" },
+  { name: "Lernpfade", href: "/lernpfade" },
+  { name: "Prüfungen", href: "/pruefungen" },
+  { name: "Zertifikate", href: "/zertifikate" },
+  { name: "Forum", href: "/forum" },
 ];
 
 const stats = [
@@ -24,7 +20,7 @@ const stats = [
 const courses = [
   { img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80", tag: "Nicht-Leben", title: "Grundlagen Sachversicherung", p: 68, credits: 8 },
   { img: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&q=80", tag: "Leben", title: "Lebensversicherungen", p: 33, credits: 12 },
-  { img: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80", tag: "Faehigkeiten", title: "Beratungskompetenz", p: 85, credits: 10 },
+  { img: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80", tag: "Fähigkeiten", title: "Beratungskompetenz", p: 85, credits: 10 },
 ];
 
 const activities = [
@@ -34,6 +30,9 @@ const activities = [
   { text: "Kurs FIDLEG & VAG eingeschrieben", time: "Fr 20.03.", color: "#022350" },
   { text: "Zertifikat Trainee Grundausbildung erhalten", time: "Mi 18.03.", color: "#0FA4A0" },
 ];
+
+const heading = "var(--font-cormorant, 'Cormorant Garamond', serif)";
+const body = "var(--font-dm-sans, 'DM Sans', sans-serif)";
 
 export default function Dashboard() {
   const [chatOpen, setChatOpen] = useState(false);
@@ -46,32 +45,31 @@ export default function Dashboard() {
     if (!input.trim()) return;
     setMessages(m => [...m, { role: "user", text: input }]);
     setInput("");
-    setTimeout(() => setMessages(m => [...m, { role: "bot", text: "Danke fuer deine Frage! Ich helfe dir gerne weiter." }]), 800);
+    setTimeout(() => setMessages(m => [...m, { role: "bot", text: "Danke für deine Frage! Ich helfe dir gerne weiter." }]), 800);
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "DM Sans, sans-serif", background: "#F0F2F5", overflow: "hidden" }}>
+    <div style={{ display: "flex", height: "100vh", fontFamily: body, background: "#F0F2F5", overflow: "hidden" }}>
 
       {/* SIDEBAR */}
       <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "0.5px solid #dce0e6", display: "flex", flexDirection: "column", overflowY: "auto" }}>
         <div style={{ padding: "24px 22px 20px", borderBottom: "0.5px solid #dce0e6", display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 21, fontWeight: 700, letterSpacing: "0.12em", color: "#022350" }}>ZURIVA</span>
-          <span style={{ fontSize: 12, fontWeight: 500, color: "#C8A24D" }}>academy</span>
+          <span style={{ fontSize: 21, fontWeight: 700, letterSpacing: "0.12em", color: "#022350", fontFamily: heading }}>ZURIVA</span>
+          <span style={{ fontSize: 12, fontWeight: 500, color: "#C8A24D", fontFamily: body }}>academy</span>
         </div>
 
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A9AAA", padding: "18px 22px 6px" }}>Lernen</div>
-        {navItems.slice(0, 5).map((item) => (
-          <a key={item.name} href={item.href} style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 14px 8px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#EEF5FF" : "transparent", borderLeft: item.active ? "2.5px solid #0FA4A0" : "2.5px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none" }}>{item.name}</a>
-        ))}
-
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A9AAA", padding: "18px 22px 6px" }}>Tools</div>
-        {navItems.slice(5, 8).map((item) => (
-          <a key={item.name} href={item.href} style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 14px 8px 22px", color: "#4A4A5A", background: "transparent", borderLeft: "2.5px solid transparent", fontSize: 13, textDecoration: "none" }}>{item.name}</a>
+        {navItems.map((item) => (
+          <a key={item.name} href={item.href} style={{ display: "flex", alignItems: "center", gap: 9, padding: "9px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#EEF5FF" : "transparent", borderLeft: item.active ? "2.5px solid #0FA4A0" : "2.5px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none" }}>{item.name}</a>
         ))}
 
         <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A9AAA", padding: "18px 22px 6px" }}>Admin</div>
-        {navItems.slice(8).map((item) => (
-          <a key={item.name} href={item.href} style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 14px 8px 22px", color: "#4A4A5A", background: "transparent", borderLeft: "2.5px solid transparent", fontSize: 13, textDecoration: "none" }}>{item.name}</a>
+        {[
+          { name: "Übersicht", href: "/admin" },
+          { name: "Kurseditor", href: "/admin/kurse" },
+          { name: "Prüfungseditor", href: "/admin/pruefungen" },
+          { name: "Team", href: "/admin/team" },
+        ].map((item) => (
+          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: "#4A4A5A", background: "transparent", borderLeft: "2.5px solid transparent", fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
         ))}
 
         <div style={{ flex: 1 }} />
@@ -106,7 +104,7 @@ export default function Dashboard() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 14 }}>
             {stats.map((s, i) => (
               <div key={i} style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "18px 20px" }}>
-                <div style={{ fontSize: 34, fontWeight: 600, color: "#022350", lineHeight: 1, marginBottom: 4 }}>{s.n}</div>
+                <div style={{ fontSize: 34, fontWeight: 600, color: "#022350", lineHeight: 1, marginBottom: 4, fontFamily: heading }}>{s.n}</div>
                 <div style={{ fontSize: 12, color: "#4A4A5A" }}>{s.l}</div>
                 <div style={{ fontSize: 11, fontWeight: 500, marginTop: 8, color: s.red ? "#e74c3c" : "#0FA4A0" }}>{s.t}</div>
               </div>
@@ -118,7 +116,7 @@ export default function Dashboard() {
             <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(15,164,160,0.12)" }} />
             <div style={{ position: "relative" }}>
               <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#C8A24D", marginBottom: 6 }}>VBV-Zertifizierung 2026</div>
-              <div style={{ fontSize: 22, fontWeight: 600, color: "white", marginBottom: 14 }}>Dein Lernfortschritt</div>
+              <div style={{ fontSize: 24, fontWeight: 600, color: "white", marginBottom: 14, fontFamily: heading }}>Dein Lernfortschritt</div>
               <div style={{ background: "rgba(255,255,255,0.12)", height: 3, borderRadius: 2, marginBottom: 8 }}>
                 <div style={{ height: 3, borderRadius: 2, background: "#0FA4A0", width: "57%" }} />
               </div>
@@ -128,18 +126,16 @@ export default function Dashboard() {
               </div>
             </div>
             <div style={{ textAlign: "right", position: "relative" }}>
-              <div style={{ fontSize: 52, fontWeight: 600, color: "#C8A24D", lineHeight: 1 }}>342</div>
+              <div style={{ fontSize: 52, fontWeight: 600, color: "#C8A24D", lineHeight: 1, fontFamily: heading }}>342</div>
               <div style={{ fontSize: 16, color: "rgba(255,255,255,0.3)" }}>/ 600 Credits</div>
             </div>
           </div>
 
-          {/* 2 COLUMN LAYOUT */}
+          {/* 2 COLUMN */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 14 }}>
-
-            {/* COURSES */}
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <div style={{ fontSize: 18, fontWeight: 600, color: "#022350" }}>Aktuelle Kurse</div>
+                <div style={{ fontSize: 20, fontWeight: 600, color: "#022350", fontFamily: heading }}>Aktuelle Kurse</div>
                 <a href="/courses" style={{ fontSize: 12, color: "#0FA4A0", fontWeight: 500, textDecoration: "none" }}>Alle ansehen →</a>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gap: 12 }}>
@@ -162,9 +158,8 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* ACTIVITIES */}
             <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "18px 20px" }}>
-              <div style={{ fontSize: 16, fontWeight: 600, color: "#022350", marginBottom: 14 }}>Letzte Aktivitaeten</div>
+              <div style={{ fontSize: 17, fontWeight: 600, color: "#022350", marginBottom: 14, fontFamily: heading }}>Letzte Aktivitäten</div>
               {activities.map((a, i) => (
                 <div key={i} style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: i < activities.length - 1 ? "0.5px solid #dce0e6" : "none", alignItems: "flex-start" }}>
                   <div style={{ width: 7, height: 7, borderRadius: "50%", background: a.color, marginTop: 5, flexShrink: 0 }} />
@@ -175,7 +170,6 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-
           </div>
         </div>
       </div>
@@ -184,14 +178,14 @@ export default function Dashboard() {
       {chatOpen && (
         <div style={{ position: "fixed", top: 0, right: 0, width: 400, height: "100vh", background: "white", borderLeft: "0.5px solid #dce0e6", boxShadow: "-8px 0 40px rgba(2,35,80,0.15)", zIndex: 999999, display: "flex", flexDirection: "column" }}>
           <div style={{ background: "#022350", padding: "18px 20px", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>🤖</div>
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>✦</div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: "white" }}>Aura</div>
+              <div style={{ fontSize: 16, fontWeight: 600, color: "white", fontFamily: heading }}>Aura</div>
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", display: "flex", alignItems: "center", gap: 5 }}>
                 <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80" }} /> Online
               </div>
             </div>
-            <div onClick={() => setChatOpen(false)} style={{ color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 22, lineHeight: 1 }}>x</div>
+            <div onClick={() => setChatOpen(false)} style={{ color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 22, lineHeight: 1 }}>×</div>
           </div>
           <div style={{ flex: 1, overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column", gap: 10 }}>
             {messages.map((m, i) => (
@@ -199,14 +193,14 @@ export default function Dashboard() {
             ))}
           </div>
           <div style={{ borderTop: "0.5px solid #dce0e6", padding: "12px 16px", display: "flex", gap: 8, flexShrink: 0 }}>
-            <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMsg()} placeholder="Frage Aura..." style={{ flex: 1, border: "none", outline: "none", fontSize: 14, fontFamily: "sans-serif" }} />
+            <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMsg()} placeholder="Frage Aura..." style={{ flex: 1, border: "none", outline: "none", fontSize: 14, fontFamily: body }} />
             <button onClick={sendMsg} style={{ width: 34, height: 34, borderRadius: 8, background: "#0FA4A0", border: "none", cursor: "pointer", color: "white", fontSize: 16 }}>→</button>
           </div>
         </div>
       )}
 
       {/* AURA BUTTON */}
-      <div onClick={() => setChatOpen(!chatOpen)} style={{ position: "fixed", bottom: 28, right: 28, width: 60, height: 60, borderRadius: "50%", background: "#022350", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, cursor: "pointer", boxShadow: "0 4px 18px rgba(2,35,80,0.3)", zIndex: 99999 }}>🤖</div>
+      <div onClick={() => setChatOpen(!chatOpen)} style={{ position: "fixed", bottom: 28, right: 28, width: 60, height: 60, borderRadius: "50%", background: "linear-gradient(135deg, #022350, #0a3a6e)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, cursor: "pointer", boxShadow: "0 4px 18px rgba(2,35,80,0.3)", zIndex: 99999, color: "#C8A24D" }}>✦</div>
 
     </div>
   );

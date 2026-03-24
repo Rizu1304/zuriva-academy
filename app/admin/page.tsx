@@ -18,7 +18,7 @@ const team = [
 
 export default function Admin() {
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif", background: "#F0F2F5", overflow: "hidden" }}>
+    <div style={{ display: "flex", height: "100vh", fontFamily: "var(--font-dm-sans, 'DM Sans', sans-serif)", background: "#F0F2F5", overflow: "hidden" }}>
       <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "0.5px solid #dce0e6", display: "flex", flexDirection: "column" }}>
         <div style={{ padding: "24px 22px 20px", borderBottom: "0.5px solid #dce0e6", display: "flex", alignItems: "baseline", gap: 8 }}>
           <span style={{ fontSize: 21, fontWeight: 700, letterSpacing: "0.12em", color: "#022350" }}>ZURIVA</span>
