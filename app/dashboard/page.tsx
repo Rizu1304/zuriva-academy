@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { chat } from "@/app/aura/actions";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
@@ -45,16 +46,32 @@ const nav = [
 
 export default function Dashboard() {
   const [chatOpen, setChatOpen] = useState(false);
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([
     { role: "bot", text: "Hallo! Ich bin Aura, deine KI-Assistentin. Wie kann ich dir helfen?" }
   ]);
   const [input, setInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
 
-  const sendMsg = () => {
-    if (!input.trim()) return;
-    setMessages(m => [...m, { role: "user", text: input }]);
+  const sendMsg = async () => {
+    if (!input.trim() || chatLoading) return;
+    const userText = input.trim();
+    setMessages(m => [...m, { role: "user", text: userText }]);
     setInput("");
-    setTimeout(() => setMessages(m => [...m, { role: "bot", text: "Danke für deine Frage! Ich helfe dir gerne weiter." }]), 800);
+    setChatLoading(true);
+
+    try {
+      const apiMessages = [...messages.filter(m => m.role !== "bot" || messages.indexOf(m) > 0 ? true : false), { role: "user" as const, text: userText }]
+        .map(m => ({
+          role: (m.role === "bot" ? "assistant" : "user") as "user" | "assistant",
+          content: m.text,
+        }));
+      const response = await chat({ messages: apiMessages });
+      setMessages(m => [...m, { role: "bot", text: response.content }]);
+    } catch {
+      setMessages(m => [...m, { role: "bot", text: "Entschuldigung, es gab einen Fehler. Bitte versuche es erneut." }]);
+    } finally {
+      setChatLoading(false);
+    }
   };
 
   return (
@@ -295,12 +312,21 @@ export default function Dashboard() {
                 <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#14C4BF" }} /> Online
               </div>
             </div>
+            <a href="/aura" style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 12, textDecoration: "none" }} title="Vollbild-Chat">↗</a>
             <div onClick={() => setChatOpen(false)} style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 14 }}>×</div>
           </div>
           <div style={{ flex: 1, overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column", gap: 10 }}>
             {messages.map((m, i) => (
-              <div key={i} style={{ maxWidth: "85%", fontSize: 13, padding: "12px 16px", borderRadius: 16, background: m.role === "bot" ? "rgba(0,0,0,0.03)" : "linear-gradient(135deg, #022350, #0E3057)", color: m.role === "bot" ? "#1A1A2E" : "white", alignSelf: m.role === "bot" ? "flex-start" : "flex-end", lineHeight: 1.5 }}>{m.text}</div>
+              <div key={i} style={{ maxWidth: "85%", fontSize: 13, padding: "12px 16px", borderRadius: 16, background: m.role === "bot" ? "rgba(0,0,0,0.03)" : "linear-gradient(135deg, #022350, #0E3057)", color: m.role === "bot" ? "#1A1A2E" : "white", alignSelf: m.role === "bot" ? "flex-start" : "flex-end", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{m.text}</div>
             ))}
+            {chatLoading && (
+              <div style={{ maxWidth: "85%", fontSize: 13, padding: "12px 16px", borderRadius: 16, background: "rgba(0,0,0,0.03)", color: "#9A9AAA", alignSelf: "flex-start", lineHeight: 1.5, display: "flex", gap: 2 }}>
+                <span style={{ animation: "dotPulse 1.4s infinite 0s" }}>.</span>
+                <span style={{ animation: "dotPulse 1.4s infinite 0.2s" }}>.</span>
+                <span style={{ animation: "dotPulse 1.4s infinite 0.4s" }}>.</span>
+                <style>{`@keyframes dotPulse { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }`}</style>
+              </div>
+            )}
           </div>
           <div style={{ padding: "12px 16px", flexShrink: 0 }}>
             <div style={{ display: "flex", gap: 8, background: "rgba(0,0,0,0.03)", borderRadius: 14, padding: "4px 4px 4px 16px", alignItems: "center" }}>
