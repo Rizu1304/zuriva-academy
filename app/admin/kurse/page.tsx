@@ -1,6 +1,17 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import {
+  getCourses,
+  getCategories,
+  getCourseById,
+  createCourse,
+  updateCourse,
+  deleteCourse as deleteCourseAction,
+  createCategory as createCategoryAction,
+  addModule as addModuleAction,
+  deleteModule as deleteModuleAction,
+} from "./actions";
 
 type Category = { id: string; name: string; color: string; _count: { courses: number } };
 type Course = {
@@ -11,12 +22,11 @@ type Course = {
   categoryId: string | null;
   duration: number | null;
   credits: number;
-  createdAt: string;
+  createdAt: Date;
   category: Category | null;
   _count: { modules: number; enrollments: number };
 };
-type Module = { id: string; title: string; content: string | null; sortOrder: number; lessons: Lesson[] };
-type Lesson = { id: string; title: string; content: string | null; videoUrl: string | null; sortOrder: number };
+type Module = { id: string; title: string; content: string | null; sortOrder: number; lessons: { id: string; title: string }[] };
 type CourseDetail = Course & { modules: Module[] };
 
 const STATUS_LABELS: Record<string, { label: string; bg: string; color: string }> = {
@@ -33,27 +43,18 @@ export default function KursEditor() {
   const [editCourse, setEditCourse] = useState<CourseDetail | null>(null);
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
-
-  // Form state
   const [form, setForm] = useState({ title: "", description: "", status: "DRAFT", categoryId: "", duration: "", credits: "0" });
   const [saving, setSaving] = useState(false);
-
-  // New category
   const [showNewCat, setShowNewCat] = useState(false);
   const [newCatName, setNewCatName] = useState("");
-
-  // New module
   const [newModuleTitle, setNewModuleTitle] = useState("");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [coursesRes, catsRes] = await Promise.all([
-        fetch("/api/courses"),
-        fetch("/api/categories"),
-      ]);
-      if (coursesRes.ok) setCourses(await coursesRes.json());
-      if (catsRes.ok) setCategories(await catsRes.json());
+      const [c, cats] = await Promise.all([getCourses(), getCategories()]);
+      setCourses(c as Course[]);
+      setCategories(cats as Category[]);
     } catch (e) {
       console.error("Fehler beim Laden:", e);
     }
@@ -68,10 +69,9 @@ export default function KursEditor() {
   };
 
   const openEdit = async (courseId: string) => {
-    const res = await fetch(`/api/courses/${courseId}`);
-    if (res.ok) {
-      const data: CourseDetail = await res.json();
-      setEditCourse(data);
+    const data = await getCourseById(courseId);
+    if (data) {
+      setEditCourse(data as CourseDetail);
       setForm({
         title: data.title,
         description: data.description || "",
@@ -87,60 +87,51 @@ export default function KursEditor() {
   const saveCourse = async () => {
     setSaving(true);
     try {
-      const url = view === "create" ? "/api/courses" : `/api/courses/${editCourse?.id}`;
-      const method = view === "create" ? "POST" : "PUT";
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          categoryId: form.categoryId || null,
-        }),
-      });
-      if (res.ok) {
-        await fetchData();
-        setView("list");
+      const payload = { ...form, categoryId: form.categoryId || null };
+      if (view === "create") {
+        await createCourse(payload);
+      } else if (editCourse) {
+        await updateCourse(editCourse.id, payload);
       }
+      await fetchData();
+      setView("list");
+      setEditCourse(null);
     } catch (e) {
       console.error("Fehler beim Speichern:", e);
     }
     setSaving(false);
   };
 
-  const deleteCourse = async (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Kurs wirklich löschen? Alle Module und Lektionen werden ebenfalls gelöscht.")) return;
-    await fetch(`/api/courses/${id}`, { method: "DELETE" });
+    await deleteCourseAction(id);
     await fetchData();
   };
 
-  const createCategory = async () => {
+  const handleCreateCategory = async () => {
     if (!newCatName.trim()) return;
-    const res = await fetch("/api/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: newCatName.trim() }),
-    });
-    if (res.ok) {
-      const cat = await res.json();
-      setCategories((prev) => [...prev, cat]);
-      setForm((prev) => ({ ...prev, categoryId: cat.id }));
-      setNewCatName("");
-      setShowNewCat(false);
-    }
+    const cat = await createCategoryAction(newCatName.trim());
+    setCategories((prev) => [...prev, { ...cat, _count: { courses: 0 } }]);
+    setForm((prev) => ({ ...prev, categoryId: cat.id }));
+    setNewCatName("");
+    setShowNewCat(false);
   };
 
-  const addModule = async () => {
+  const handleAddModule = async () => {
     if (!newModuleTitle.trim() || !editCourse) return;
-    const res = await fetch(`/api/courses/${editCourse.id}/modules`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: newModuleTitle.trim() }),
-    });
-    if (res.ok) {
-      const mod = await res.json();
-      setEditCourse((prev) => prev ? { ...prev, modules: [...prev.modules, mod] } : null);
-      setNewModuleTitle("");
-    }
+    const mod = await addModuleAction(editCourse.id, newModuleTitle.trim());
+    setEditCourse((prev) =>
+      prev ? { ...prev, modules: [...prev.modules, { ...mod, lessons: mod.lessons || [] }] } : null
+    );
+    setNewModuleTitle("");
+  };
+
+  const handleDeleteModule = async (moduleId: string) => {
+    if (!editCourse) return;
+    await deleteModuleAction(moduleId);
+    setEditCourse((prev) =>
+      prev ? { ...prev, modules: prev.modules.filter((m) => m.id !== moduleId) } : null
+    );
   };
 
   const filtered = courses.filter((c) => {
@@ -184,13 +175,12 @@ export default function KursEditor() {
         </div>
       </aside>
 
-      {/* Main content */}
+      {/* Main */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        {/* Top bar */}
         <div style={{ background: "white", borderBottom: "0.5px solid #dce0e6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 15, fontWeight: 500, color: "#022350" }}>
-              {view === "list" ? "Kurseditor" : view === "create" ? "Neuer Kurs" : `Kurs bearbeiten`}
+              {view === "list" ? "Kurseditor" : view === "create" ? "Neuer Kurs" : "Kurs bearbeiten"}
             </div>
             <div style={{ fontSize: 12, color: "#9A9AAA" }}>
               {view === "list" ? "Kurse erstellen, bearbeiten und verwalten" : view === "create" ? "Neuen Kurs anlegen" : editCourse?.title}
@@ -205,36 +195,19 @@ export default function KursEditor() {
           </div>
         </div>
 
-        {/* Content */}
         <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px" }}>
-
-          {/* LIST VIEW */}
+          {/* LIST */}
           {view === "list" && (
             <>
-              {/* Filter bar */}
               <div style={{ display: "flex", gap: 10, marginBottom: 20, alignItems: "center" }}>
-                <input
-                  placeholder="Kurs suchen…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{ padding: "8px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, width: 260, outline: "none" }}
-                />
+                <input placeholder="Kurs suchen…" value={search} onChange={(e) => setSearch(e.target.value)} style={{ padding: "8px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, width: 260, outline: "none" }} />
                 {["ALL", "DRAFT", "PUBLISHED", "ARCHIVED"].map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setFilter(s)}
-                    style={{
-                      padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 500, border: "0.5px solid #dce0e6", cursor: "pointer",
-                      background: filter === s ? "#022350" : "white",
-                      color: filter === s ? "white" : "#4A4A5A",
-                    }}
-                  >
+                  <button key={s} onClick={() => setFilter(s)} style={{ padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 500, border: "0.5px solid #dce0e6", cursor: "pointer", background: filter === s ? "#022350" : "white", color: filter === s ? "white" : "#4A4A5A" }}>
                     {s === "ALL" ? "Alle" : STATUS_LABELS[s].label}
                   </button>
                 ))}
               </div>
 
-              {/* Stats */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 24 }}>
                 {[
                   { label: "Alle Kurse", value: courses.length, color: "#022350" },
@@ -249,7 +222,6 @@ export default function KursEditor() {
                 ))}
               </div>
 
-              {/* Course table */}
               {loading ? (
                 <div style={{ textAlign: "center", padding: 60, color: "#9A9AAA" }}>Laden…</div>
               ) : filtered.length === 0 ? (
@@ -281,9 +253,7 @@ export default function KursEditor() {
                             <td style={{ padding: "14px 24px" }}>
                               {course.category ? (
                                 <span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 500, background: course.category.color + "18", color: course.category.color }}>{course.category.name}</span>
-                              ) : (
-                                <span style={{ fontSize: 12, color: "#9A9AAA" }}>—</span>
-                              )}
+                              ) : <span style={{ fontSize: 12, color: "#9A9AAA" }}>—</span>}
                             </td>
                             <td style={{ padding: "14px 24px" }}>
                               <span style={{ padding: "3px 10px", borderRadius: 6, fontSize: 11, fontWeight: 500, background: st.bg, color: st.color }}>{st.label}</span>
@@ -294,7 +264,7 @@ export default function KursEditor() {
                             <td style={{ padding: "14px 24px" }}>
                               <div style={{ display: "flex", gap: 6 }}>
                                 <button onClick={() => openEdit(course.id)} style={{ padding: "5px 12px", borderRadius: 7, border: "0.5px solid #dce0e6", background: "white", fontSize: 12, cursor: "pointer", color: "#022350" }}>Bearbeiten</button>
-                                <button onClick={() => deleteCourse(course.id)} style={{ padding: "5px 12px", borderRadius: 7, border: "0.5px solid #dce0e6", background: "white", fontSize: 12, cursor: "pointer", color: "#e74c3c" }}>Löschen</button>
+                                <button onClick={() => handleDelete(course.id)} style={{ padding: "5px 12px", borderRadius: 7, border: "0.5px solid #dce0e6", background: "white", fontSize: 12, cursor: "pointer", color: "#e74c3c" }}>Löschen</button>
                               </div>
                             </td>
                           </tr>
@@ -307,42 +277,26 @@ export default function KursEditor() {
             </>
           )}
 
-          {/* CREATE / EDIT VIEW */}
+          {/* CREATE / EDIT */}
           {(view === "create" || view === "edit") && (
             <div style={{ display: "grid", gridTemplateColumns: view === "edit" ? "1fr 1fr" : "1fr", gap: 24 }}>
-              {/* Course form */}
               <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "28px 28px" }}>
                 <div style={{ fontSize: 16, fontWeight: 600, color: "#022350", marginBottom: 20 }}>Kursdetails</div>
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Kurstitel *</label>
-                  <input
-                    value={form.title}
-                    onChange={(e) => setForm({ ...form, title: e.target.value })}
-                    placeholder="z.B. Grundlagen der Lebensversicherung"
-                    style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }}
-                  />
+                  <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="z.B. Grundlagen der Lebensversicherung" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Beschreibung</label>
-                  <textarea
-                    value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    rows={4}
-                    placeholder="Kurze Beschreibung des Kursinhalts…"
-                    style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", resize: "vertical", boxSizing: "border-box", fontFamily: "inherit" }}
-                  />
+                  <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} placeholder="Kurze Beschreibung des Kursinhalts…" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", resize: "vertical", boxSizing: "border-box", fontFamily: "inherit" }} />
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Status</label>
-                    <select
-                      value={form.status}
-                      onChange={(e) => setForm({ ...form, status: e.target.value })}
-                      style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box" }}
-                    >
+                    <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box" }}>
                       <option value="DRAFT">Entwurf</option>
                       <option value="PUBLISHED">Veröffentlicht</option>
                       <option value="ARCHIVED">Archiviert</option>
@@ -352,28 +306,16 @@ export default function KursEditor() {
                     <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Kategorie</label>
                     {!showNewCat ? (
                       <div style={{ display: "flex", gap: 6 }}>
-                        <select
-                          value={form.categoryId}
-                          onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-                          style={{ flex: 1, padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box" }}
-                        >
+                        <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })} style={{ flex: 1, padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box" }}>
                           <option value="">Keine Kategorie</option>
-                          {categories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                          ))}
+                          {categories.map((cat) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                         </select>
                         <button onClick={() => setShowNewCat(true)} style={{ padding: "0 12px", borderRadius: 9, border: "0.5px solid #dce0e6", background: "white", fontSize: 16, cursor: "pointer", color: "#0FA4A0" }} title="Neue Kategorie">+</button>
                       </div>
                     ) : (
                       <div style={{ display: "flex", gap: 6 }}>
-                        <input
-                          value={newCatName}
-                          onChange={(e) => setNewCatName(e.target.value)}
-                          placeholder="Neue Kategorie…"
-                          onKeyDown={(e) => e.key === "Enter" && createCategory()}
-                          style={{ flex: 1, padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }}
-                        />
-                        <button onClick={createCategory} style={{ padding: "0 12px", borderRadius: 9, border: "none", background: "#0FA4A0", color: "white", fontSize: 12, cursor: "pointer" }}>OK</button>
+                        <input value={newCatName} onChange={(e) => setNewCatName(e.target.value)} placeholder="Neue Kategorie…" onKeyDown={(e) => e.key === "Enter" && handleCreateCategory()} style={{ flex: 1, padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+                        <button onClick={handleCreateCategory} style={{ padding: "0 12px", borderRadius: 9, border: "none", background: "#0FA4A0", color: "white", fontSize: 12, cursor: "pointer" }}>OK</button>
                         <button onClick={() => { setShowNewCat(false); setNewCatName(""); }} style={{ padding: "0 12px", borderRadius: 9, border: "0.5px solid #dce0e6", background: "white", fontSize: 12, cursor: "pointer", color: "#9A9AAA" }}>×</button>
                       </div>
                     )}
@@ -383,48 +325,23 @@ export default function KursEditor() {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Dauer (Minuten)</label>
-                    <input
-                      type="number"
-                      value={form.duration}
-                      onChange={(e) => setForm({ ...form, duration: e.target.value })}
-                      placeholder="z.B. 120"
-                      style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }}
-                    />
+                    <input type="number" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} placeholder="z.B. 120" style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
                   </div>
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 500, color: "#4A4A5A", display: "block", marginBottom: 6 }}>Credits</label>
-                    <input
-                      type="number"
-                      value={form.credits}
-                      onChange={(e) => setForm({ ...form, credits: e.target.value })}
-                      style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }}
-                    />
+                    <input type="number" value={form.credits} onChange={(e) => setForm({ ...form, credits: e.target.value })} style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
                   </div>
                 </div>
 
                 <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-                  <button
-                    onClick={() => { setView("list"); setEditCourse(null); }}
-                    style={{ padding: "10px 20px", borderRadius: 9, border: "0.5px solid #dce0e6", background: "white", fontSize: 13, cursor: "pointer", color: "#4A4A5A" }}
-                  >
-                    Abbrechen
-                  </button>
-                  <button
-                    onClick={saveCourse}
-                    disabled={saving || !form.title.trim()}
-                    style={{
-                      padding: "10px 24px", borderRadius: 9, border: "none", fontSize: 13, fontWeight: 500, cursor: "pointer",
-                      background: !form.title.trim() ? "#dce0e6" : "#022350",
-                      color: !form.title.trim() ? "#9A9AAA" : "white",
-                      opacity: saving ? 0.6 : 1,
-                    }}
-                  >
+                  <button onClick={() => { setView("list"); setEditCourse(null); }} style={{ padding: "10px 20px", borderRadius: 9, border: "0.5px solid #dce0e6", background: "white", fontSize: 13, cursor: "pointer", color: "#4A4A5A" }}>Abbrechen</button>
+                  <button onClick={saveCourse} disabled={saving || !form.title.trim()} style={{ padding: "10px 24px", borderRadius: 9, border: "none", fontSize: 13, fontWeight: 500, cursor: "pointer", background: !form.title.trim() ? "#dce0e6" : "#022350", color: !form.title.trim() ? "#9A9AAA" : "white", opacity: saving ? 0.6 : 1 }}>
                     {saving ? "Speichern…" : view === "create" ? "Kurs erstellen" : "Änderungen speichern"}
                   </button>
                 </div>
               </div>
 
-              {/* Modules panel (only in edit view) */}
+              {/* Modules */}
               {view === "edit" && editCourse && (
                 <div style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", padding: "28px 28px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
@@ -433,9 +350,7 @@ export default function KursEditor() {
                   </div>
 
                   {editCourse.modules.length === 0 ? (
-                    <div style={{ padding: "32px 0", textAlign: "center", color: "#9A9AAA", fontSize: 13 }}>
-                      Noch keine Module vorhanden.
-                    </div>
+                    <div style={{ padding: "32px 0", textAlign: "center", color: "#9A9AAA", fontSize: 13 }}>Noch keine Module vorhanden.</div>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
                       {editCourse.modules.map((mod, idx) => (
@@ -446,32 +361,16 @@ export default function KursEditor() {
                               <div style={{ fontSize: 13.5, fontWeight: 500, color: "#022350" }}>{mod.title}</div>
                               <div style={{ fontSize: 11, color: "#9A9AAA", marginTop: 2 }}>{mod.lessons.length} Lektionen</div>
                             </div>
+                            <button onClick={() => handleDeleteModule(mod.id)} style={{ padding: "4px 10px", borderRadius: 6, border: "0.5px solid #dce0e6", background: "white", fontSize: 11, cursor: "pointer", color: "#e74c3c" }}>×</button>
                           </div>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {/* Add module */}
                   <div style={{ display: "flex", gap: 8 }}>
-                    <input
-                      value={newModuleTitle}
-                      onChange={(e) => setNewModuleTitle(e.target.value)}
-                      placeholder="Neues Modul hinzufügen…"
-                      onKeyDown={(e) => e.key === "Enter" && addModule()}
-                      style={{ flex: 1, padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none" }}
-                    />
-                    <button
-                      onClick={addModule}
-                      disabled={!newModuleTitle.trim()}
-                      style={{
-                        padding: "10px 16px", borderRadius: 9, border: "none", fontSize: 12.5, fontWeight: 500, cursor: "pointer",
-                        background: newModuleTitle.trim() ? "#0FA4A0" : "#dce0e6",
-                        color: newModuleTitle.trim() ? "white" : "#9A9AAA",
-                      }}
-                    >
-                      + Modul
-                    </button>
+                    <input value={newModuleTitle} onChange={(e) => setNewModuleTitle(e.target.value)} placeholder="Neues Modul hinzufügen…" onKeyDown={(e) => e.key === "Enter" && handleAddModule()} style={{ flex: 1, padding: "10px 14px", borderRadius: 9, border: "0.5px solid #dce0e6", fontSize: 13, outline: "none" }} />
+                    <button onClick={handleAddModule} disabled={!newModuleTitle.trim()} style={{ padding: "10px 16px", borderRadius: 9, border: "none", fontSize: 12.5, fontWeight: 500, cursor: "pointer", background: newModuleTitle.trim() ? "#0FA4A0" : "#dce0e6", color: newModuleTitle.trim() ? "white" : "#9A9AAA" }}>+ Modul</button>
                   </div>
                 </div>
               )}
