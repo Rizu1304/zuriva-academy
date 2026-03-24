@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
+import AuraWidget from "@/components/AuraWidget";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -29,7 +30,10 @@ export default function RootLayout({
       lang="de"
       className={`${cormorant.variable} ${dmSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col" style={{ fontFamily: "'DM Sans', sans-serif" }}>{children}</body>
+      <body className="min-h-full flex flex-col" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        {children}
+        <AuraWidget />
+      </body>
     </html>
   );
 }

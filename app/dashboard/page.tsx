@@ -1,6 +1,4 @@
 "use client";
-import { useState } from "react";
-import { chat } from "@/app/aura/actions";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
@@ -42,38 +40,10 @@ const nav = [
   { name: "Prüfungen", href: "/pruefungen" },
   { name: "Zertifikate", href: "/zertifikate" },
   { name: "Forum", href: "/forum" },
+  { name: "Kahoot", href: "/kahoot" },
 ];
 
 export default function Dashboard() {
-  const [chatOpen, setChatOpen] = useState(false);
-  const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([
-    { role: "bot", text: "Hallo! Ich bin Aura, deine KI-Assistentin. Wie kann ich dir helfen?" }
-  ]);
-  const [input, setInput] = useState("");
-  const [chatLoading, setChatLoading] = useState(false);
-
-  const sendMsg = async () => {
-    if (!input.trim() || chatLoading) return;
-    const userText = input.trim();
-    setMessages(m => [...m, { role: "user", text: userText }]);
-    setInput("");
-    setChatLoading(true);
-
-    try {
-      const apiMessages = [...messages.filter(m => m.role !== "bot" || messages.indexOf(m) > 0 ? true : false), { role: "user" as const, text: userText }]
-        .map(m => ({
-          role: (m.role === "bot" ? "assistant" : "user") as "user" | "assistant",
-          content: m.text,
-        }));
-      const response = await chat({ messages: apiMessages });
-      setMessages(m => [...m, { role: "bot", text: response.content }]);
-    } catch {
-      setMessages(m => [...m, { role: "bot", text: "Entschuldigung, es gab einen Fehler. Bitte versuche es erneut." }]);
-    } finally {
-      setChatLoading(false);
-    }
-  };
-
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: b, background: "linear-gradient(135deg, #FAF8F5 0%, #F0ECE6 50%, #FAF8F5 100%)", overflow: "hidden" }}>
 
@@ -301,44 +271,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* AURA CHAT */}
-      {chatOpen && (
-        <div style={{ position: "fixed", top: 12, right: 12, bottom: 12, width: 380, background: "rgba(255,255,255,0.85)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)", borderRadius: 24, boxShadow: "0 8px 60px rgba(2,35,80,0.12)", zIndex: 999999, display: "flex", flexDirection: "column", overflow: "hidden", border: "1px solid rgba(255,255,255,0.6)" }}>
-          <div style={{ background: "linear-gradient(135deg, #022350, #0E3057)", padding: "20px 24px", display: "flex", alignItems: "center", gap: 12, flexShrink: 0, borderRadius: "24px 24px 0 0" }}>
-            <div style={{ width: 38, height: 38, borderRadius: 12, background: "rgba(200,162,77,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: "#C8A24D" }}>✦</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 16, fontWeight: 500, color: "white", fontFamily: h }}>Aura</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", gap: 5 }}>
-                <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#14C4BF" }} /> Online
-              </div>
-            </div>
-            <a href="/aura" style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 12, textDecoration: "none" }} title="Vollbild-Chat">↗</a>
-            <div onClick={() => setChatOpen(false)} style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.5)", cursor: "pointer", fontSize: 14 }}>×</div>
-          </div>
-          <div style={{ flex: 1, overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column", gap: 10 }}>
-            {messages.map((m, i) => (
-              <div key={i} style={{ maxWidth: "85%", fontSize: 13, padding: "12px 16px", borderRadius: 16, background: m.role === "bot" ? "rgba(0,0,0,0.03)" : "linear-gradient(135deg, #022350, #0E3057)", color: m.role === "bot" ? "#1A1A2E" : "white", alignSelf: m.role === "bot" ? "flex-start" : "flex-end", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{m.text}</div>
-            ))}
-            {chatLoading && (
-              <div style={{ maxWidth: "85%", fontSize: 13, padding: "12px 16px", borderRadius: 16, background: "rgba(0,0,0,0.03)", color: "#9A9AAA", alignSelf: "flex-start", lineHeight: 1.5, display: "flex", gap: 2 }}>
-                <span style={{ animation: "dotPulse 1.4s infinite 0s" }}>.</span>
-                <span style={{ animation: "dotPulse 1.4s infinite 0.2s" }}>.</span>
-                <span style={{ animation: "dotPulse 1.4s infinite 0.4s" }}>.</span>
-                <style>{`@keyframes dotPulse { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }`}</style>
-              </div>
-            )}
-          </div>
-          <div style={{ padding: "12px 16px", flexShrink: 0 }}>
-            <div style={{ display: "flex", gap: 8, background: "rgba(0,0,0,0.03)", borderRadius: 14, padding: "4px 4px 4px 16px", alignItems: "center" }}>
-              <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMsg()} placeholder="Frage Aura..." style={{ flex: 1, border: "none", outline: "none", fontSize: 13, fontFamily: b, color: "#1A1A2E", background: "transparent" }} />
-              <button onClick={sendMsg} style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg, #0FA4A0, #14C4BF)", border: "none", cursor: "pointer", color: "white", fontSize: 14, flexShrink: 0 }}>→</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* AURA BUTTON */}
-      <div onClick={() => setChatOpen(!chatOpen)} style={{ position: "fixed", bottom: 28, right: 28, width: 56, height: 56, borderRadius: 18, background: "linear-gradient(135deg, #022350, #0E3057)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, cursor: "pointer", boxShadow: "0 4px 24px rgba(2,35,80,0.25)", zIndex: 99999, color: "#C8A24D", transition: "transform 0.2s ease, box-shadow 0.2s ease" }}>✦</div>
     </div>
   );
 }
