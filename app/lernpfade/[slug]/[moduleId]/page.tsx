@@ -1,5 +1,5 @@
 "use client";
-import { useState, use } from "react";
+import { useState, use, type JSX } from "react";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
