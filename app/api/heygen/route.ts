@@ -1,5 +1,5 @@
 export async function POST(request: Request) {
-  const { text, avatar_id } = await request.json();
+  const { text, avatar_id, voice_id } = await request.json();
 
   if (!text) {
     return Response.json({ error: "Text is required" }, { status: 400 });
@@ -10,11 +10,35 @@ export async function POST(request: Request) {
     return Response.json({ error: "HeyGen API key not configured" }, { status: 500 });
   }
 
-  // Default avatar: professional female presenter
-  const selectedAvatar = avatar_id || "Angela-inblackskirt-20220820";
-
   try {
-    // Step 1: Create video generation task
+    // First, get a valid avatar if none specified
+    let selectedAvatar = avatar_id;
+    if (!selectedAvatar) {
+      const avatarRes = await fetch("https://api.heygen.com/v2/avatars", {
+        headers: { "X-Api-Key": apiKey },
+      });
+      if (avatarRes.ok) {
+        const avatarData = await avatarRes.json();
+        const avatars = avatarData.data?.avatars || [];
+        if (avatars.length > 0) {
+          selectedAvatar = avatars[0].avatar_id;
+        }
+      }
+    }
+
+    if (!selectedAvatar) {
+      return Response.json(
+        { error: "Kein Avatar verfügbar. Bitte wähle einen Avatar aus." },
+        { status: 400 }
+      );
+    }
+
+    // Build voice config - use HeyGen's built-in voice
+    const voiceConfig = voice_id
+      ? { type: "text", input_text: text, voice_id: voice_id, speed: 1.0 }
+      : { type: "text", input_text: text, speed: 1.0 };
+
+    // Create video generation task
     const createRes = await fetch("https://api.heygen.com/v2/video/generate", {
       method: "POST",
       headers: {
@@ -29,12 +53,7 @@ export async function POST(request: Request) {
               avatar_id: selectedAvatar,
               avatar_style: "normal",
             },
-            voice: {
-              type: "text",
-              input_text: text,
-              voice_id: "de_female_1",
-              speed: 1.0,
-            },
+            voice: voiceConfig,
             background: {
               type: "color",
               value: "#022350",
@@ -48,25 +67,38 @@ export async function POST(request: Request) {
       }),
     });
 
-    if (!createRes.ok) {
-      const errorText = await createRes.text();
+    const responseText = await createRes.text();
+    let createData;
+    try {
+      createData = JSON.parse(responseText);
+    } catch {
       return Response.json(
-        { error: "HeyGen create error", details: errorText },
+        { error: "HeyGen Antwort ungültig", details: responseText },
+        { status: 500 }
+      );
+    }
+
+    if (!createRes.ok) {
+      const errorMsg = createData?.error?.message || createData?.message || createData?.error || responseText;
+      return Response.json(
+        { error: `HeyGen Fehler: ${errorMsg}`, details: responseText },
         { status: createRes.status }
       );
     }
 
-    const createData = await createRes.json();
     const videoId = createData.data?.video_id;
 
     if (!videoId) {
-      return Response.json({ error: "No video_id returned" }, { status: 500 });
+      return Response.json(
+        { error: "Kein Video-ID erhalten", details: JSON.stringify(createData) },
+        { status: 500 }
+      );
     }
 
     return Response.json({ video_id: videoId, status: "processing" });
   } catch (err) {
     return Response.json(
-      { error: "HeyGen API error", details: String(err) },
+      { error: "HeyGen Verbindungsfehler", details: String(err) },
       { status: 500 }
     );
   }

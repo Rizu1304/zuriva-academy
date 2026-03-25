@@ -200,7 +200,7 @@ export default function KIStudio() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setVideoError(data.details || data.error);
+        setVideoError(data.error || "Unbekannter Fehler");
         setVideoStatus("error");
         setGenerating(false);
         return;
