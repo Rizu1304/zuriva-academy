@@ -37,10 +37,11 @@ Sprache: ${lang}
 
 Regeln:
 - Nur den gesprochenen Text, keine Szenenanweisungen
-- Natuerliche Sprache, als wuerde ein Mensch sprechen
-- Klare Struktur: Begruessung, Hauptteil, Zusammenfassung
-- Fuer Versicherungsvermittler in der Schweiz relevant machen wenn moeglich
-- Direkte Ansprache ("Sie" oder "du" je nach Stil)`,
+- Natürliche Sprache, als würde ein Mensch sprechen
+- Klare Struktur: Begrüßung, Hauptteil, Zusammenfassung
+- Für Versicherungsvermittler in der Schweiz relevant machen wenn möglich
+- Direkte Ansprache ("Sie" oder "du" je nach Stil)
+- WICHTIG: Verwende immer echte deutsche Umlaute (ä, ö, ü, ß) und NIEMALS Ersatzschreibweisen wie ae, oe, ue, ss`,
         },
       ],
     });
@@ -62,23 +63,23 @@ function generateFallbackScript(topic: string, style: string, duration: string, 
 
   if (isDE) {
     if (isShort) {
-      return `Hallo und willkommen! Heute sprechen wir ueber ${topic}. ${style === "professional" ? "Dieses Thema ist von zentraler Bedeutung fuer Ihre berufliche Praxis." : "Ein spannendes Thema, das ich Ihnen naeher bringen moechte."} Die wichtigsten Punkte sind: Erstens, die Grundlagen verstehen. Zweitens, die praktische Anwendung meistern. Und drittens, immer auf dem neuesten Stand bleiben. Vielen Dank fuers Zuhoeren!`;
+      return `Hallo und willkommen! Heute sprechen wir über ${topic}. ${style === "professional" ? "Dieses Thema ist von zentraler Bedeutung für Ihre berufliche Praxis." : "Ein spannendes Thema, das ich Ihnen näher bringen möchte."} Die wichtigsten Punkte sind: Erstens, die Grundlagen verstehen. Zweitens, die praktische Anwendung meistern. Und drittens, immer auf dem neuesten Stand bleiben. Vielen Dank fürs Zuhören!`;
     }
-    return `Herzlich willkommen! Mein Name ist Aura und heute moechte ich mit Ihnen ueber ein wichtiges Thema sprechen: ${topic}.
+    return `Herzlich willkommen! Mein Name ist Aura und heute möchte ich mit Ihnen über ein wichtiges Thema sprechen: ${topic}.
 
-${style === "professional" ? "In der heutigen Versicherungsbranche ist es entscheidend, dieses Thema gruendlich zu verstehen." : "Ich freue mich, Ihnen dieses Thema auf eine verstaendliche Weise naeher zu bringen."}
+${style === "professional" ? "In der heutigen Versicherungsbranche ist es entscheidend, dieses Thema gründlich zu verstehen." : "Ich freue mich, Ihnen dieses Thema auf eine verständliche Weise näher zu bringen."}
 
-Lassen Sie uns mit den Grundlagen beginnen. ${topic} umfasst verschiedene Aspekte, die fuer Ihre taegliche Arbeit als Versicherungsvermittler relevant sind.
+Lassen Sie uns mit den Grundlagen beginnen. ${topic} umfasst verschiedene Aspekte, die für Ihre tägliche Arbeit als Versicherungsvermittler relevant sind.
 
-Der erste wichtige Punkt ist das Verstaendnis der rechtlichen Rahmenbedingungen. In der Schweiz gelten besondere Vorschriften, die Sie kennen muessen.
+Der erste wichtige Punkt ist das Verständnis der rechtlichen Rahmenbedingungen. In der Schweiz gelten besondere Vorschriften, die Sie kennen müssen.
 
-Der zweite Punkt betrifft die praktische Umsetzung. Wie koennen Sie dieses Wissen im Kundengespraech einsetzen?
+Der zweite Punkt betrifft die praktische Umsetzung. Wie können Sie dieses Wissen im Kundengespräch einsetzen?
 
-Und schliesslich: Bleiben Sie immer auf dem neuesten Stand. Die Branche entwickelt sich staendig weiter, und kontinuierliche Weiterbildung ist der Schluessel zum Erfolg.
+Und schließlich: Bleiben Sie immer auf dem neuesten Stand. Die Branche entwickelt sich ständig weiter, und kontinuierliche Weiterbildung ist der Schlüssel zum Erfolg.
 
 Zusammenfassend: ${topic} ist ein Bereich, der sowohl theoretisches Wissen als auch praktische Erfahrung erfordert. Nutzen Sie die Ressourcen der Zuriva Academy, um sich weiterzubilden.
 
-Vielen Dank fuers Zuhoeren und viel Erfolg bei Ihrer Weiterbildung!`;
+Vielen Dank fürs Zuhören und viel Erfolg bei Ihrer Weiterbildung!`;
   }
 
   return `Welcome! Today we're talking about ${topic}. This is an important topic that will help you in your professional development. Let's dive in and explore the key concepts together. Thank you for watching!`;

@@ -9,6 +9,7 @@ interface Voice {
   labels: Record<string, string>;
   preview_url: string;
   description: string;
+  source?: string;
 }
 
 interface Avatar {
@@ -48,6 +49,8 @@ export default function KIStudio() {
   const [voicesLoading, setVoicesLoading] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState<Voice | null>(null);
   const [playingPreview, setPlayingPreview] = useState<string | null>(null);
+  const [voiceLang, setVoiceLang] = useState<"all" | "de" | "en">("all");
+  const [voiceSearch, setVoiceSearch] = useState("");
   const previewAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Avatar state
@@ -75,10 +78,10 @@ export default function KIStudio() {
   const [ttsPlaying, setTtsPlaying] = useState(false);
   const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Load voices
+  // Load voices (with German library voices)
   useEffect(() => {
     setVoicesLoading(true);
-    fetch("/api/voices")
+    fetch("/api/voices?language=de")
       .then((r) => r.json())
       .then((data) => {
         setVoices(data.voices || []);
@@ -86,6 +89,15 @@ export default function KIStudio() {
       })
       .catch(() => setVoicesLoading(false));
   }, []);
+
+  // Filtered voices
+  const filteredVoices = voices.filter((v) => {
+    const lang = (v.labels?.language || v.labels?.accent || "").toLowerCase();
+    if (voiceLang === "de" && !lang.includes("german") && !lang.includes("deutsch") && !lang.includes("de") && v.source !== "library") return false;
+    if (voiceLang === "en" && !lang.includes("english") && !lang.includes("en")) return false;
+    if (voiceSearch && !v.name.toLowerCase().includes(voiceSearch.toLowerCase())) return false;
+    return true;
+  });
 
   // Load avatars
   useEffect(() => {
@@ -279,8 +291,35 @@ export default function KIStudio() {
       {/* ===== TAB: VOICES ===== */}
       {activeTab === "voices" && (
         <div>
-          <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350", marginBottom: 4 }}>Stimme auswaehlen</div>
-          <div className="z-gold-line" style={{ marginBottom: 20 }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 4 }}>
+            <div>
+              <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350" }}>Stimme auswaehlen</div>
+            </div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <input
+                value={voiceSearch}
+                onChange={(e) => setVoiceSearch(e.target.value)}
+                placeholder="Stimme suchen..."
+                style={{ padding: "7px 14px", borderRadius: 10, border: "1px solid #ECE8E1", background: "#FAF8F5", fontSize: 12.5, outline: "none", fontFamily: "inherit", width: 160 }}
+              />
+              <div style={{ display: "flex", gap: 4 }}>
+                {(["all", "de", "en"] as const).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setVoiceLang(lang)}
+                    className={voiceLang === lang ? "z-btn z-btn-primary" : "z-btn z-btn-ghost"}
+                    style={{ padding: "6px 12px", fontSize: 11.5 }}
+                  >
+                    {lang === "all" ? "Alle" : lang === "de" ? "🇩🇪 Deutsch" : "🇬🇧 English"}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="z-gold-line" style={{ marginBottom: 8 }} />
+          <div style={{ fontSize: 12, color: "#9A9AAA", marginBottom: 20 }}>
+            {filteredVoices.length} Stimmen gefunden · Alle Stimmen koennen Deutsch sprechen (Multilingual v2)
+          </div>
 
           {voicesLoading ? (
             <div className="z-card-static" style={{ padding: 40, textAlign: "center" }}>
@@ -292,9 +331,10 @@ export default function KIStudio() {
             </div>
           ) : (
             <div className="z-grid-3">
-              {voices.map((voice) => {
+              {filteredVoices.map((voice) => {
                 const isSelected = selectedVoice?.voice_id === voice.voice_id;
                 const isPlaying = playingPreview === voice.voice_id;
+                const isGerman = (voice.labels?.language || voice.labels?.accent || "").toLowerCase().match(/german|deutsch|de/) || voice.source === "library";
                 return (
                   <div
                     key={voice.voice_id}
@@ -319,18 +359,31 @@ export default function KIStudio() {
                       </div>
                       <div>
                         <div style={{ fontSize: 14, fontWeight: 600, color: "#022350" }}>{voice.name}</div>
-                        <div style={{ fontSize: 11, color: "#9A9AAA" }}>{voice.category || "Stimme"}</div>
+                        <div style={{ fontSize: 11, color: "#9A9AAA" }}>{voice.source === "library" ? "Voice Library" : voice.category || "Eigene Stimme"}</div>
                       </div>
                     </div>
-                    {voice.labels && (
-                      <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 }}>
-                        {Object.entries(voice.labels).slice(0, 3).map(([key, val]) => (
-                          <span key={key} className="z-badge" style={{ background: "#FAF8F5", color: "#4A4A5A", border: "1px solid #E8E4DE" }}>
-                            {val}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 }}>
+                      {isGerman && (
+                        <span className="z-badge" style={{ background: "rgba(15,164,160,0.06)", color: "#0FA4A0", border: "1px solid rgba(15,164,160,0.15)" }}>
+                          🇩🇪 Deutsch
+                        </span>
+                      )}
+                      {voice.labels?.gender && (
+                        <span className="z-badge" style={{ background: "#FAF8F5", color: "#4A4A5A", border: "1px solid #E8E4DE" }}>
+                          {voice.labels.gender}
+                        </span>
+                      )}
+                      {voice.labels?.use_case && (
+                        <span className="z-badge" style={{ background: "#FAF8F5", color: "#4A4A5A", border: "1px solid #E8E4DE" }}>
+                          {voice.labels.use_case}
+                        </span>
+                      )}
+                      {voice.labels?.accent && !isGerman && (
+                        <span className="z-badge" style={{ background: "#FAF8F5", color: "#4A4A5A", border: "1px solid #E8E4DE" }}>
+                          {voice.labels.accent}
+                        </span>
+                      )}
+                    </div>
                     {voice.preview_url && (
                       <button
                         onClick={(e) => { e.stopPropagation(); playPreview(voice); }}
