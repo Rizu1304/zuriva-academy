@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -110,6 +110,43 @@ export default function CourseDetail() {
   const completedLessons = course.modules.reduce((sum, m) => sum + m.lessons.filter(l => l.completed).length, 0);
   const progressPercent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
+  // TTS voice state
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [ttsLoading, setTtsLoading] = useState(false);
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const stopTts = useCallback(() => {
+    if (ttsAudioRef.current) { ttsAudioRef.current.pause(); ttsAudioRef.current = null; }
+    setIsSpeaking(false);
+  }, []);
+
+  const speakLesson = useCallback(async () => {
+    if (isSpeaking) { stopTts(); return; }
+    if (!activeLesson) return;
+    stopTts();
+    setTtsLoading(true);
+    const text = `${activeLesson.title}. ${course.description}`;
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!res.ok) throw new Error("TTS failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      ttsAudioRef.current = audio;
+      audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+      setIsSpeaking(true);
+      setTtsLoading(false);
+      await audio.play();
+    } catch {
+      setTtsLoading(false);
+      setIsSpeaking(false);
+    }
+  }, [activeLesson, course.description, isSpeaking, stopTts]);
+
   const typeIcon = (type: string) => {
     if (type === "video") return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>;
     if (type === "quiz") return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>;
@@ -174,8 +211,35 @@ export default function CourseDetail() {
                 <span style={{ color: "#C8A24D" }}>{typeIcon(activeLesson.type)}</span>
                 <span style={{ fontSize: 11, fontWeight: 600, color: "#C8A24D", letterSpacing: "0.08em", textTransform: "uppercase" }}>{typeLabel(activeLesson.type)} · {activeLesson.duration}</span>
               </div>
-              <div className="font-heading" style={{ fontSize: 26, fontWeight: 400, color: "#022350", marginBottom: 6 }}>{activeLesson.title}</div>
-              <div style={{ fontSize: 12.5, color: "#9A9AAA", marginBottom: 24 }}>Modul {activeModuleIdx + 1}: {activeModule.title}</div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
+                <div>
+                  <div className="font-heading" style={{ fontSize: 26, fontWeight: 400, color: "#022350", marginBottom: 6 }}>{activeLesson.title}</div>
+                  <div style={{ fontSize: 12.5, color: "#9A9AAA", marginBottom: 24 }}>Modul {activeModuleIdx + 1}: {activeModule.title}</div>
+                </div>
+                <button
+                  onClick={speakLesson}
+                  disabled={ttsLoading}
+                  style={{
+                    padding: "8px 18px",
+                    borderRadius: 10,
+                    border: "1px solid",
+                    borderColor: isSpeaking ? "#C0392B" : "#ECE8E1",
+                    background: isSpeaking ? "rgba(192,57,43,0.06)" : "#FAF8F5",
+                    color: isSpeaking ? "#C0392B" : ttsLoading ? "#9A9AAA" : "#022350",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: ttsLoading ? "wait" : "pointer",
+                    fontFamily: "inherit",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                  }}
+                >
+                  {ttsLoading ? "⏳ Laden..." : isSpeaking ? "■ Stoppen" : "▶ Vorlesen"}
+                </button>
+              </div>
 
               {/* Content placeholder */}
               {activeLesson.type === "video" && (

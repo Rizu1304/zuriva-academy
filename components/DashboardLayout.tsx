@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -47,6 +47,41 @@ export default function DashboardLayout({ children, title, subtitle, actions }: 
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isAuraSpeaking, setIsAuraSpeaking] = useState(false);
+  const [isAuraLoading, setIsAuraLoading] = useState(false);
+  const auraAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const stopAuraAudio = useCallback(() => {
+    if (auraAudioRef.current) {
+      auraAudioRef.current.pause();
+      auraAudioRef.current = null;
+    }
+    setIsAuraSpeaking(false);
+  }, []);
+
+  const speakAura = useCallback(async (text: string) => {
+    stopAuraAudio();
+    setIsAuraLoading(true);
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!res.ok) throw new Error("TTS failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      auraAudioRef.current = audio;
+      audio.onended = () => { setIsAuraSpeaking(false); URL.revokeObjectURL(url); };
+      setIsAuraSpeaking(true);
+      setIsAuraLoading(false);
+      await audio.play();
+    } catch {
+      setIsAuraLoading(false);
+      setIsAuraSpeaking(false);
+    }
+  }, [stopAuraAudio]);
 
   const sendMsg = async () => {
     if (!input.trim() || loading) return;
@@ -187,7 +222,18 @@ export default function DashboardLayout({ children, title, subtitle, actions }: 
           </div>
           <div className="z-scroll" style={{ flex: 1, overflowY: "auto", padding: "20px", display: "flex", flexDirection: "column", gap: 12 }}>
             {messages.map((m, i) => (
-              <div key={i} style={{ maxWidth: "85%", fontSize: 13.5, padding: "12px 16px", borderRadius: 14, lineHeight: 1.65, background: m.role === "bot" ? "#FAF8F5" : "#022350", color: m.role === "bot" ? "#1A1A2E" : "white", alignSelf: m.role === "bot" ? "flex-start" : "flex-end", border: m.role === "bot" ? "1px solid #ECE8E1" : "none", whiteSpace: "pre-wrap" }}>{m.text}</div>
+              <div key={i} style={{ maxWidth: "85%", alignSelf: m.role === "bot" ? "flex-start" : "flex-end" }}>
+                <div style={{ fontSize: 13.5, padding: "12px 16px", borderRadius: 14, lineHeight: 1.65, background: m.role === "bot" ? "#FAF8F5" : "#022350", color: m.role === "bot" ? "#1A1A2E" : "white", border: m.role === "bot" ? "1px solid #ECE8E1" : "none", whiteSpace: "pre-wrap" }}>{m.text}</div>
+                {m.role === "bot" && (
+                  <button
+                    onClick={() => speakAura(m.text)}
+                    disabled={isAuraLoading}
+                    style={{ marginTop: 4, background: "none", border: "none", cursor: isAuraLoading ? "wait" : "pointer", fontSize: 11, color: isAuraSpeaking ? "#C0392B" : "#C8A24D", fontWeight: 600, padding: "2px 6px", fontFamily: "inherit", letterSpacing: "0.02em" }}
+                  >
+                    {isAuraLoading ? "Laden..." : isAuraSpeaking ? "■ Stoppen" : "▶ Vorlesen"}
+                  </button>
+                )}
+              </div>
             ))}
             {loading && (
               <div style={{ maxWidth: "85%", fontSize: 13.5, padding: "12px 16px", borderRadius: 14, background: "#FAF8F5", border: "1px solid #ECE8E1", alignSelf: "flex-start", color: "#9A9AAA" }}>Aura denkt nach...</div>
