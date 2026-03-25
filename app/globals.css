@@ -255,7 +255,7 @@
   background: #B8B2A8;
 }
 
-/* Sidebar nav items */
+/* Sidebar nav items - light version */
 .z-nav {
   display: flex;
   align-items: center;
@@ -290,6 +290,44 @@
   width: 3px;
   border-radius: 0 2px 2px 0;
   background: #C8A24D;
+}
+
+/* Sidebar nav items - dark navy version */
+.z-nav-dark {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  margin-bottom: 2px;
+}
+
+.z-nav-dark:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.z-nav-dark-active {
+  background: rgba(200, 162, 77, 0.08);
+  color: white;
+  font-weight: 600;
+}
+
+.z-nav-dark-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, #C8A24D, #E0B95F);
 }
 
 /* Gold accent line */
