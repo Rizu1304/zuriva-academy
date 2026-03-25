@@ -1,5 +1,5 @@
 export async function POST(request: Request) {
-  const { text, avatar_id, voice_id } = await request.json();
+  const { text, avatar_id } = await request.json();
 
   if (!text) {
     return Response.json({ error: "Text is required" }, { status: 400 });
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    // First, get a valid avatar if none specified
+    // Get a valid avatar if none specified
     let selectedAvatar = avatar_id;
     if (!selectedAvatar) {
       const avatarRes = await fetch("https://api.heygen.com/v2/avatars", {
@@ -33,15 +33,33 @@ export async function POST(request: Request) {
       );
     }
 
-    // Build voice config - always include a voice_id (required by HeyGen)
-    // Default to a German female voice if none selected
-    const selectedVoiceId = voice_id || "1bd001e7e50f421d891986aad5c1e5d9";
-    const voiceConfig = {
-      type: "text" as const,
-      input_text: text,
-      voice_id: selectedVoiceId,
-      speed: 1.0,
-    };
+    // Fetch a valid HeyGen voice (German preferred)
+    let heygenVoiceId = "";
+    const voicesRes = await fetch("https://api.heygen.com/v2/voices", {
+      headers: { "X-Api-Key": apiKey },
+    });
+    if (voicesRes.ok) {
+      const voicesData = await voicesRes.json();
+      const voices = voicesData.data?.voices || [];
+      // Try to find a German voice first
+      const germanVoice = voices.find((v: Record<string, unknown>) =>
+        (v.language as string || "").toLowerCase().includes("german") ||
+        (v.language as string || "").toLowerCase().includes("deutsch") ||
+        (v.language as string || "").toLowerCase() === "de"
+      );
+      if (germanVoice) {
+        heygenVoiceId = germanVoice.voice_id as string;
+      } else if (voices.length > 0) {
+        heygenVoiceId = voices[0].voice_id as string;
+      }
+    }
+
+    if (!heygenVoiceId) {
+      return Response.json(
+        { error: "Keine HeyGen-Stimme verfügbar. Bitte prüfe deinen HeyGen Account." },
+        { status: 400 }
+      );
+    }
 
     // Create video generation task
     const createRes = await fetch("https://api.heygen.com/v2/video/generate", {
@@ -58,7 +76,12 @@ export async function POST(request: Request) {
               avatar_id: selectedAvatar,
               avatar_style: "normal",
             },
-            voice: voiceConfig,
+            voice: {
+              type: "text",
+              input_text: text,
+              voice_id: heygenVoiceId,
+              speed: 1.0,
+            },
             background: {
               type: "color",
               value: "#022350",
