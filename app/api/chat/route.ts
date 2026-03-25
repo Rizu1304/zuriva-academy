@@ -1,6 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
-
-const client = new Anthropic();
+export const dynamic = "force-dynamic";
 
 const SYSTEM_PROMPT = `Du bist Aura, die KI-Assistentin der Zuriva Academy — einer Premium-Lernplattform fuer Schweizer Versicherungsvermittler.
 
@@ -26,6 +24,9 @@ Kontext:
 
 export async function POST(request: Request) {
   try {
+    const Anthropic = (await import("@anthropic-ai/sdk")).default;
+    const client = new Anthropic();
+
     const { messages } = await request.json();
 
     const anthropicMessages = messages.map((m: { role: string; text: string }) => ({
