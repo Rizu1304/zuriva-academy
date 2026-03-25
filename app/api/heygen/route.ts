@@ -1,5 +1,5 @@
 export async function POST(request: Request) {
-  const { text, avatar_id } = await request.json();
+  const { text, avatar_id, heygen_voice_id } = await request.json();
 
   if (!text) {
     return Response.json({ error: "Text is required" }, { status: 400 });
@@ -27,27 +27,22 @@ export async function POST(request: Request) {
       return Response.json({ error: "Kein Avatar verfügbar." }, { status: 400 });
     }
 
-    // Get best HeyGen voice (prefer German male)
-    let voiceId = "";
-    const voicesRes = await fetch("https://api.heygen.com/v2/voices", {
-      headers: { "X-Api-Key": heygenKey },
-    });
-    if (voicesRes.ok) {
-      const voicesData = await voicesRes.json();
-      const voices = voicesData.data?.voices || [];
-
-      const germanMale = voices.find((v: Record<string, unknown>) => {
-        const lang = ((v.language as string) || "").toLowerCase();
-        const gender = ((v.gender as string) || "").toLowerCase();
-        return (lang.includes("german") || lang.includes("de")) && gender.includes("male");
+    // Use selected HeyGen voice, or find best German one
+    let voiceId = heygen_voice_id || "";
+    if (!voiceId) {
+      const voicesRes = await fetch("https://api.heygen.com/v2/voices", {
+        headers: { "X-Api-Key": heygenKey },
       });
-      const germanAny = voices.find((v: Record<string, unknown>) => {
-        const lang = ((v.language as string) || "").toLowerCase();
-        return lang.includes("german") || lang.includes("de");
-      });
-
-      const selected = germanMale || germanAny || voices[0];
-      if (selected) voiceId = selected.voice_id as string;
+      if (voicesRes.ok) {
+        const voicesData = await voicesRes.json();
+        const voices = voicesData.data?.voices || [];
+        const germanVoice = voices.find((v: Record<string, unknown>) => {
+          const lang = ((v.language as string) || "").toLowerCase();
+          return lang.includes("german") || lang.includes("de");
+        });
+        const selected = germanVoice || voices[0];
+        if (selected) voiceId = selected.voice_id as string;
+      }
     }
 
     if (!voiceId) {
