@@ -1,7 +1,37 @@
 "use client";
+import {
+  LayoutDashboard, BookOpen, Map, MessageSquare, Clock, Award, Settings, Gamepad2,
+  Bell, CheckCircle, GraduationCap,
+} from "lucide-react";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
+
+const marine = "#022350";
+const marineMid = "#0E3057";
+const bgColor = "#E4E8F0";
+const glass = {
+  background: "rgba(255,255,255,0.85)",
+  backdropFilter: "blur(18px)",
+  WebkitBackdropFilter: "blur(18px)",
+  borderRadius: 22,
+  border: "1px solid rgba(255,255,255,0.6)",
+  boxShadow: "0 2px 20px rgba(2,35,80,0.06)",
+} as const;
+
+const navItems = [
+  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard", active: false },
+  { icon: BookOpen, label: "Kurse", href: "/courses", active: false },
+  { icon: Map, label: "Lernpfade", href: "/lernpfade", active: false },
+  { icon: MessageSquare, label: "Forum", href: "/forum", active: false },
+  { icon: Clock, label: "Prüfungen", href: "/pruefungen", active: false },
+  { icon: Award, label: "Zertifikate", href: "/zertifikate", active: true },
+];
+
+const adminItems = [
+  { icon: Settings, label: "Admin", href: "/admin", active: false },
+  { icon: Gamepad2, label: "Kahoot", href: "/kahoot", active: false },
+];
 
 const certs = [
   { id: 1, title: "Trainee Grundausbildung", course: "Trainee Grundausbildung", date: "01.03.2026", score: 94, credits: 40, verified: true },
@@ -65,57 +95,56 @@ function downloadCert(cert: typeof certs[0]) {
 
 export default function Zertifikate() {
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: b, background: "linear-gradient(135deg, #FAF8F5 0%, #F0ECE6 50%, #FAF8F5 100%)", overflow: "hidden" }}>
-      {/* Sidebar */}
-      <aside style={{ width: 260, minWidth: 260, background: "rgba(255,255,255,0.55)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)", borderRight: "1px solid rgba(255,255,255,0.5)", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "28px 24px 24px", display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 22, fontWeight: 400, letterSpacing: "0.18em", color: "#022350", fontFamily: h }}>ZURIVA</span>
-          <span style={{ fontSize: 10, fontWeight: 500, color: "#C8A24D", marginLeft: 8 }}>academy</span>
+    <div style={{ display: "flex", height: "100vh", fontFamily: b, background: bgColor, overflow: "hidden" }}>
+
+      {/* ═══ ICON SIDEBAR ═══ */}
+      <aside style={{ width: 64, minWidth: 64, display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 20, paddingBottom: 16, gap: 4 }}>
+        {/* Logo */}
+        <div style={{ width: 42, height: 42, borderRadius: 14, background: marine, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, boxShadow: "0 2px 12px rgba(2,35,80,0.25)" }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: "white", fontFamily: h, letterSpacing: "0.1em" }}>Z</span>
         </div>
-        <div style={{ padding: "0 12px" }}>
-          <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", padding: "16px 12px 8px" }}>LERNEN</div>
-          {[
-            { name: "Dashboard", href: "/dashboard" },
-            { name: "Kurse", href: "/courses" },
-            { name: "Lernpfade", href: "/lernpfade" },
-            { name: "Prüfungen", href: "/pruefungen" },
-            { name: "Zertifikate", href: "/zertifikate", active: true },
-            { name: "Forum", href: "/forum" },
-            { name: "Kahoot", href: "/kahoot" },
-          ].map((item) => (
-            <a key={item.name} href={item.href} style={{ padding: "10px 14px", margin: "2px 0", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "rgba(255,255,255,0.8)" : "transparent", borderRadius: 12, boxShadow: item.active ? "0 1px 8px rgba(2,35,80,0.06)" : "none", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block", transition: "all 0.2s ease" }}>{item.name}</a>
+
+        {/* Nav icons */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
+          {navItems.map((item) => (
+            <a key={item.label} href={item.href} title={item.label} style={{
+              width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center",
+              background: item.active ? "rgba(255,255,255,0.9)" : "transparent",
+              boxShadow: item.active ? "0 2px 10px rgba(2,35,80,0.08)" : "none",
+              textDecoration: "none", color: item.active ? marine : "#8090A0", transition: "all 0.2s",
+            }}><item.icon size={20} strokeWidth={item.active ? 2.2 : 1.8} /></a>
           ))}
-          <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", padding: "16px 12px 8px" }}>ADMIN</div>
-          {[
-            { name: "Übersicht", href: "/admin" },
-            { name: "Kurseditor", href: "/admin/kurse" },
-            { name: "Prüfungseditor", href: "/admin/pruefungen" },
-            { name: "Team", href: "/admin/team" },
-          ].map((item) => (
-            <a key={item.name} href={item.href} style={{ padding: "10px 14px", margin: "2px 0", color: "#4A4A5A", background: "transparent", borderRadius: 12, fontSize: 13, textDecoration: "none", display: "block", transition: "all 0.2s ease" }}>{item.name}</a>
+          <div style={{ height: 1, background: "rgba(2,35,80,0.08)", margin: "8px 8px" }} />
+          {adminItems.map((item) => (
+            <a key={item.label} href={item.href} title={item.label} style={{
+              width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center",
+              background: "transparent", textDecoration: "none", color: "#8090A0",
+            }}><item.icon size={20} strokeWidth={1.8} /></a>
           ))}
         </div>
-        <div style={{ flex: 1 }} />
-        <div style={{ padding: "16px 20px", margin: "0 12px 12px", background: "rgba(255,255,255,0.6)", borderRadius: 14, display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 12, background: "linear-gradient(135deg, #022350, #0E3057)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>LM</div>
-          <div><div style={{ fontSize: 12.5, fontWeight: 500, color: "#022350" }}>Laura Meier</div><div style={{ fontSize: 11, color: "#9A9AAA" }}>Vermittlerin</div></div>
+
+        {/* Notification + Avatar */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "#8090A0", cursor: "pointer" }}><Bell size={20} /></div>
+          <div style={{ width: 40, height: 40, borderRadius: 14, background: `linear-gradient(135deg, ${marine}, ${marineMid})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, color: "white", cursor: "pointer", boxShadow: "0 2px 8px rgba(2,35,80,0.2)" }}>LM</div>
         </div>
       </aside>
 
+      {/* ═══ MAIN CONTENT ═══ */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {/* Topbar */}
         <div style={{ padding: "20px 36px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div>
-            <div style={{ fontSize: 28, fontWeight: 400, color: "#022350", fontFamily: h }}>Meine Zertifikate</div>
-            <div style={{ fontSize: 12, color: "#9A9AAA" }}>{certs.length} Zertifikate erhalten</div>
+            <div style={{ fontSize: 28, fontWeight: 700, color: marine }}>Meine Zertifikate</div>
+            <div style={{ fontSize: 12, color: "#8090A0" }}>{certs.length} Zertifikate erhalten</div>
           </div>
         </div>
 
         <div style={{ flex: 1, overflowY: "auto", padding: "0 36px 36px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, maxWidth: 900 }}>
             {certs.map(cert => (
-              <div key={cert.id} style={{ background: "rgba(255,255,255,0.72)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.6)", boxShadow: "0 2px 24px rgba(2,35,80,0.04)", overflow: "hidden", transition: "all 0.2s ease" }}>
-                <div style={{ background: "linear-gradient(135deg, #022350, #0E3057)", padding: "28px 28px 24px", position: "relative", overflow: "hidden", borderRadius: "20px 20px 0 0" }}>
+              <div key={cert.id} style={{ ...glass, overflow: "hidden", transition: "all 0.2s ease" }}>
+                <div style={{ background: `linear-gradient(135deg, ${marine}, ${marineMid})`, padding: "28px 28px 24px", position: "relative", overflow: "hidden", borderRadius: "22px 22px 0 0" }}>
                   <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "rgba(200,162,77,0.15)" }} />
                   <div style={{ position: "absolute", bottom: -30, left: 20, width: 80, height: 80, borderRadius: "50%", background: "rgba(15,164,160,0.1)" }} />
                   <div style={{ position: "relative" }}>
@@ -128,21 +157,21 @@ export default function Zertifikate() {
                   <div style={{ display: "flex", gap: 20, marginBottom: 16 }}>
                     <div style={{ textAlign: "center" }}>
                       <div style={{ fontSize: 28, fontWeight: 700, color: "#0FA4A0", fontFamily: h }}>{cert.score}%</div>
-                      <div style={{ fontSize: 11, color: "#9A9AAA" }}>Score</div>
+                      <div style={{ fontSize: 11, color: "#8090A0" }}>Score</div>
                     </div>
                     <div style={{ textAlign: "center" }}>
                       <div style={{ fontSize: 28, fontWeight: 700, color: "#C8A24D", fontFamily: h }}>{cert.credits}</div>
-                      <div style={{ fontSize: 11, color: "#9A9AAA" }}>Credits</div>
+                      <div style={{ fontSize: 11, color: "#8090A0" }}>Credits</div>
                     </div>
                     <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
                       {cert.verified && (
                         <div style={{ background: "rgba(15,164,160,0.1)", color: "#0FA4A0", fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, display: "flex", alignItems: "center", gap: 4 }}>
-                          ✓ Verifiziert
+                          <CheckCircle size={12} /> Verifiziert
                         </div>
                       )}
                     </div>
                   </div>
-                  <button onClick={() => downloadCert(cert)} style={{ width: "100%", padding: "10px", background: "linear-gradient(135deg, #022350, #0E3057)", color: "white", border: "none", borderRadius: 12, fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: b, transition: "all 0.2s ease" }}>
+                  <button onClick={() => downloadCert(cert)} style={{ width: "100%", padding: "10px", background: `linear-gradient(135deg, ${marine}, ${marineMid})`, color: "white", border: "none", borderRadius: 12, fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: b, transition: "all 0.2s ease" }}>
                     PDF herunterladen
                   </button>
                 </div>
@@ -151,8 +180,8 @@ export default function Zertifikate() {
           </div>
 
           {certs.length === 0 && (
-            <div style={{ textAlign: "center", padding: "60px 20px", color: "#9A9AAA" }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🎓</div>
+            <div style={{ textAlign: "center", padding: "60px 20px", color: "#8090A0" }}>
+              <div style={{ marginBottom: 16 }}><GraduationCap size={48} color="#8090A0" /></div>
               <div style={{ fontSize: 16, fontWeight: 500, color: "#4A4A5A", marginBottom: 8 }}>Noch keine Zertifikate</div>
               <div style={{ fontSize: 13 }}>Schliesse Kurse ab um Zertifikate zu erhalten</div>
             </div>
