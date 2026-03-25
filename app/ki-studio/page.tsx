@@ -82,7 +82,7 @@ export default function KIStudio() {
   // Load voices (with German library voices)
   useEffect(() => {
     setVoicesLoading(true);
-    fetch("/api/voices?language=de")
+    fetch("/api/voices")
       .then((r) => r.json())
       .then((data) => {
         setVoices(data.voices || []);
@@ -91,11 +91,8 @@ export default function KIStudio() {
       .catch(() => setVoicesLoading(false));
   }, []);
 
-  // Filtered voices
+  // Filtered voices (search only)
   const filteredVoices = voices.filter((v) => {
-    const lang = (v.labels?.language || v.labels?.accent || "").toLowerCase();
-    if (voiceLang === "de" && !lang.includes("german") && !lang.includes("deutsch") && !lang.includes("de") && v.source !== "library") return false;
-    if (voiceLang === "en" && !lang.includes("english") && !lang.includes("en")) return false;
     if (voiceSearch && !v.name.toLowerCase().includes(voiceSearch.toLowerCase())) return false;
     return true;
   });
@@ -197,7 +194,7 @@ export default function KIStudio() {
         body: JSON.stringify({
           text: script,
           avatar_id: selectedAvatar?.avatar_id,
-          elevenlabs_voice_id: selectedVoice?.voice_id,
+          heygen_voice_id: selectedVoice?.voice_id,
         }),
       });
       const data = await res.json();
@@ -295,32 +292,20 @@ export default function KIStudio() {
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 4 }}>
             <div>
-              <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350" }}>Stimme auswaehlen</div>
+              <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350" }}>Stimme auswählen</div>
             </div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <input
                 value={voiceSearch}
                 onChange={(e) => setVoiceSearch(e.target.value)}
                 placeholder="Stimme suchen..."
-                style={{ padding: "7px 14px", borderRadius: 10, border: "1px solid #ECE8E1", background: "#FAF8F5", fontSize: 12.5, outline: "none", fontFamily: "inherit", width: 160 }}
+                style={{ padding: "7px 14px", borderRadius: 10, border: "1px solid #ECE8E1", background: "#FAF8F5", fontSize: 12.5, outline: "none", fontFamily: "inherit", width: 180 }}
               />
-              <div style={{ display: "flex", gap: 4 }}>
-                {(["all", "de", "en"] as const).map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setVoiceLang(lang)}
-                    className={voiceLang === lang ? "z-btn z-btn-primary" : "z-btn z-btn-ghost"}
-                    style={{ padding: "6px 12px", fontSize: 11.5 }}
-                  >
-                    {lang === "all" ? "Alle" : lang === "de" ? "🇩🇪 Deutsch" : "🇬🇧 English"}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
           <div className="z-gold-line" style={{ marginBottom: 8 }} />
           <div style={{ fontSize: 12, color: "#9A9AAA", marginBottom: 20 }}>
-            {filteredVoices.length} Stimmen gefunden · Alle Stimmen koennen Deutsch sprechen (Multilingual v2)
+            {filteredVoices.length} deutsche Stimmen · Diese Stimme wird im Video verwendet
           </div>
 
           {voicesLoading ? (
