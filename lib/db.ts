@@ -1,21 +1,17 @@
-let prismaInstance: ReturnType<typeof createClient> | undefined;
+let prismaInstance: import("@prisma/client").PrismaClient | undefined;
 
 function createClient() {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { PrismaClient } = require("@prisma/client");
-  return new PrismaClient() as import("@prisma/client").PrismaClient;
+  return new PrismaClient({
+    datasourceUrl: process.env.DATABASE_URL,
+  }) as import("@prisma/client").PrismaClient;
 }
 
-export const prisma = (() => {
-  if (typeof globalThis !== "undefined") {
-    const g = globalThis as unknown as { __prisma?: ReturnType<typeof createClient> };
-    if (!g.__prisma) {
-      g.__prisma = createClient();
-    }
-    return g.__prisma;
-  }
-  if (!prismaInstance) {
-    prismaInstance = createClient();
-  }
-  return prismaInstance;
+const g = globalThis as unknown as { __prisma?: import("@prisma/client").PrismaClient };
+
+export const prisma: import("@prisma/client").PrismaClient = g.__prisma ?? (() => {
+  const client = createClient();
+  if (process.env.NODE_ENV !== "production") g.__prisma = client;
+  return client;
 })();
