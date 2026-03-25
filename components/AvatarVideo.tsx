@@ -83,6 +83,13 @@ export default function AvatarVideo({ text, autoGenerate = false }: AvatarVideoP
     }
   }, [autoGenerate, status, generateVideo]);
 
+  const logoOverlay = (
+    <div style={{ position: "absolute", top: 14, left: 16, zIndex: 10, display: "flex", alignItems: "baseline", gap: 5, pointerEvents: "none" }}>
+      <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.1em", color: "white", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>ZURIVA</span>
+      <span style={{ fontSize: 9, fontWeight: 500, color: "#C8A24D", letterSpacing: "0.05em", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>academy</span>
+    </div>
+  );
+
   return (
     <div style={{
       background: "#022350",
@@ -93,6 +100,7 @@ export default function AvatarVideo({ text, autoGenerate = false }: AvatarVideoP
       maxWidth: 640,
       width: "100%",
     }}>
+      {logoOverlay}
       {status === "idle" && (
         <div style={{
           display: "flex",
