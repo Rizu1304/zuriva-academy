@@ -164,7 +164,7 @@ export default function CourseDetail() {
       </div>
 
       {/* MAIN GRID: Content + Sidebar */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 24 }}>
+      <div className="z-grid-main-320">
 
         {/* LEFT: Active Lesson */}
         <div>

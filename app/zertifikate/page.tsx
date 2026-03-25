@@ -151,7 +151,7 @@ export default function Zertifikate() {
       )}
 
       {/* Certificate Cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, maxWidth: 900 }}>
+      <div className="z-grid-2" style={{ gap: 20, maxWidth: 900 }}>
         {certs.map((cert, i) => (
           <div key={cert.id} className={`animate-scale-in stagger-${i + 1}`} style={{ borderRadius: 16, overflow: "hidden", border: "1px solid #E8E4DE", background: "white" }}>
             {/* Header */}

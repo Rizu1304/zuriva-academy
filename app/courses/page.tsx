@@ -42,7 +42,7 @@ export default function Courses() {
       </div>
 
       {/* Course Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+      <div className="z-grid-3">
         {filtered.map((course, i) => {
           const color = catColors[course.category] || "#022350";
           return (

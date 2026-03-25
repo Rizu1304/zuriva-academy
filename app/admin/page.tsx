@@ -25,7 +25,7 @@ export default function Admin() {
         Neuer Kurs
       </button>
     }>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14, marginBottom: 24 }}>
+      <div className="z-grid-4" style={{ marginBottom: 24 }}>
         {stats.map((s, i) => (
           <div key={i} className={`z-card animate-fade-in-up stagger-${i + 1}`} style={{ padding: "22px 24px" }}>
             <div style={{ width: 40, height: 40, borderRadius: 10, background: `${s.color}0D`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
@@ -38,7 +38,7 @@ export default function Admin() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}>
+      <div className="z-grid-2" style={{ gap: 14, marginBottom: 20 }}>
         <a href="/admin/kurse" className="z-card" style={{ padding: "22px 24px", textDecoration: "none", display: "flex", alignItems: "center", gap: 16 }}>
           <div style={{ width: 48, height: 48, borderRadius: 12, background: "rgba(15,164,160,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0FA4A0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>

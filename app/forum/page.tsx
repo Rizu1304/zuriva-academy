@@ -59,7 +59,7 @@ export default function Forum() {
 
   return (
     <DashboardLayout title="Forum" subtitle="Diskutiere mit deinem Team">
-      <div style={{ display: "grid", gridTemplateColumns: "370px 1fr", gap: 18, height: "calc(100vh - 180px)" }}>
+      <div className="z-grid-forum" style={{ height: "calc(100vh - 180px)" }}>
 
         {/* Post List */}
         <div className="z-card-static" style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>

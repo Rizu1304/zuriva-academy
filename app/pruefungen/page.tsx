@@ -32,7 +32,7 @@ export default function Pruefungen() {
     <DashboardLayout title="Pruefungen" subtitle="Deine Pruefungen und Ergebnisse">
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 24 }}>
+      <div className="z-grid-3" style={{ gap: 14, marginBottom: 24 }}>
         <div className="z-card animate-fade-in-up stagger-1" style={{ padding: "22px 24px" }}>
           <div className="font-heading" style={{ fontSize: 36, fontWeight: 400, color: "#C8A24D", lineHeight: 1, marginBottom: 4 }}>{openCount}</div>
           <div style={{ fontSize: 12.5, color: "#9A9AAA" }}>Offene Pruefungen</div>

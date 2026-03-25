@@ -34,7 +34,7 @@ export default function Dashboard() {
     <DashboardLayout title="Guten Morgen, Laura" subtitle="Mittwoch, 25. Maerz 2026 · VBV-Frist in 97 Tagen">
 
       {/* STATS */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
+      <div className="z-grid-4" style={{ marginBottom: 24 }}>
         {stats.map((s, i) => (
           <div key={i} className={`z-card animate-fade-in-up stagger-${i + 1}`} style={{ padding: "26px 26px 24px", position: "relative", overflow: "hidden" }}>
             {/* Gold accent top line */}
@@ -93,7 +93,7 @@ export default function Dashboard() {
       </div>
 
       {/* COURSES + RIGHT SIDEBAR */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
+      <div className="z-grid-main">
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 18 }}>
             <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350" }}>Aktuelle Kurse</div>
@@ -103,7 +103,7 @@ export default function Dashboard() {
             </a>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gap: 14 }}>
+          <div className="z-grid-courses">
             {courses.map((c, i) => (
               <div key={i} className={`animate-scale-in stagger-${i + 1}`} style={{ borderRadius: 16, overflow: "hidden", position: "relative", minHeight: 220, cursor: "pointer", boxShadow: "0 4px 20px rgba(2,35,80,0.08)" }}>
                 <img src={c.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, filter: "brightness(0.35) saturate(0.8)" }} />
@@ -130,7 +130,7 @@ export default function Dashboard() {
           {/* Upcoming Exams */}
           <div style={{ marginTop: 28 }}>
             <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350", marginBottom: 18 }}>Naechste Pruefungen</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div className="z-grid-2" style={{ gap: 14 }}>
               <div className="z-card animate-fade-in-up stagger-6" style={{ padding: "22px 24px", borderLeft: "3px solid #C0392B" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                   <div style={{ fontSize: 14.5, fontWeight: 600, color: "#022350" }}>Sachversicherung Modul 3</div>
