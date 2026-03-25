@@ -33,10 +33,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // Build voice config - use HeyGen's built-in voice
-    const voiceConfig = voice_id
-      ? { type: "text", input_text: text, voice_id: voice_id, speed: 1.0 }
-      : { type: "text", input_text: text, speed: 1.0 };
+    // Build voice config - always include a voice_id (required by HeyGen)
+    // Default to a German female voice if none selected
+    const selectedVoiceId = voice_id || "1bd001e7e50f421d891986aad5c1e5d9";
+    const voiceConfig = {
+      type: "text" as const,
+      input_text: text,
+      voice_id: selectedVoiceId,
+      speed: 1.0,
+    };
 
     // Create video generation task
     const createRes = await fetch("https://api.heygen.com/v2/video/generate", {
