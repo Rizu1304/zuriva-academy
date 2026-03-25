@@ -669,7 +669,7 @@ export default function KIStudio() {
           <div className="z-grid-main">
             <div>
               {/* Video player area */}
-              <div className="z-card-navy" style={{ aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+              <div className="z-card-navy" style={{ aspectRatio: "16/9", maxWidth: 800, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
                 {/* ZURIVA academy logo overlay */}
                 <div style={{ position: "absolute", top: 16, left: 18, zIndex: 10, display: "flex", alignItems: "baseline", gap: 5, pointerEvents: "none" }}>
                   <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: "0.1em", color: "white", textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}>ZURIVA</span>
