@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-cormorant);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -82,21 +82,30 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Premium Design Tokens */
-  --z-navy: #0A0E27;
-  --z-navy-light: #111640;
-  --z-navy-mid: #1A1F4E;
+  /* ===== ZURIVA BRAND TOKENS ===== */
+
+  /* Primary */
+  --z-navy: #022350;
+  --z-white: #FFFFFF;
+  --z-gold: #C8A24D;
+
+  /* Secondary */
+  --z-navy-light: #0E3057;
+  --z-blue: #1B6FC2;
   --z-teal: #0FA4A0;
-  --z-teal-glow: rgba(15, 164, 160, 0.4);
-  --z-gold: #D4A843;
-  --z-gold-light: #F0D78C;
-  --z-surface: rgba(255, 255, 255, 0.03);
-  --z-surface-hover: rgba(255, 255, 255, 0.06);
-  --z-glass: rgba(255, 255, 255, 0.05);
-  --z-glass-border: rgba(255, 255, 255, 0.08);
-  --z-text-primary: #FFFFFF;
-  --z-text-secondary: rgba(255, 255, 255, 0.6);
-  --z-text-muted: rgba(255, 255, 255, 0.35);
+  --z-gold-light: #E0B95F;
+
+  /* Extended */
+  --z-blue-light: #2D8FE5;
+  --z-teal-light: #14C4BF;
+  --z-red: #C0392B;
+  --z-cream: #FAF8F5;
+  --z-warm-gray: #F0ECE6;
+
+  /* Text */
+  --z-text-dark: #1A1A2E;
+  --z-text-mid: #4A4A5A;
+  --z-text-light: #9A9AAA;
 }
 
 .dark {
@@ -145,286 +154,225 @@
   }
 }
 
-/* ========== PREMIUM ANIMATIONS ========== */
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(15, 164, 160, 0.15); }
-  50% { box-shadow: 0 0 40px rgba(15, 164, 160, 0.3); }
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+/* ========== ZURIVA PREMIUM ANIMATIONS ========== */
 
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(20px); }
+  from { opacity: 0; transform: translateX(16px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
-@keyframes progress-fill {
-  from { stroke-dashoffset: var(--progress-offset, 283); }
-  to { stroke-dashoffset: var(--progress-target, 0); }
-}
-
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.92); }
+  from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes border-glow {
-  0%, 100% { border-color: rgba(15, 164, 160, 0.2); }
-  50% { border-color: rgba(15, 164, 160, 0.5); }
+@keyframes progress-grow {
+  from { width: 0; }
 }
 
 /* ========== PREMIUM UTILITY CLASSES ========== */
 
-.premium-bg {
-  background: linear-gradient(135deg, #0A0E27 0%, #111640 40%, #0A0E27 100%);
-  min-height: 100vh;
+/* Heading font - Cormorant Garamond */
+.font-heading {
+  font-family: var(--font-cormorant), 'Cormorant Garamond', 'Georgia', serif;
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 20px;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+/* Body font - DM Sans */
+.font-body {
+  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
 }
 
-.glass-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.12);
-  transform: translateY(-2px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+/* Elegant card */
+.z-card {
+  background: white;
+  border: 1px solid #E8E4DE;
+  border-radius: 16px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card-static {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 20px;
+.z-card:hover {
+  border-color: #D4CFC7;
+  box-shadow: 0 8px 32px rgba(2, 35, 80, 0.06);
+  transform: translateY(-1px);
 }
 
-.glass-sidebar {
-  background: rgba(10, 14, 39, 0.85);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+.z-card-static {
+  background: white;
+  border: 1px solid #E8E4DE;
+  border-radius: 16px;
 }
 
-.premium-gradient-text {
-  background: linear-gradient(135deg, #0FA4A0, #5EEAD4, #0FA4A0);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-.gold-gradient-text {
-  background: linear-gradient(135deg, #D4A843, #F0D78C, #D4A843);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 4s ease-in-out infinite;
-}
-
-.premium-shadow {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
-}
-
-.premium-shadow-teal {
-  box-shadow: 0 8px 32px rgba(15, 164, 160, 0.15), 0 0 0 1px rgba(15, 164, 160, 0.1);
-}
-
-.premium-shadow-gold {
-  box-shadow: 0 8px 32px rgba(212, 168, 67, 0.15), 0 0 0 1px rgba(212, 168, 67, 0.1);
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-}
-
-.animate-slide-in-right {
-  animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.1s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.2s; }
-.stagger-5 { animation-delay: 0.25s; }
-.stagger-6 { animation-delay: 0.3s; }
-.stagger-7 { animation-delay: 0.35s; }
-.stagger-8 { animation-delay: 0.4s; }
-
-/* Premium Mesh Gradient Orbs */
-.mesh-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-  opacity: 0.4;
-}
-
-.mesh-orb-teal {
-  background: radial-gradient(circle, rgba(15, 164, 160, 0.3) 0%, transparent 70%);
-}
-
-.mesh-orb-gold {
-  background: radial-gradient(circle, rgba(212, 168, 67, 0.2) 0%, transparent 70%);
-}
-
-.mesh-orb-purple {
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
-}
-
-/* Premium Scrollbar */
-.premium-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.premium-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.premium-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-}
-
-.premium-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* Nav item hover */
-.nav-item {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-}
-
-.nav-item:hover {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.nav-item-active {
-  background: rgba(15, 164, 160, 0.08) !important;
-}
-
-.nav-item-active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: linear-gradient(180deg, #0FA4A0, #5EEAD4);
-}
-
-/* Premium button */
-.premium-btn {
-  background: linear-gradient(135deg, #0FA4A0, #0d8c89);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 10px 24px;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+/* Navy card (for hero/banner areas) */
+.z-card-navy {
+  background: #022350;
+  border-radius: 16px;
   position: relative;
   overflow: hidden;
 }
 
-.premium-btn::before {
+/* Animations */
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.stagger-1 { animation-delay: 0.04s; }
+.stagger-2 { animation-delay: 0.08s; }
+.stagger-3 { animation-delay: 0.12s; }
+.stagger-4 { animation-delay: 0.16s; }
+.stagger-5 { animation-delay: 0.20s; }
+.stagger-6 { animation-delay: 0.24s; }
+.stagger-7 { animation-delay: 0.28s; }
+.stagger-8 { animation-delay: 0.32s; }
+
+/* Premium scrollbar */
+.z-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.z-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.z-scroll::-webkit-scrollbar-thumb {
+  background: #D4CFC7;
+  border-radius: 3px;
+}
+.z-scroll::-webkit-scrollbar-thumb:hover {
+  background: #B8B2A8;
+}
+
+/* Sidebar nav items */
+.z-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #4A4A5A;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.z-nav:hover {
+  background: #FAF8F5;
+  color: #022350;
+}
+
+.z-nav-active {
+  background: rgba(2, 35, 80, 0.04);
+  color: #022350;
+  font-weight: 600;
+}
+
+.z-nav-active::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.15), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.5s;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: #C8A24D;
 }
 
-.premium-btn:hover::before {
-  transform: translateX(100%);
+/* Gold accent line */
+.z-gold-line {
+  height: 2px;
+  width: 32px;
+  background: linear-gradient(90deg, #C8A24D, #E0B95F);
+  border-radius: 1px;
 }
 
-.premium-btn:hover {
+/* Premium button */
+.z-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s ease;
+  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+}
+
+.z-btn-primary {
+  background: #022350;
+  color: white;
+}
+.z-btn-primary:hover {
+  background: #0E3057;
+  box-shadow: 0 4px 16px rgba(2, 35, 80, 0.18);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(15, 164, 160, 0.3);
 }
 
-/* Progress ring animation */
-.progress-ring-circle {
-  transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
+.z-btn-teal {
+  background: #0FA4A0;
+  color: white;
+}
+.z-btn-teal:hover {
+  background: #0d8c89;
+  box-shadow: 0 4px 16px rgba(15, 164, 160, 0.2);
+  transform: translateY(-1px);
 }
 
-/* Premium tag/badge */
-.premium-badge {
+.z-btn-ghost {
+  background: transparent;
+  border: 1px solid #E8E4DE;
+  color: #4A4A5A;
+}
+.z-btn-ghost:hover {
+  border-color: #D4CFC7;
+  background: #FAF8F5;
+  color: #022350;
+}
+
+/* Premium badge */
+.z-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 3px 10px;
   border-radius: 20px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-/* Grain texture overlay */
-.grain-overlay::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  opacity: 0.015;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
+/* Gold shimmer for headings */
+.z-gold-text {
+  color: #C8A24D;
 }
 
-/* Aura chat premium */
-.aura-glow {
-  box-shadow: 0 0 30px rgba(15, 164, 160, 0.3), 0 0 60px rgba(15, 164, 160, 0.1);
-  animation: pulse-glow 3s ease-in-out infinite;
+/* Progress bar */
+.z-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: #F0ECE6;
+  overflow: hidden;
+}
+.z-progress-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
