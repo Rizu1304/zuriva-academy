@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard", active: true },
@@ -42,11 +42,51 @@ export default function Dashboard() {
   ]);
   const [input, setInput] = useState("");
 
+  const [isAuraSpeaking, setIsAuraSpeaking] = useState(false);
+  const [isAuraLoading, setIsAuraLoading] = useState(false);
+  const auraAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const stopAuraAudio = useCallback(() => {
+    if (auraAudioRef.current) {
+      auraAudioRef.current.pause();
+      auraAudioRef.current = null;
+    }
+    setIsAuraSpeaking(false);
+  }, []);
+
+  const speakAura = useCallback(async (text: string) => {
+    stopAuraAudio();
+    setIsAuraLoading(true);
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!res.ok) throw new Error("TTS failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      auraAudioRef.current = audio;
+      audio.onended = () => { setIsAuraSpeaking(false); URL.revokeObjectURL(url); };
+      setIsAuraSpeaking(true);
+      setIsAuraLoading(false);
+      await audio.play();
+    } catch {
+      setIsAuraLoading(false);
+      setIsAuraSpeaking(false);
+    }
+  }, [stopAuraAudio]);
+
   const sendMsg = () => {
     if (!input.trim()) return;
-    setMessages(m => [...m, { role: "user", text: input }]);
+    const userText = input;
+    setMessages(m => [...m, { role: "user", text: userText }]);
     setInput("");
-    setTimeout(() => setMessages(m => [...m, { role: "bot", text: "Danke fuer deine Frage! Ich helfe dir gerne weiter." }]), 800);
+    setTimeout(() => {
+      const botReply = "Danke fuer deine Frage! Ich helfe dir gerne weiter. Klicke auf das Lautsprecher-Symbol, um meine Antwort zu hoeren.";
+      setMessages(m => [...m, { role: "bot", text: botReply }]);
+    }, 800);
   };
 
   return (
@@ -195,7 +235,18 @@ export default function Dashboard() {
           </div>
           <div style={{ flex: 1, overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column", gap: 10 }}>
             {messages.map((m, i) => (
-              <div key={i} style={{ maxWidth: "85%", fontSize: 13.5, padding: "10px 13px", borderRadius: 12, background: m.role === "bot" ? "#f0f2f5" : "#022350", color: m.role === "bot" ? "#1A1A2E" : "white", alignSelf: m.role === "bot" ? "flex-start" : "flex-end" }}>{m.text}</div>
+              <div key={i} style={{ maxWidth: "85%", alignSelf: m.role === "bot" ? "flex-start" : "flex-end" }}>
+                <div style={{ fontSize: 13.5, padding: "10px 13px", borderRadius: 12, background: m.role === "bot" ? "#f0f2f5" : "#022350", color: m.role === "bot" ? "#1A1A2E" : "white" }}>{m.text}</div>
+                {m.role === "bot" && (
+                  <button
+                    onClick={() => speakAura(m.text)}
+                    disabled={isAuraLoading}
+                    style={{ marginTop: 4, background: "none", border: "none", cursor: isAuraLoading ? "wait" : "pointer", fontSize: 11, color: isAuraSpeaking ? "#e74c3c" : "#0FA4A0", fontWeight: 500, padding: "2px 6px", fontFamily: "inherit" }}
+                  >
+                    {isAuraLoading ? "⏳ Laden..." : isAuraSpeaking ? "🔊 Spricht..." : "🔊 Vorlesen"}
+                  </button>
+                )}
+              </div>
             ))}
           </div>
           <div style={{ borderTop: "0.5px solid #dce0e6", padding: "12px 16px", display: "flex", gap: 8, flexShrink: 0 }}>
