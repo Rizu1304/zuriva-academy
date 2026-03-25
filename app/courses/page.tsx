@@ -68,7 +68,7 @@ export default function Courses() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
             {filtered.map(course => (
-              <div key={course.id} style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", overflow: "hidden", cursor: "pointer" }}>
+              <a key={course.id} href={`/courses/${course.id}/player`} style={{ background: "white", borderRadius: 14, border: "0.5px solid #dce0e6", overflow: "hidden", cursor: "pointer", textDecoration: "none", color: "inherit", display: "block" }}>
                 <div style={{ height: 4, background: course.color }} />
                 <div style={{ height: 140, overflow: "hidden", position: "relative" }}>
                   <img src={course.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.85)" }} />
@@ -86,10 +86,10 @@ export default function Courses() {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontSize: 11, color: "#9A9AAA" }}>{course.progress > 0 ? course.progress + "% abgeschlossen" : "Noch nicht gestartet"}</span>
-                    <button style={{ padding: "5px 12px", background: course.progress > 0 ? "#0FA4A0" : "#022350", color: "white", border: "none", borderRadius: 7, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "sans-serif" }}>{course.progress > 0 ? "Weiter" : "Starten"}</button>
+                    <span style={{ padding: "5px 12px", background: course.progress > 0 ? "#0FA4A0" : "#022350", color: "white", border: "none", borderRadius: 7, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "sans-serif", display: "inline-block" }}>{course.progress > 0 ? "Weiter" : "Starten"}</span>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
