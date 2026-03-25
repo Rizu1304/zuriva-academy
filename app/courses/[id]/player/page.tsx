@@ -3,6 +3,7 @@ import { useState } from "react";
 import { use } from "react";
 import LessonSlides from "../../../../components/LessonSlides";
 import type { Slide } from "../../../../components/LessonSlides";
+import AvatarVideo from "../../../../components/AvatarVideo";
 
 interface CourseData {
   title: string;
@@ -223,6 +224,7 @@ export default function CoursePlayer({ params }: { params: Promise<{ id: string 
   const course = courseData[id];
   const [activeModule, setActiveModule] = useState(0);
   const [completedModules, setCompletedModules] = useState<number[]>([]);
+  const [viewMode, setViewMode] = useState<"slides" | "avatar">("slides");
 
   const title = course?.title || "Kurs";
   const color = course?.color || "#022350";
@@ -314,21 +316,85 @@ export default function CoursePlayer({ params }: { params: Promise<{ id: string 
         <div style={{ background: "white", borderBottom: "0.5px solid #dce0e6", height: 56, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 500, color: "#022350" }}>{modules[activeModule]?.title}</div>
-            <div style={{ fontSize: 11, color: "#9A9AAA" }}>Echte Stimme powered by ElevenLabs</div>
+            <div style={{ fontSize: 11, color: "#9A9AAA" }}>
+              {viewMode === "slides" ? "Echte Stimme powered by ElevenLabs" : "KI-Avatar powered by HeyGen"}
+            </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80" }} />
-            <span style={{ fontSize: 12, color: "#4A4A5A" }}>Sprachausgabe aktiv</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <button
+              onClick={() => setViewMode("slides")}
+              style={{
+                padding: "6px 14px",
+                borderRadius: 8,
+                border: "0.5px solid",
+                borderColor: viewMode === "slides" ? "#0FA4A0" : "#dce0e6",
+                background: viewMode === "slides" ? "#0FA4A0" : "white",
+                color: viewMode === "slides" ? "white" : "#4A4A5A",
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: "pointer",
+                fontFamily: "inherit",
+              }}
+            >
+              📖 Slides + Stimme
+            </button>
+            <button
+              onClick={() => setViewMode("avatar")}
+              style={{
+                padding: "6px 14px",
+                borderRadius: 8,
+                border: "0.5px solid",
+                borderColor: viewMode === "avatar" ? "#022350" : "#dce0e6",
+                background: viewMode === "avatar" ? "#022350" : "white",
+                color: viewMode === "avatar" ? "white" : "#4A4A5A",
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: "pointer",
+                fontFamily: "inherit",
+              }}
+            >
+              🎬 KI-Avatar Video
+            </button>
           </div>
         </div>
 
-        {/* Slide Content */}
+        {/* Content Area */}
         <div style={{ flex: 1, overflowY: "auto", padding: "32px", display: "flex", alignItems: "flex-start", justifyContent: "center" }}>
-          <LessonSlides
-            slides={modules[activeModule]?.slides || []}
-            courseTitle={title}
-            onComplete={handleModuleComplete}
-          />
+          {viewMode === "slides" ? (
+            <LessonSlides
+              slides={modules[activeModule]?.slides || []}
+              courseTitle={title}
+              onComplete={handleModuleComplete}
+            />
+          ) : (
+            <div style={{ width: "100%", maxWidth: 900, margin: "0 auto" }}>
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: 11, color: "#9A9AAA", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>{title}</div>
+                <div style={{ fontSize: 22, fontWeight: 700, color: "#022350", marginTop: 4 }}>{modules[activeModule]?.title}</div>
+                <div style={{ fontSize: 13, color: "#4A4A5A", marginTop: 6 }}>
+                  Ein KI-Avatar erklaert dir diese Lektion als Video. Klicke auf &quot;Video generieren&quot; um zu starten.
+                </div>
+              </div>
+              <AvatarVideo
+                text={modules[activeModule]?.slides.map(s => s.speakText).join(" ") || ""}
+              />
+              <div style={{
+                marginTop: 16,
+                padding: "14px 18px",
+                background: "white",
+                borderRadius: 12,
+                border: "0.5px solid #dce0e6",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+              }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#C8A24D" }} />
+                <span style={{ fontSize: 12, color: "#4A4A5A" }}>
+                  Tipp: Die Video-Generierung dauert 1-3 Minuten. Waehrenddessen kannst du die Slides-Ansicht nutzen.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
