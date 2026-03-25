@@ -1,18 +1,22 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const exams = [
-  { id: 1, title: "Sachversicherung — Modul 3", course: "Grundlagen Sachversicherung", due: "28.03.2026", status: "pending", score: null, passing: 70, urgent: true },
-  { id: 2, title: "Lebensversicherungen Abschlusspruefung", course: "Lebensversicherungen", due: "15.04.2026", status: "pending", score: null, passing: 75, urgent: false },
-  { id: 3, title: "Trainee Grundausbildung — Abschluss", course: "Trainee Grundausbildung", due: "01.03.2026", status: "passed", score: 94, passing: 70, urgent: false },
-  { id: 4, title: "Beratungskompetenz Quiz", course: "Beratungskompetenz", due: "10.02.2026", status: "passed", score: 88, passing: 70, urgent: false },
-  { id: 5, title: "FIDLEG Grundlagen", course: "FIDLEG und VAG 2026", due: "30.04.2026", status: "locked", score: null, passing: 80, urgent: false },
+  { id: 1, title: "Sachversicherung — Grundbegriffe", course: "Grundlagen Sachversicherung", courseId: 1, quizId: "sach-grundbegriffe", due: "28.03.2026", status: "pending" as const, score: null, passing: 70, urgent: true, questions: 5, duration: "5 min" },
+  { id: 2, title: "Sachversicherung — Produktkenntnisse", course: "Grundlagen Sachversicherung", courseId: 1, quizId: "sach-produkte", due: "02.04.2026", status: "pending" as const, score: null, passing: 70, urgent: false, questions: 5, duration: "8 min" },
+  { id: 3, title: "Lebensversicherung — Grundlagen", course: "Lebensversicherungen", courseId: 2, quizId: "leben-grundlagen", due: "15.04.2026", status: "pending" as const, score: null, passing: 70, urgent: false, questions: 5, duration: "5 min" },
+  { id: 4, title: "Trainee Grundausbildung — Abschluss", course: "Trainee Grundausbildung", courseId: null, quizId: null, due: "01.03.2026", status: "passed" as const, score: 94, passing: 70, urgent: false, questions: 20, duration: "30 min" },
+  { id: 5, title: "Beratungskompetenz Quiz", course: "Beratungskompetenz", courseId: null, quizId: null, due: "10.02.2026", status: "passed" as const, score: 88, passing: 70, urgent: false, questions: 10, duration: "12 min" },
+  { id: 6, title: "FIDLEG Grundlagen", course: "FIDLEG und VAG 2026", courseId: 3, quizId: null, due: "30.04.2026", status: "locked" as const, score: null, passing: 80, urgent: false, questions: 8, duration: "10 min" },
 ];
+
+const tabs = [{ key: "alle", label: "Alle" }, { key: "offen", label: "Offen" }, { key: "bestanden", label: "Bestanden" }, { key: "gesperrt", label: "Gesperrt" }];
 
 export default function Pruefungen() {
   const [activeTab, setActiveTab] = useState("alle");
-
-  const filtered = exams.filter(e => {
+  const filtered = exams.filter((e) => {
     if (activeTab === "alle") return true;
     if (activeTab === "offen") return e.status === "pending";
     if (activeTab === "bestanden") return e.status === "passed";
@@ -20,90 +24,79 @@ export default function Pruefungen() {
     return true;
   });
 
+  const openCount = exams.filter(e => e.status === "pending").length;
+  const passedCount = exams.filter(e => e.status === "passed").length;
+  const avgScore = exams.filter(e => e.score).reduce((s, e) => s + (e.score ?? 0), 0) / (passedCount || 1);
+
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif", background: "#F0F2F5", overflow: "hidden" }}>
-      <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "0.5px solid #dce0e6", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "24px 22px 20px", borderBottom: "0.5px solid #dce0e6", display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 21, fontWeight: 700, letterSpacing: "0.12em", color: "#022350" }}>ZURIVA</span>
-          <span style={{ fontSize: 12, fontWeight: 500, color: "#C8A24D" }}>academy</span>
-        </div>
-        {[
-          { name: "Dashboard", href: "/dashboard" },
-          { name: "Kurse", href: "/courses" },
-          { name: "Lernpfade", href: "/lernpfade" },
-          { name: "Pruefungen", href: "/pruefungen", active: true },
-          { name: "Zertifikate", href: "/zertifikate" },
-          { name: "Forum", href: "#" },
-          { name: "Analytics", href: "#" },
-        ].map((item) => (
-          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#EEF5FF" : "transparent", borderLeft: item.active ? "2.5px solid #0FA4A0" : "2.5px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
-        ))}
-        <div style={{ flex: 1 }} />
-        <div style={{ padding: "14px 22px", borderTop: "0.5px solid #dce0e6", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#0FA4A0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>LM</div>
-          <div><div style={{ fontSize: 12.5, fontWeight: 500, color: "#022350" }}>Laura Meier</div><div style={{ fontSize: 11, color: "#9A9AAA" }}>Vermittlerin</div></div>
-        </div>
-      </aside>
+    <DashboardLayout title="Pruefungen" subtitle="Deine Pruefungen und Ergebnisse">
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ background: "white", borderBottom: "0.5px solid #dce0e6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 500, color: "#022350" }}>Pruefungen</div>
-            <div style={{ fontSize: 12, color: "#9A9AAA" }}>Deine Pruefungen und Ergebnisse</div>
-          </div>
-          <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#0FA4A0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, color: "white" }}>LM</div>
+      {/* Stats */}
+      <div className="z-grid-3" style={{ gap: 14, marginBottom: 24 }}>
+        <div className="z-card animate-fade-in-up stagger-1" style={{ padding: "22px 24px" }}>
+          <div className="font-heading" style={{ fontSize: 36, fontWeight: 400, color: "#C8A24D", lineHeight: 1, marginBottom: 4 }}>{openCount}</div>
+          <div style={{ fontSize: 12.5, color: "#9A9AAA" }}>Offene Pruefungen</div>
         </div>
-
-        <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px" }}>
-          <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
-            {[
-              { key: "alle", label: "Alle" },
-              { key: "offen", label: "Offen" },
-              { key: "bestanden", label: "Bestanden" },
-              { key: "gesperrt", label: "Gesperrt" },
-            ].map(tab => (
-              <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{ padding: "6px 16px", borderRadius: 20, border: "0.5px solid", borderColor: activeTab === tab.key ? "#022350" : "#dce0e6", background: activeTab === tab.key ? "#022350" : "white", color: activeTab === tab.key ? "white" : "#4A4A5A", fontSize: 12.5, fontWeight: activeTab === tab.key ? 600 : 400, cursor: "pointer", fontFamily: "sans-serif" }}>{tab.label}</button>
-            ))}
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {filtered.map(exam => (
-              <div key={exam.id} style={{ background: "white", borderRadius: 14, border: exam.urgent ? "1.5px solid #e74c3c" : "0.5px solid #dce0e6", padding: "20px 24px", opacity: exam.status === "locked" ? 0.6 : 1 }}>
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16 }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-                      <div style={{ fontSize: 15, fontWeight: 600, color: "#022350" }}>{exam.title}</div>
-                      {exam.urgent && <span style={{ background: "rgba(231,76,60,0.1)", color: "#e74c3c", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>Dringend</span>}
-                      {exam.status === "passed" && <span style={{ background: "rgba(15,164,160,0.1)", color: "#0FA4A0", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>Bestanden</span>}
-                      {exam.status === "locked" && <span style={{ background: "#f0f2f5", color: "#9A9AAA", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>Gesperrt</span>}
-                    </div>
-                    <div style={{ fontSize: 12.5, color: "#4A4A5A", marginBottom: 12 }}>Kurs: {exam.course}</div>
-                    <div style={{ display: "flex", gap: 20 }}>
-                      <div style={{ fontSize: 12, color: "#9A9AAA" }}>Frist: <span style={{ color: exam.urgent ? "#e74c3c" : "#4A4A5A", fontWeight: 500 }}>{exam.due}</span></div>
-                      <div style={{ fontSize: 12, color: "#9A9AAA" }}>Bestehensgrenze: <span style={{ color: "#4A4A5A", fontWeight: 500 }}>{exam.passing}%</span></div>
-                      {exam.score && <div style={{ fontSize: 12, color: "#9A9AAA" }}>Ergebnis: <span style={{ color: "#0FA4A0", fontWeight: 600 }}>{exam.score}%</span></div>}
-                    </div>
-                  </div>
-                  <div>
-                    {exam.status === "pending" && (
-                      <button style={{ padding: "9px 20px", background: exam.urgent ? "#e74c3c" : "#022350", color: "white", border: "none", borderRadius: 9, fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "sans-serif", whiteSpace: "nowrap" }}>Pruefung starten</button>
-                    )}
-                    {exam.status === "passed" && (
-                      <div style={{ textAlign: "center" }}>
-                        <div style={{ fontSize: 28, fontWeight: 700, color: "#0FA4A0" }}>{exam.score}%</div>
-                        <div style={{ fontSize: 11, color: "#9A9AAA" }}>Erreicht</div>
-                      </div>
-                    )}
-                    {exam.status === "locked" && (
-                      <div style={{ fontSize: 20 }}>🔒</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="z-card animate-fade-in-up stagger-2" style={{ padding: "22px 24px" }}>
+          <div className="font-heading" style={{ fontSize: 36, fontWeight: 400, color: "#0FA4A0", lineHeight: 1, marginBottom: 4 }}>{passedCount}</div>
+          <div style={{ fontSize: 12.5, color: "#9A9AAA" }}>Bestanden</div>
+        </div>
+        <div className="z-card animate-fade-in-up stagger-3" style={{ padding: "22px 24px" }}>
+          <div className="font-heading" style={{ fontSize: 36, fontWeight: 400, color: "#022350", lineHeight: 1, marginBottom: 4 }}>{Math.round(avgScore)}%</div>
+          <div style={{ fontSize: 12.5, color: "#9A9AAA" }}>Durchschnitt</div>
         </div>
       </div>
-    </div>
+
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+        {tabs.map((tab) => (
+          <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{ padding: "7px 18px", borderRadius: 20, border: "1px solid", borderColor: activeTab === tab.key ? "#022350" : "#E8E4DE", background: activeTab === tab.key ? "#022350" : "white", color: activeTab === tab.key ? "white" : "#4A4A5A", fontSize: 12.5, fontWeight: activeTab === tab.key ? 600 : 400, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s ease" }}>
+            {tab.label}
+            {tab.key === "offen" && openCount > 0 && <span style={{ marginLeft: 6, background: activeTab === tab.key ? "rgba(255,255,255,0.2)" : "rgba(200,162,77,0.1)", color: activeTab === tab.key ? "white" : "#C8A24D", padding: "1px 6px", borderRadius: 10, fontSize: 10, fontWeight: 700 }}>{openCount}</span>}
+          </button>
+        ))}
+      </div>
+
+      {/* Exam List */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {filtered.map((exam, i) => (
+          <div key={exam.id} className={`z-card animate-fade-in-up stagger-${Math.min(i + 1, 8)}`} style={{ padding: "24px 28px", opacity: exam.status === "locked" ? 0.5 : 1, borderLeft: exam.urgent ? "3px solid #C0392B" : exam.status === "passed" ? "3px solid #0FA4A0" : undefined }}>
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20 }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: "#022350" }}>{exam.title}</div>
+                  {exam.urgent && <span className="z-badge" style={{ background: "rgba(192,57,43,0.06)", color: "#C0392B" }}>Dringend</span>}
+                  {exam.status === "passed" && <span className="z-badge" style={{ background: "rgba(15,164,160,0.08)", color: "#0FA4A0" }}>Bestanden</span>}
+                  {exam.status === "locked" && <span className="z-badge" style={{ background: "#F0ECE6", color: "#9A9AAA" }}>Gesperrt</span>}
+                </div>
+                <div style={{ fontSize: 12.5, color: "#9A9AAA", marginBottom: 12 }}>Kurs: {exam.course}</div>
+                <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 12, color: "#4A4A5A" }}>Frist: <span style={{ color: exam.urgent ? "#C0392B" : "#022350", fontWeight: 600 }}>{exam.due}</span></span>
+                  <span style={{ fontSize: 12, color: "#4A4A5A" }}>{exam.questions} Fragen · {exam.duration}</span>
+                  <span style={{ fontSize: 12, color: "#4A4A5A" }}>Bestehensgrenze: <span style={{ fontWeight: 600 }}>{exam.passing}%</span></span>
+                  {exam.score && <span style={{ fontSize: 12, color: "#4A4A5A" }}>Ergebnis: <span style={{ color: "#0FA4A0", fontWeight: 700 }}>{exam.score}%</span></span>}
+                </div>
+              </div>
+              <div style={{ flexShrink: 0 }}>
+                {exam.status === "pending" && exam.quizId && (
+                  <Link href={`/quiz/${exam.quizId}`} className={`z-btn ${exam.urgent ? "z-btn-primary" : "z-btn-teal"}`} style={{ textDecoration: "none" }}>
+                    Pruefung starten
+                  </Link>
+                )}
+                {exam.status === "pending" && !exam.quizId && (
+                  <button className="z-btn z-btn-ghost" style={{ opacity: 0.5 }}>Bald verfuegbar</button>
+                )}
+                {exam.status === "passed" && exam.score && (
+                  <div style={{ textAlign: "center" }}>
+                    <div className="font-heading" style={{ fontSize: 32, fontWeight: 400, color: "#0FA4A0" }}>{exam.score}%</div>
+                    <div style={{ fontSize: 11, color: "#9A9AAA" }}>Erreicht</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </DashboardLayout>
   );
 }
