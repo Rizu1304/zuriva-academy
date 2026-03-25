@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import DashboardLayout from "@/components/DashboardLayout";
 
 const categories = ["Alle", "Nicht-Leben", "Leben", "Gen. Faehigkeiten", "Krankenzusatz", "Compliance"];
@@ -45,7 +46,7 @@ export default function Courses() {
         {filtered.map((course, i) => {
           const color = catColors[course.category] || "#022350";
           return (
-            <div key={course.id} className={`z-card animate-scale-in stagger-${Math.min(i + 1, 8)}`} style={{ overflow: "hidden", cursor: "pointer", padding: 0 }}>
+            <Link href={`/courses/${course.id}`} key={course.id} className={`z-card animate-scale-in stagger-${Math.min(i + 1, 8)}`} style={{ overflow: "hidden", cursor: "pointer", padding: 0, textDecoration: "none", color: "inherit" }}>
               <div style={{ height: 3, background: color }} />
               <div style={{ height: 140, overflow: "hidden", position: "relative" }}>
                 <img src={course.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.85) saturate(0.9)" }} />
@@ -73,10 +74,10 @@ export default function Courses() {
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: 11.5, color: "#9A9AAA" }}>{course.progress > 0 ? course.progress + "% abgeschlossen" : "Noch nicht gestartet"}</span>
-                  <button className={`z-btn ${course.progress > 0 ? "z-btn-teal" : "z-btn-primary"}`} style={{ padding: "6px 14px", fontSize: 12 }}>{course.progress > 0 ? "Weiter" : "Starten"}</button>
+                  <span className={`z-btn ${course.progress > 0 ? "z-btn-teal" : "z-btn-primary"}`} style={{ padding: "6px 14px", fontSize: 12 }}>{course.progress > 0 ? "Weiter" : "Starten"}</span>
                 </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
