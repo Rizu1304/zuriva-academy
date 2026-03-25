@@ -16,13 +16,13 @@ const allCourses: Record<string, Course> = {
       { id: "m1", title: "Einfuehrung in die Sachversicherung", lessons: [
         { id: "l1", title: "Was ist Sachversicherung?", type: "video", duration: "12 min", completed: true },
         { id: "l2", title: "Rechtliche Grundlagen in der Schweiz", type: "text", duration: "8 min", completed: true },
-        { id: "l3", title: "Quiz: Grundbegriffe", type: "quiz", duration: "5 min", completed: true },
+        { id: "l3", title: "Quiz: Grundbegriffe", type: "quiz", duration: "5 min", completed: true, quizId: "sach-grundbegriffe" },
       ]},
       { id: "m2", title: "Produktarten und Deckungen", lessons: [
         { id: "l4", title: "Gebaeudeversicherung", type: "video", duration: "15 min", completed: true },
         { id: "l5", title: "Hausratversicherung", type: "video", duration: "12 min", completed: true },
         { id: "l6", title: "Betriebsunterbrechung", type: "text", duration: "10 min", completed: false },
-        { id: "l7", title: "Quiz: Produktkenntnisse", type: "quiz", duration: "8 min", completed: false },
+        { id: "l7", title: "Quiz: Produktkenntnisse", type: "quiz", duration: "8 min", completed: false, quizId: "sach-produkte" },
       ]},
       { id: "m3", title: "Risikobewertung und Praemien", lessons: [
         { id: "l8", title: "Risikoanalyse im Sachbereich", type: "video", duration: "18 min", completed: false },
@@ -55,7 +55,7 @@ const allCourses: Record<string, Course> = {
       { id: "m1", title: "Grundlagen Lebensversicherung", lessons: [
         { id: "l1", title: "Das 3-Saeulen-System", type: "video", duration: "15 min", completed: true },
         { id: "l2", title: "Arten von Lebensversicherungen", type: "text", duration: "10 min", completed: true },
-        { id: "l3", title: "Quiz: Grundlagen", type: "quiz", duration: "5 min", completed: true },
+        { id: "l3", title: "Quiz: Grundlagen", type: "quiz", duration: "5 min", completed: true, quizId: "leben-grundlagen" },
       ]},
       { id: "m2", title: "Saeule 2 — Berufliche Vorsorge", lessons: [
         { id: "l4", title: "BVG im Ueberblick", type: "video", duration: "18 min", completed: true },
@@ -80,7 +80,7 @@ const defaultCourse: Course = {
   modules: [],
 };
 
-interface Lesson { id: string; title: string; type: "video" | "text" | "quiz"; duration: string; completed: boolean; }
+interface Lesson { id: string; title: string; type: "video" | "text" | "quiz"; duration: string; completed: boolean; quizId?: string; }
 interface Module { id: string; title: string; lessons: Lesson[]; }
 interface Course { id: number; title: string; category: string; duration: string; credits: number; progress: number; instructor: string; instructorRole: string; description: string; img: string; modules: Module[]; }
 
@@ -207,7 +207,11 @@ export default function CourseDetail() {
                   </div>
                   <div className="font-heading" style={{ fontSize: 20, fontWeight: 400, color: "#022350", marginBottom: 6 }}>{activeLesson.title}</div>
                   <div style={{ fontSize: 13, color: "#9A9AAA", marginBottom: 20 }}>{activeLesson.duration} · Bestehensgrenze 70%</div>
-                  <button className="z-btn z-btn-primary" style={{ padding: "10px 28px" }}>Quiz starten</button>
+                  {activeLesson.quizId ? (
+                    <Link href={`/quiz/${activeLesson.quizId}`} className="z-btn z-btn-primary" style={{ textDecoration: "none", padding: "10px 28px" }}>Quiz starten</Link>
+                  ) : (
+                    <button className="z-btn z-btn-primary" style={{ padding: "10px 28px", opacity: 0.5 }}>Noch nicht verfuegbar</button>
+                  )}
                 </div>
               )}
 

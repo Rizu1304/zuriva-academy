@@ -46,14 +46,29 @@ export default function DashboardLayout({ children, title, subtitle, actions }: 
   ]);
   const [input, setInput] = useState("");
 
-  const sendMsg = () => {
-    if (!input.trim()) return;
-    setMessages((m) => [...m, { role: "user", text: input }]);
+  const [loading, setLoading] = useState(false);
+
+  const sendMsg = async () => {
+    if (!input.trim() || loading) return;
+    const userMsg = { role: "user" as const, text: input };
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput("");
-    setTimeout(
-      () => setMessages((m) => [...m, { role: "bot", text: "Danke fuer deine Frage! Ich analysiere das fuer dich und helfe dir gerne weiter." }]),
-      800
-    );
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: updatedMessages }),
+      });
+      const data = await res.json();
+      setMessages((m) => [...m, { role: "bot", text: data.text }]);
+    } catch {
+      setMessages((m) => [...m, { role: "bot", text: "Entschuldigung, es gab ein technisches Problem. Bitte versuche es nochmal." }]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -166,8 +181,13 @@ export default function DashboardLayout({ children, title, subtitle, actions }: 
           </div>
           <div className="z-scroll" style={{ flex: 1, overflowY: "auto", padding: "20px", display: "flex", flexDirection: "column", gap: 12 }}>
             {messages.map((m, i) => (
-              <div key={i} style={{ maxWidth: "85%", fontSize: 13.5, padding: "12px 16px", borderRadius: 14, lineHeight: 1.65, background: m.role === "bot" ? "#FAF8F5" : "#022350", color: m.role === "bot" ? "#1A1A2E" : "white", alignSelf: m.role === "bot" ? "flex-start" : "flex-end", border: m.role === "bot" ? "1px solid #ECE8E1" : "none" }}>{m.text}</div>
+              <div key={i} style={{ maxWidth: "85%", fontSize: 13.5, padding: "12px 16px", borderRadius: 14, lineHeight: 1.65, background: m.role === "bot" ? "#FAF8F5" : "#022350", color: m.role === "bot" ? "#1A1A2E" : "white", alignSelf: m.role === "bot" ? "flex-start" : "flex-end", border: m.role === "bot" ? "1px solid #ECE8E1" : "none", whiteSpace: "pre-wrap" }}>{m.text}</div>
             ))}
+            {loading && (
+              <div style={{ maxWidth: "85%", fontSize: 13.5, padding: "12px 16px", borderRadius: 14, background: "#FAF8F5", border: "1px solid #ECE8E1", alignSelf: "flex-start", color: "#9A9AAA" }}>
+                Aura denkt nach...
+              </div>
+            )}
           </div>
           <div style={{ borderTop: "1px solid #ECE8E1", padding: "14px 18px", display: "flex", gap: 10, flexShrink: 0 }}>
             <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMsg()} placeholder="Frage Aura..." style={{ flex: 1, border: "1px solid #ECE8E1", borderRadius: 12, padding: "10px 16px", outline: "none", fontSize: 13.5, fontFamily: "inherit", background: "#FAF8F5" }} />
