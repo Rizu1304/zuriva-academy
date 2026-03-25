@@ -6,8 +6,247 @@ datasource db {
   provider = "postgresql"
 }
 
+// ===== USERS & AUTH =====
+
 enum Role {
   ADMIN
   INSTRUCTOR
   LEARNER
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  role          Role      @default(LEARNER)
+  avatarInitials String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  enrollments   Enrollment[]
+  lessonProgress LessonProgress[]
+  quizAttempts  QuizAttempt[]
+  certificates  Certificate[]
+  forumPosts    ForumPost[]
+  forumReplies  ForumReply[]
+
+  @@map("users")
+}
+
+// ===== COURSES =====
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  category    String
+  imageUrl    String?
+  duration    String?
+  credits     Int      @default(0)
+  published   Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  modules     Module[]
+  enrollments Enrollment[]
+  pathCourses LearningPathCourse[]
+
+  @@map("courses")
+}
+
+model Module {
+  id        String   @id @default(cuid())
+  courseId   String
+  title     String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+
+  @@map("modules")
+}
+
+model Lesson {
+  id        String     @id @default(cuid())
+  moduleId  String
+  title     String
+  type      LessonType
+  content   String?    @db.Text
+  videoUrl  String?
+  duration  String?
+  sortOrder Int        @default(0)
+  createdAt DateTime   @default(now())
+
+  module    Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  quiz      Quiz?
+  progress  LessonProgress[]
+
+  @@map("lessons")
+}
+
+enum LessonType {
+  VIDEO
+  TEXT
+  QUIZ
+}
+
+// ===== ENROLLMENT & PROGRESS =====
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId   String
+  startedAt DateTime @default(now())
+  completedAt DateTime?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  lessonId    String
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("lesson_progress")
+}
+
+// ===== QUIZZES =====
+
+model Quiz {
+  id            String   @id @default(cuid())
+  lessonId      String   @unique
+  passingScore  Int      @default(70)
+  timeLimit     String?
+  createdAt     DateTime @default(now())
+
+  lesson        Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questions     QuizQuestion[]
+  attempts      QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id          String   @id @default(cuid())
+  quizId      String
+  question    String   @db.Text
+  options     String[] // Array of option strings
+  correctIdx  Int
+  explanation String?  @db.Text
+  sortOrder   Int      @default(0)
+
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_questions")
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  quizId    String
+  score     Int      // percentage 0-100
+  passed    Boolean
+  answers   Int[]    // array of selected option indices
+  startedAt DateTime @default(now())
+  completedAt DateTime?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_attempts")
+}
+
+// ===== LEARNING PATHS =====
+
+model LearningPath {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  color       String?
+  sortOrder   Int      @default(0)
+  prerequisiteId String?
+  createdAt   DateTime @default(now())
+
+  prerequisite LearningPath?  @relation("PathPrerequisite", fields: [prerequisiteId], references: [id])
+  dependents   LearningPath[] @relation("PathPrerequisite")
+  courses      LearningPathCourse[]
+
+  @@map("learning_paths")
+}
+
+model LearningPathCourse {
+  id        String @id @default(cuid())
+  pathId    String
+  courseId   String
+  sortOrder Int    @default(0)
+
+  path      LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  course    Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([pathId, courseId])
+  @@map("learning_path_courses")
+}
+
+// ===== CERTIFICATES =====
+
+model Certificate {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  courseName String?
+  score     Int?
+  credits   Int      @default(0)
+  issuedAt  DateTime @default(now())
+  verified  Boolean  @default(true)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("certificates")
+}
+
+// ===== FORUM =====
+
+model ForumPost {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  content   String   @db.Text
+  category  String
+  solved    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies   ForumReply[]
+
+  @@map("forum_posts")
+}
+
+model ForumReply {
+  id         String   @id @default(cuid())
+  postId     String
+  userId     String
+  content    String   @db.Text
+  isBestAnswer Boolean @default(false)
+  createdAt  DateTime @default(now())
+
+  post       ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("forum_replies")
 }

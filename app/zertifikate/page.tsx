@@ -1,4 +1,6 @@
 "use client";
+import { useCallback, useState } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const certs = [
   { id: 1, title: "Trainee Grundausbildung", course: "Trainee Grundausbildung", date: "01.03.2026", score: 94, credits: 40, verified: true },
@@ -6,88 +8,200 @@ const certs = [
 ];
 
 export default function Zertifikate() {
+  const [preview, setPreview] = useState<typeof certs[0] | null>(null);
+
+  const generatePDF = useCallback(async (cert: typeof certs[0]) => {
+    const { jsPDF } = await import("jspdf");
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+    const w = 297, h = 210;
+
+    doc.setFillColor(2, 35, 80);
+    doc.rect(0, 0, w, h, "F");
+    doc.setDrawColor(200, 162, 77);
+    doc.setLineWidth(1.5);
+    doc.rect(12, 12, w - 24, h - 24);
+    doc.setLineWidth(0.3);
+    doc.rect(16, 16, w - 32, h - 32);
+    doc.setFillColor(200, 162, 77);
+    doc.rect(w / 2 - 20, 30, 40, 1.5, "F");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14);
+    doc.setTextColor(200, 162, 77);
+    doc.text("ZURIVA", w / 2, 42, { align: "center" });
+    doc.setFontSize(8);
+    doc.text("academy", w / 2 + 22, 42, { align: "left" });
+    doc.setFontSize(10);
+    doc.text("Z E R T I F I K A T", w / 2, 58, { align: "center" });
+    doc.setFillColor(200, 162, 77);
+    doc.rect(w / 2 - 30, 63, 60, 0.5, "F");
+    doc.setFontSize(28);
+    doc.setTextColor(255, 255, 255);
+    doc.text(cert.title, w / 2, 82, { align: "center" });
+    doc.setFontSize(10);
+    doc.setTextColor(150, 160, 180);
+    doc.text("verliehen an", w / 2, 96, { align: "center" });
+    doc.setFontSize(22);
+    doc.setTextColor(255, 255, 255);
+    doc.text("Laura Meier", w / 2, 110, { align: "center" });
+    doc.setFillColor(200, 162, 77);
+    doc.rect(w / 2 - 25, 117, 50, 0.5, "F");
+    doc.setFontSize(9);
+    doc.setTextColor(150, 160, 180);
+    doc.text(`Kurs: ${cert.course}`, w / 2, 130, { align: "center" });
+    doc.setFontSize(11);
+    doc.setTextColor(200, 162, 77);
+    doc.text(`Score: ${cert.score}%`, w / 2 - 30, 142, { align: "center" });
+    doc.text(`Credits: ${cert.credits}`, w / 2 + 30, 142, { align: "center" });
+    doc.setFontSize(9);
+    doc.setTextColor(150, 160, 180);
+    doc.text(`Ausgestellt am ${cert.date}`, w / 2, 155, { align: "center" });
+    if (cert.verified) { doc.setFontSize(8); doc.setTextColor(15, 164, 160); doc.text("Verifiziert", w / 2, 163, { align: "center" }); }
+    doc.setFontSize(7);
+    doc.setTextColor(100, 110, 130);
+    doc.text("Zuriva GmbH  ·  Duebendorf, Zuerich  ·  FINMA-registriert  ·  zuriva.ch", w / 2, h - 22, { align: "center" });
+    doc.setFontSize(6);
+    doc.setTextColor(80, 90, 110);
+    doc.text(`Zertifikat-Nr: ZA-${cert.id.toString().padStart(4, "0")}-2026`, w / 2, h - 17, { align: "center" });
+    doc.save(`Zuriva_Zertifikat_${cert.title.replace(/\s+/g, "_")}.pdf`);
+  }, []);
+
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif", background: "#F0F2F5", overflow: "hidden" }}>
-      <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "0.5px solid #dce0e6", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "24px 22px 20px", borderBottom: "0.5px solid #dce0e6", display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 21, fontWeight: 700, letterSpacing: "0.12em", color: "#022350" }}>ZURIVA</span>
-          <span style={{ fontSize: 12, fontWeight: 500, color: "#C8A24D" }}>academy</span>
-        </div>
-        {[
-          { name: "Dashboard", href: "/dashboard" },
-          { name: "Kurse", href: "/courses" },
-          { name: "Lernpfade", href: "/lernpfade" },
-          { name: "Pruefungen", href: "/pruefungen" },
-          { name: "Zertifikate", href: "/zertifikate", active: true },
-          { name: "Forum", href: "/forum" },
-          { name: "Analytics", href: "#" },
-        ].map((item) => (
-          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#EEF5FF" : "transparent", borderLeft: item.active ? "2.5px solid #0FA4A0" : "2.5px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
-        ))}
-        <div style={{ flex: 1 }} />
-        <div style={{ padding: "14px 22px", borderTop: "0.5px solid #dce0e6", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#0FA4A0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>LM</div>
-          <div><div style={{ fontSize: 12.5, fontWeight: 500, color: "#022350" }}>Laura Meier</div><div style={{ fontSize: 11, color: "#9A9AAA" }}>Vermittlerin</div></div>
-        </div>
-      </aside>
+    <DashboardLayout title="Meine Zertifikate" subtitle={`${certs.length} Zertifikate erhalten`}>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ background: "white", borderBottom: "0.5px solid #dce0e6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 500, color: "#022350" }}>Meine Zertifikate</div>
-            <div style={{ fontSize: 12, color: "#9A9AAA" }}>{certs.length} Zertifikate erhalten</div>
-          </div>
-          <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#0FA4A0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 600, color: "white" }}>LM</div>
-        </div>
+      {/* Preview Modal */}
+      {preview && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(2,35,80,0.6)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", zIndex: 99998, display: "flex", alignItems: "center", justifyContent: "center", padding: 32 }} onClick={() => setPreview(null)}>
+          <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 820 }} className="animate-scale-in">
 
-        <div style={{ flex: 1, overflowY: "auto", padding: "32px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, maxWidth: 900 }}>
-            {certs.map(cert => (
-              <div key={cert.id} style={{ background: "white", borderRadius: 16, border: "0.5px solid #dce0e6", overflow: "hidden" }}>
-                <div style={{ background: "#022350", padding: "28px 28px 24px", position: "relative", overflow: "hidden" }}>
-                  <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "rgba(200,162,77,0.15)" }} />
-                  <div style={{ position: "absolute", bottom: -30, left: 20, width: 80, height: 80, borderRadius: "50%", background: "rgba(15,164,160,0.1)" }} />
-                  <div style={{ position: "relative" }}>
-                    <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#C8A24D", marginBottom: 8 }}>Zuriva Academy</div>
-                    <div style={{ fontSize: 22, fontWeight: 600, color: "white", marginBottom: 4, lineHeight: 1.2 }}>{cert.title}</div>
-                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 8 }}>Laura Meier · {cert.date}</div>
+            {/* Certificate Preview */}
+            <div style={{ background: "#022350", borderRadius: 16, overflow: "hidden", position: "relative", aspectRatio: "297/210", padding: "5% 6%", boxShadow: "0 24px 80px rgba(0,0,0,0.4)" }}>
+              {/* Double gold border */}
+              <div style={{ position: "absolute", inset: "4%", border: "2px solid #C8A24D", borderRadius: 4, pointerEvents: "none" }} />
+              <div style={{ position: "absolute", inset: "5.5%", border: "0.5px solid rgba(200,162,77,0.4)", borderRadius: 2, pointerEvents: "none" }} />
+
+              <div style={{ position: "relative", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+                {/* Gold line top */}
+                <div style={{ width: 60, height: 2, background: "linear-gradient(90deg, transparent, #C8A24D, transparent)", marginBottom: 20 }} />
+
+                {/* Logo */}
+                <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 24 }}>
+                  <span className="font-heading" style={{ fontSize: 20, fontWeight: 500, letterSpacing: "0.1em", color: "#C8A24D" }}>ZURIVA</span>
+                  <span style={{ fontSize: 10, color: "#C8A24D", opacity: 0.7 }}>academy</span>
+                </div>
+
+                {/* "ZERTIFIKAT" */}
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.35em", color: "#C8A24D", marginBottom: 8 }}>Z E R T I F I K A T</div>
+
+                {/* Gold line */}
+                <div style={{ width: 80, height: 1, background: "linear-gradient(90deg, transparent, #C8A24D, transparent)", marginBottom: 28 }} />
+
+                {/* Title */}
+                <div className="font-heading" style={{ fontSize: 36, fontWeight: 400, color: "white", lineHeight: 1.2, marginBottom: 20 }}>{preview.title}</div>
+
+                {/* Verliehen an */}
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", marginBottom: 8 }}>verliehen an</div>
+
+                {/* Name */}
+                <div className="font-heading" style={{ fontSize: 28, fontWeight: 400, color: "white", marginBottom: 16 }}>Laura Meier</div>
+
+                {/* Gold line */}
+                <div style={{ width: 60, height: 1, background: "linear-gradient(90deg, transparent, #C8A24D, transparent)", marginBottom: 20 }} />
+
+                {/* Course */}
+                <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.4)", marginBottom: 16 }}>Kurs: {preview.course}</div>
+
+                {/* Score & Credits */}
+                <div style={{ display: "flex", gap: 40, marginBottom: 20 }}>
+                  <div>
+                    <div className="font-heading" style={{ fontSize: 22, fontWeight: 400, color: "#C8A24D" }}>{preview.score}%</div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>Score</div>
+                  </div>
+                  <div>
+                    <div className="font-heading" style={{ fontSize: 22, fontWeight: 400, color: "#C8A24D" }}>{preview.credits}</div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>Credits</div>
                   </div>
                 </div>
-                <div style={{ padding: "20px 28px" }}>
-                  <div style={{ display: "flex", gap: 20, marginBottom: 16 }}>
-                    <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 28, fontWeight: 700, color: "#0FA4A0" }}>{cert.score}%</div>
-                      <div style={{ fontSize: 11, color: "#9A9AAA" }}>Score</div>
-                    </div>
-                    <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 28, fontWeight: 700, color: "#C8A24D" }}>{cert.credits}</div>
-                      <div style={{ fontSize: 11, color: "#9A9AAA" }}>Credits</div>
-                    </div>
-                    <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                      {cert.verified && (
-                        <div style={{ background: "rgba(15,164,160,0.1)", color: "#0FA4A0", fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, display: "flex", alignItems: "center", gap: 4 }}>
-                          ✓ Verifiziert
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <button style={{ width: "100%", padding: "10px", background: "#022350", color: "white", border: "none", borderRadius: 9, fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "sans-serif" }}>
-                    PDF herunterladen
-                  </button>
+
+                {/* Date */}
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Ausgestellt am {preview.date}</div>
+
+                {/* Verified */}
+                {preview.verified && (
+                  <div style={{ fontSize: 10, color: "#0FA4A0", marginTop: 8, fontWeight: 600 }}>Verifiziert</div>
+                )}
+
+                {/* Footer */}
+                <div style={{ position: "absolute", bottom: "6%", left: 0, right: 0, textAlign: "center" }}>
+                  <div style={{ fontSize: 8.5, color: "rgba(255,255,255,0.2)" }}>Zuriva GmbH · Duebendorf, Zuerich · FINMA-registriert · zuriva.ch</div>
+                  <div style={{ fontSize: 7.5, color: "rgba(255,255,255,0.15)", marginTop: 3 }}>Zertifikat-Nr: ZA-{preview.id.toString().padStart(4, "0")}-2026</div>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {certs.length === 0 && (
-            <div style={{ textAlign: "center", padding: "60px 20px", color: "#9A9AAA" }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🎓</div>
-              <div style={{ fontSize: 16, fontWeight: 500, color: "#4A4A5A", marginBottom: 8 }}>Noch keine Zertifikate</div>
-              <div style={{ fontSize: 13 }}>Schliesse Kurse ab um Zertifikate zu erhalten</div>
             </div>
-          )}
+
+            {/* Actions below preview */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 12, marginTop: 20 }}>
+              <button onClick={() => generatePDF(preview)} className="z-btn z-btn-primary" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                PDF herunterladen
+              </button>
+              <button onClick={() => setPreview(null)} className="z-btn z-btn-ghost">Schliessen</button>
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* Certificate Cards */}
+      <div className="z-grid-2" style={{ gap: 20, maxWidth: 900 }}>
+        {certs.map((cert, i) => (
+          <div key={cert.id} className={`animate-scale-in stagger-${i + 1}`} style={{ borderRadius: 16, overflow: "hidden", border: "1px solid #E8E4DE", background: "white" }}>
+            {/* Header */}
+            <div className="z-card-navy" style={{ padding: "30px 28px 26px", borderRadius: 0 }}>
+              <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "rgba(200,162,77,0.1)" }} />
+              <div style={{ position: "absolute", bottom: -30, left: 20, width: 80, height: 80, borderRadius: "50%", background: "rgba(15,164,160,0.06)" }} />
+              <div style={{ position: "relative" }}>
+                <div style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", marginBottom: 10 }}>Zuriva Academy</div>
+                <div className="font-heading" style={{ fontSize: 24, fontWeight: 500, color: "white", lineHeight: 1.2, marginBottom: 4 }}>{cert.title}</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 10 }}>Laura Meier · {cert.date}</div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div style={{ padding: "22px 28px 24px" }}>
+              <div style={{ display: "flex", gap: 24, marginBottom: 18 }}>
+                <div style={{ textAlign: "center" }}>
+                  <div className="font-heading" style={{ fontSize: 30, fontWeight: 500, color: "#0FA4A0" }}>{cert.score}%</div>
+                  <div style={{ fontSize: 11, color: "#9A9AAA" }}>Score</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div className="font-heading" style={{ fontSize: 30, fontWeight: 500, color: "#C8A24D" }}>{cert.credits}</div>
+                  <div style={{ fontSize: 11, color: "#9A9AAA" }}>Credits</div>
+                </div>
+                <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                  {cert.verified && <span className="z-badge" style={{ background: "rgba(15,164,160,0.08)", color: "#0FA4A0", padding: "5px 12px" }}>Verifiziert</span>}
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button onClick={() => setPreview(cert)} className="z-btn z-btn-ghost" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                  Vorschau
+                </button>
+                <button onClick={() => generatePDF(cert)} className="z-btn z-btn-primary" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                  PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
+
+      {certs.length === 0 && (
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "#9A9AAA" }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🎓</div>
+          <div style={{ fontSize: 16, fontWeight: 500, color: "#4A4A5A", marginBottom: 8 }}>Noch keine Zertifikate</div>
+          <div style={{ fontSize: 13 }}>Schliesse Kurse ab um Zertifikate zu erhalten</div>
+        </div>
+      )}
+    </DashboardLayout>
   );
 }
