@@ -1,12 +1,14 @@
 export async function POST(request: Request) {
-  const { text, avatar_id } = await request.json();
+  const { text, avatar_id, elevenlabs_voice_id } = await request.json();
 
   if (!text) {
     return Response.json({ error: "Text is required" }, { status: 400 });
   }
 
-  const apiKey = process.env.HEYGEN_API_KEY;
-  if (!apiKey) {
+  const heygenKey = process.env.HEYGEN_API_KEY;
+  const elevenlabsKey = process.env.ELEVENLABS_API_KEY;
+
+  if (!heygenKey) {
     return Response.json({ error: "HeyGen API key not configured" }, { status: 500 });
   }
 
@@ -15,7 +17,7 @@ export async function POST(request: Request) {
     let selectedAvatar = avatar_id;
     if (!selectedAvatar) {
       const avatarRes = await fetch("https://api.heygen.com/v2/avatars", {
-        headers: { "X-Api-Key": apiKey },
+        headers: { "X-Api-Key": heygenKey },
       });
       if (avatarRes.ok) {
         const avatarData = await avatarRes.json();
@@ -33,39 +35,77 @@ export async function POST(request: Request) {
       );
     }
 
-    // Fetch a valid HeyGen voice (German preferred)
-    let heygenVoiceId = "";
-    const voicesRes = await fetch("https://api.heygen.com/v2/voices", {
-      headers: { "X-Api-Key": apiKey },
-    });
-    if (voicesRes.ok) {
-      const voicesData = await voicesRes.json();
-      const voices = voicesData.data?.voices || [];
-      // Try to find a German voice first
-      const germanVoice = voices.find((v: Record<string, unknown>) =>
-        (v.language as string || "").toLowerCase().includes("german") ||
-        (v.language as string || "").toLowerCase().includes("deutsch") ||
-        (v.language as string || "").toLowerCase() === "de"
-      );
-      if (germanVoice) {
-        heygenVoiceId = germanVoice.voice_id as string;
-      } else if (voices.length > 0) {
-        heygenVoiceId = voices[0].voice_id as string;
-      }
-    }
+    // Strategy: If ElevenLabs voice is selected, generate audio first,
+    // then use audio URL with HeyGen. Otherwise use HeyGen's built-in voice.
+    let voiceConfig: Record<string, unknown>;
 
-    if (!heygenVoiceId) {
-      return Response.json(
-        { error: "Keine HeyGen-Stimme verfügbar. Bitte prüfe deinen HeyGen Account." },
-        { status: 400 }
+    if (elevenlabs_voice_id && elevenlabsKey) {
+      // Step 1: Generate audio with ElevenLabs
+      const ttsRes = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${elevenlabs_voice_id}`,
+        {
+          method: "POST",
+          headers: {
+            "xi-api-key": elevenlabsKey,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text,
+            model_id: "eleven_multilingual_v2",
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.75,
+              style: 0.3,
+              use_speaker_boost: true,
+            },
+          }),
+        }
       );
+
+      if (!ttsRes.ok) {
+        return Response.json(
+          { error: "ElevenLabs Stimme konnte nicht generiert werden. Fehler: " + (await ttsRes.text()) },
+          { status: 500 }
+        );
+      }
+
+      // Step 2: Upload audio to HeyGen
+      const audioBuffer = await ttsRes.arrayBuffer();
+      const formData = new FormData();
+      formData.append("file", new Blob([audioBuffer], { type: "audio/mpeg" }), "voice.mp3");
+
+      const uploadRes = await fetch("https://api.heygen.com/v2/assets/upload", {
+        method: "POST",
+        headers: { "X-Api-Key": heygenKey },
+        body: formData,
+      });
+
+      if (uploadRes.ok) {
+        const uploadData = await uploadRes.json();
+        const audioUrl = uploadData.data?.url || uploadData.data?.asset_url;
+        if (audioUrl) {
+          voiceConfig = {
+            type: "audio",
+            audio_url: audioUrl,
+          };
+        } else {
+          // Fallback: use HeyGen voice
+          voiceConfig = await getHeyGenVoiceConfig(heygenKey, text);
+        }
+      } else {
+        // Fallback: use HeyGen voice
+        voiceConfig = await getHeyGenVoiceConfig(heygenKey, text);
+      }
+    } else {
+      // No ElevenLabs voice selected - use HeyGen's built-in voice
+      voiceConfig = await getHeyGenVoiceConfig(heygenKey, text);
     }
 
     // Create video generation task
     const createRes = await fetch("https://api.heygen.com/v2/video/generate", {
       method: "POST",
       headers: {
-        "X-Api-Key": apiKey,
+        "X-Api-Key": heygenKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -76,12 +116,7 @@ export async function POST(request: Request) {
               avatar_id: selectedAvatar,
               avatar_style: "normal",
             },
-            voice: {
-              type: "text",
-              input_text: text,
-              voice_id: heygenVoiceId,
-              speed: 1.0,
-            },
+            voice: voiceConfig,
             background: {
               type: "color",
               value: "#022350",
@@ -126,10 +161,36 @@ export async function POST(request: Request) {
     return Response.json({ video_id: videoId, status: "processing" });
   } catch (err) {
     return Response.json(
-      { error: "HeyGen Verbindungsfehler", details: String(err) },
+      { error: "Verbindungsfehler: " + String(err) },
       { status: 500 }
     );
   }
+}
+
+// Helper: Get a valid HeyGen voice config
+async function getHeyGenVoiceConfig(apiKey: string, text: string): Promise<Record<string, unknown>> {
+  const voicesRes = await fetch("https://api.heygen.com/v2/voices", {
+    headers: { "X-Api-Key": apiKey },
+  });
+  if (voicesRes.ok) {
+    const voicesData = await voicesRes.json();
+    const voices = voicesData.data?.voices || [];
+    const germanVoice = voices.find((v: Record<string, unknown>) =>
+      (v.language as string || "").toLowerCase().includes("german") ||
+      (v.language as string || "").toLowerCase().includes("deutsch") ||
+      (v.language as string || "").toLowerCase() === "de"
+    );
+    const selectedVoice = germanVoice || voices[0];
+    if (selectedVoice) {
+      return {
+        type: "text",
+        input_text: text,
+        voice_id: selectedVoice.voice_id as string,
+        speed: 1.0,
+      };
+    }
+  }
+  return { type: "text", input_text: text, voice_id: "default", speed: 1.0 };
 }
 
 // GET: Check video status and get URL

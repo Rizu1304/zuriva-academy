@@ -197,6 +197,7 @@ export default function KIStudio() {
         body: JSON.stringify({
           text: script,
           avatar_id: selectedAvatar?.avatar_id,
+          elevenlabs_voice_id: selectedVoice?.voice_id,
         }),
       });
       const data = await res.json();
