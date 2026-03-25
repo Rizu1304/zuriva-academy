@@ -333,13 +333,15 @@ export default function KIStudio() {
             </div>
           ) : (
             <div className="z-grid-3">
-              {filteredVoices.map((voice) => {
-                const isSelected = selectedVoice?.voice_id === voice.voice_id;
+              {filteredVoices.map((voice, idx) => {
+                const voiceKey = `${voice.voice_id}-${voice.name}-${voice.source || ""}`;
+                const selectedKey = selectedVoice ? `${selectedVoice.voice_id}-${selectedVoice.name}-${selectedVoice.source || ""}` : "";
+                const isSelected = voiceKey === selectedKey;
                 const isPlaying = playingPreview === voice.voice_id;
                 const isGerman = (voice.labels?.language || voice.labels?.accent || "").toLowerCase().match(/german|deutsch|de/) || voice.source === "library";
                 return (
                   <div
-                    key={voice.voice_id}
+                    key={`${voice.voice_id}-${idx}`}
                     onClick={() => setSelectedVoice(voice)}
                     className="z-card"
                     style={{
