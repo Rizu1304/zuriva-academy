@@ -33,7 +33,8 @@ const videoDurations = [
 ];
 
 const animationStyles = [
-  { id: "fade", label: "Fade In/Out", icon: "✨", desc: "Sanfter Uebergang" },
+  { id: "none", label: "Keine", icon: "▬", desc: "Ohne Animation" },
+  { id: "fade", label: "Fade In/Out", icon: "✨", desc: "Sanfter Übergang" },
   { id: "slide", label: "Slide", icon: "➡️", desc: "Seitlicher Eingang" },
   { id: "zoom", label: "Zoom", icon: "🔍", desc: "Heranzoomen" },
   { id: "bounce", label: "Bounce", icon: "🏀", desc: "Springender Effekt" },
@@ -62,7 +63,7 @@ export default function KIStudio() {
   const [topic, setTopic] = useState("");
   const [style, setStyle] = useState("professional");
   const [duration, setDuration] = useState("medium");
-  const [animation, setAnimation] = useState("fade");
+  const [animation, setAnimation] = useState("none");
   const [script, setScript] = useState("");
   const [scriptLoading, setScriptLoading] = useState(false);
 
