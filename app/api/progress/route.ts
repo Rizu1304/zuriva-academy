@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/db";
 
 // Mark a lesson as completed
 export async function POST(request: Request) {
+  const { prisma } = await import("@/lib/db");
   const session = await auth();
   if (!session?.user?.id) {
     return Response.json({ error: "Nicht angemeldet" }, { status: 401 });
@@ -24,6 +24,7 @@ export async function POST(request: Request) {
 
 // Get progress for a course
 export async function GET(request: Request) {
+  const { prisma } = await import("@/lib/db");
   const session = await auth();
   if (!session?.user?.id) {
     return Response.json({ error: "Nicht angemeldet" }, { status: 401 });
