@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import DashboardLayout from "@/components/DashboardLayout";
 
 const paths = [
@@ -44,9 +45,9 @@ export default function Lernpfade() {
                     </div>
                     {path.prerequisite && <div style={{ fontSize: 11.5, color: "#9A9AAA", marginTop: 6 }}>Voraussetzung: {path.prerequisite}</div>}
                     {path.status !== "locked" && (
-                      <button className={`z-btn ${path.status === "done" ? "z-btn-ghost" : "z-btn-primary"}`} style={{ marginTop: 14 }}>
+                      <Link href={`/lernpfade/${path.id}`} className={`z-btn ${path.status === "done" ? "z-btn-ghost" : "z-btn-primary"}`} style={{ marginTop: 14, textDecoration: "none" }}>
                         {path.status === "done" ? "Anzeigen" : "Weiterlernen"}
-                      </button>
+                      </Link>
                     )}
                   </div>
                 </div>
