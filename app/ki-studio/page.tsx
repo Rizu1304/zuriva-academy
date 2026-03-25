@@ -668,6 +668,11 @@ export default function KIStudio() {
             <div>
               {/* Video player area */}
               <div className="z-card-navy" style={{ aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+                {/* ZURIVA academy logo overlay */}
+                <div style={{ position: "absolute", top: 16, left: 18, zIndex: 10, display: "flex", alignItems: "baseline", gap: 5, pointerEvents: "none" }}>
+                  <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: "0.1em", color: "white", textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}>ZURIVA</span>
+                  <span style={{ fontSize: 10, fontWeight: 500, color: "#C8A24D", letterSpacing: "0.05em", textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}>academy</span>
+                </div>
                 {videoStatus === "idle" && (
                   <div style={{ textAlign: "center", padding: 32 }}>
                     <div style={{ fontSize: 56, marginBottom: 16 }}>🎬</div>
