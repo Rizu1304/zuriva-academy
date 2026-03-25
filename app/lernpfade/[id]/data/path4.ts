@@ -1,10 +1,20 @@
 export const path4 = {
   id: 4,
   title: "Compliance und Updates",
+  description: "Jaehrliche Pflichtmodule und regulatorische Updates",
+  icon: "⚖️",
+  color: "#e74c3c",
+  credits: 30,
   courses: [
     {
       id: 1,
       title: "FIDLEG Update 2026",
+      description: "Neuerungen im Finanzdienstleistungsgesetz",
+      image: "https://images.unsplash.com/photo-1563986768609-322da13575f2?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "active",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -36,6 +46,12 @@ export const path4 = {
     {
       id: 2,
       title: "Datenschutz Refresher",
+      description: "DSG-Auffrischung und neue Anforderungen",
+      image: "https://images.unsplash.com/photo-1563986768609-322da13575f2?w=1200",
+      duration: "15min",
+      credits: 3,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -56,6 +72,12 @@ export const path4 = {
     {
       id: 3,
       title: "Geldwaescherei-Praevention",
+      description: "GwG-Pflichten und Sorgfaltsmassnahmen",
+      image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -76,6 +98,12 @@ export const path4 = {
     {
       id: 4,
       title: "Marktupdate Versicherung 2026",
+      description: "Aktuelle Trends und Entwicklungen im Schweizer Markt",
+      image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,

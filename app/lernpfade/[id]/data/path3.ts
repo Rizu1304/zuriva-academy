@@ -1,10 +1,20 @@
 export const path3 = {
   id: 3,
   title: "Spezialisierung Nicht-Leben",
+  description: "Vertiefung in Sach- und Haftpflichtversicherungen",
+  icon: "🏢",
+  color: "#6366f1",
+  credits: 80,
   courses: [
     {
       id: 1,
       title: "Technische Versicherungen",
+      description: "Maschinen-, Montage- und Elektronikversicherung",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200",
+      duration: "25min",
+      credits: 4,
+      status: "active",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -36,6 +46,12 @@ export const path3 = {
     {
       id: 2,
       title: "Transportversicherung",
+      description: "Waren- und Guetertransport absichern",
+      image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -56,6 +72,12 @@ export const path3 = {
     {
       id: 3,
       title: "Betriebshaftpflicht Vertiefung",
+      description: "Produkthaftung und erweiterte Haftpflichtkonzepte",
+      image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200",
+      duration: "25min",
+      credits: 4,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -76,6 +98,12 @@ export const path3 = {
     {
       id: 4,
       title: "Gebaeude und Elementar",
+      description: "Immobilienversicherung und Elementarschaeden",
+      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -96,6 +124,12 @@ export const path3 = {
     {
       id: 5,
       title: "Motorfahrzeugversicherung",
+      description: "MFZ-Haftpflicht und Kaskoversicherung",
+      image: "https://images.unsplash.com/photo-1449965408869-ebd13bc7f550?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -116,6 +150,12 @@ export const path3 = {
     {
       id: 6,
       title: "Rechtsschutzversicherung",
+      description: "Rechtsschutzarten und Deckungsumfang",
+      image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -136,6 +176,12 @@ export const path3 = {
     {
       id: 7,
       title: "Underwriting Grundlagen",
+      description: "Risikopruefung und Zeichnungsrichtlinien",
+      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200",
+      duration: "25min",
+      credits: 4,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -156,6 +202,12 @@ export const path3 = {
     {
       id: 8,
       title: "Schadenmanagement",
+      description: "Schadenregulierung und Regressmanagement",
+      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,

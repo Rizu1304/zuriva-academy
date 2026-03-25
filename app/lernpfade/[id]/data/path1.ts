@@ -1,10 +1,20 @@
 export const path1 = {
   id: 1,
   title: "Trainee Grundausbildung",
+  description: "Der perfekte Einstieg fuer neue Mitarbeitende",
+  icon: "🎓",
+  color: "#0FA4A0",
+  credits: 40,
   courses: [
     {
       id: 1,
       title: "Willkommen bei Zuriva",
+      description: "Lerne Zuriva kennen — Mission, Werte und dein Team",
+      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200",
+      duration: "30min",
+      credits: 6,
+      status: "done",
+      modules: 3,
       lessons: [
         {
           id: 1,
@@ -81,6 +91,12 @@ export const path1 = {
     {
       id: 2,
       title: "Systeme und Tools",
+      description: "CRM, Offerten-Tool und interne Plattformen kennenlernen",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200",
+      duration: "15min",
+      credits: 2,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -112,6 +128,12 @@ export const path1 = {
     {
       id: 3,
       title: "Versicherungsbasics",
+      description: "Grundprinzipien der Versicherung verstehen",
+      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200",
+      duration: "20min",
+      credits: 3,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -137,6 +159,12 @@ export const path1 = {
     {
       id: 4,
       title: "Kundenservice Grundlagen",
+      description: "Professionelle Kommunikation mit Kunden",
+      image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1200",
+      duration: "15min",
+      credits: 3,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -157,6 +185,12 @@ export const path1 = {
     {
       id: 5,
       title: "Datenschutz und Compliance Intro",
+      description: "DSG-Grundlagen und Datenschutz im Arbeitsalltag",
+      image: "https://images.unsplash.com/photo-1563986768609-322da13575f2?w=1200",
+      duration: "15min",
+      credits: 3,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,

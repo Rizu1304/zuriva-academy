@@ -1,10 +1,20 @@
 export const path2 = {
   id: 2,
   title: "VBV Grundausbildung",
+  description: "Pflichtausbildung fuer die VBV-Zertifizierung",
+  icon: "📋",
+  color: "#022350",
+  credits: 120,
   courses: [
     {
       id: 1,
       title: "Grundlagen der Sachversicherung",
+      description: "Sachversicherungsarten und versicherbare Risiken",
+      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200",
+      duration: "50min",
+      credits: 6,
+      status: "done",
+      modules: 2,
       lessons: [
         {
           id: 1,
@@ -50,6 +60,12 @@ export const path2 = {
     {
       id: 2,
       title: "Haftpflichtversicherung Basis",
+      description: "Haftungsarten und Versicherungsloesungen",
+      image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200",
+      duration: "45min",
+      credits: 6,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -81,6 +97,12 @@ export const path2 = {
     {
       id: 3,
       title: "Lebensversicherung Grundlagen",
+      description: "Lebensversicherungsprodukte und deren Einsatz",
+      image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200",
+      duration: "40min",
+      credits: 6,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -101,6 +123,12 @@ export const path2 = {
     {
       id: 4,
       title: "Vorsorge 1. und 2. Saeule",
+      description: "Das Schweizer Vorsorgesystem verstehen",
+      image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200",
+      duration: "45min",
+      credits: 6,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -121,6 +149,12 @@ export const path2 = {
     {
       id: 5,
       title: "Krankenversicherung Basics",
+      description: "KVG und VVG im Bereich Krankenversicherung",
+      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200",
+      duration: "35min",
+      credits: 6,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -141,6 +175,12 @@ export const path2 = {
     {
       id: 6,
       title: "Beratungsprozess und Dokumentation",
+      description: "Strukturierte Kundenberatung und Dokumentation",
+      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200",
+      duration: "40min",
+      credits: 6,
+      status: "done",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -161,6 +201,12 @@ export const path2 = {
     {
       id: 7,
       title: "Rechtsgrundlagen VAG/VVG",
+      description: "Versicherungsaufsichts- und Vertragsgesetz",
+      image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200",
+      duration: "1h 10min",
+      credits: 12,
+      status: "active",
+      modules: 2,
       lessons: [
         {
           id: 1,
@@ -217,6 +263,12 @@ export const path2 = {
     {
       id: 8,
       title: "Kundenbedarfsanalyse Vertiefung",
+      description: "Fortgeschrittene Techniken der Bedarfsermittlung",
+      image: "https://images.unsplash.com/photo-1552581234-26160f608093?w=1200",
+      duration: "40min",
+      credits: 6,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -237,6 +289,12 @@ export const path2 = {
     {
       id: 9,
       title: "Compliance und Datenschutz",
+      description: "Regulatorische Pflichten und Datenschutzrecht",
+      image: "https://images.unsplash.com/photo-1563986768609-322da13575f2?w=1200",
+      duration: "35min",
+      credits: 6,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,
@@ -257,6 +315,12 @@ export const path2 = {
     {
       id: 10,
       title: "Abschlusspruefung VBV",
+      description: "Vorbereitung und Simulation der VBV-Pruefung",
+      image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200",
+      duration: "1h",
+      credits: 12,
+      status: "locked",
+      modules: 1,
       lessons: [
         {
           id: 1,

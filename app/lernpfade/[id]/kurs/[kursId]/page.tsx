@@ -55,10 +55,11 @@ export default function KursDetail() {
   }
 
   const lessons = course.lessons || [];
-  const completedLessons = lessons.filter((l: { status: string }) => l.status === "done").length;
   const totalLessons = lessons.length;
-  const progressPercent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
   const courseColor = pathData?.color || "#022350";
+  const courseStatus = (course as { status?: string }).status;
+  const completedLessons = courseStatus === "done" ? totalLessons : 0;
+  const progressPercent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
   return (
     <>
@@ -144,55 +145,49 @@ export default function KursDetail() {
                 <div style={{ fontSize: 15, fontWeight: 600, color: "#022350" }}>Lektionen</div>
               </div>
 
-              {lessons.map((lesson: { id: number; title: string; duration: string; type: string; status: string; description: string }, i: number) => {
-                const typeInfo = typeIcons[lesson.type] || typeIcons.text;
+              {lessons.map((lesson: { id: number; title: string; credits: number; duration: string; slides: unknown[] }, i: number) => {
+                const isFirst = i === 0;
+                const hasQuiz = lesson.slides.some((s: unknown) => !!(s as { quiz?: unknown }).quiz);
+                const typeInfo = hasQuiz ? typeIcons.quiz : typeIcons.text;
                 return (
                   <div
                     key={lesson.id}
-                    className={lesson.status !== "locked" ? "lesson-row" : ""}
-                    onClick={() => {
-                      if (lesson.status !== "locked") {
-                        router.push(`/lernpfade/${pathId}/kurs/${kursId}/lektion/${lesson.id}`);
-                      }
-                    }}
+                    className="lesson-row"
+                    onClick={() => router.push(`/lernpfade/${pathId}/kurs/${kursId}/lektion/${lesson.id}`)}
                     style={{
                       display: "flex", alignItems: "center", gap: 16, padding: "16px 24px",
                       borderBottom: i < lessons.length - 1 ? "0.5px solid #f0f2f5" : "none",
-                      opacity: lesson.status === "locked" ? 0.5 : 1,
-                      cursor: lesson.status === "locked" ? "not-allowed" : "pointer",
+                      cursor: "pointer",
                       animation: mounted ? `fadeInUp 0.4s ease ${i * 0.06}s both` : "none",
                     }}
                   >
                     <div style={{
                       width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
                       display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14,
-                      background: lesson.status === "done" ? "#0FA4A0" : lesson.status === "active" ? courseColor : "#f0f2f5",
-                      color: lesson.status === "locked" ? "#9A9AAA" : "white",
+                      background: isFirst ? courseColor : "#f0f2f5",
+                      color: isFirst ? "white" : "#9A9AAA",
                       fontWeight: 700,
                     }}>
-                      {lesson.status === "done" ? "✓" : lesson.status === "locked" ? "🔒" : typeInfo.icon}
+                      {typeInfo.icon}
                     </div>
 
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <div style={{ fontSize: 14, fontWeight: 500, color: "#022350" }}>{lesson.title}</div>
                         <span style={{ fontSize: 10, fontWeight: 600, color: "#9A9AAA", background: "#f0f2f5", padding: "2px 7px", borderRadius: 6 }}>{typeInfo.label}</span>
-                        {lesson.status === "active" && (
+                        {isFirst && (
                           <span style={{ fontSize: 10, fontWeight: 700, background: courseColor, color: "white", padding: "2px 8px", borderRadius: 10 }}>AKTUELL</span>
                         )}
                       </div>
-                      <div style={{ fontSize: 12, color: "#9A9AAA", marginTop: 2 }}>{lesson.description}</div>
+                      <div style={{ fontSize: 12, color: "#9A9AAA", marginTop: 2 }}>{lesson.slides.length} Folien · {lesson.credits} Credits</div>
                     </div>
 
                     <div style={{ textAlign: "right", flexShrink: 0 }}>
                       <div style={{ fontSize: 12, color: "#9A9AAA", marginBottom: 4 }}>{lesson.duration}</div>
-                      {lesson.status === "active" && (
+                      {isFirst && (
                         <button className="start-btn" style={{ padding: "6px 16px", background: courseColor, color: "white", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "sans-serif" }}>
                           Starten →
                         </button>
-                      )}
-                      {lesson.status === "done" && (
-                        <span style={{ fontSize: 11.5, color: "#0FA4A0", fontWeight: 500 }}>Abgeschlossen</span>
                       )}
                     </div>
                   </div>
