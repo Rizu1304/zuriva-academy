@@ -1,4 +1,5 @@
 "use client";
+import { useCallback } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 
 const certs = [
@@ -7,6 +8,106 @@ const certs = [
 ];
 
 export default function Zertifikate() {
+
+  const generatePDF = useCallback(async (cert: typeof certs[0]) => {
+    const { jsPDF } = await import("jspdf");
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+    const w = 297;
+    const h = 210;
+
+    // Navy background
+    doc.setFillColor(2, 35, 80);
+    doc.rect(0, 0, w, h, "F");
+
+    // Gold border
+    doc.setDrawColor(200, 162, 77);
+    doc.setLineWidth(1.5);
+    doc.rect(12, 12, w - 24, h - 24);
+
+    // Inner border
+    doc.setDrawColor(200, 162, 77);
+    doc.setLineWidth(0.3);
+    doc.rect(16, 16, w - 32, h - 32);
+
+    // Gold accent line top
+    doc.setFillColor(200, 162, 77);
+    doc.rect(w / 2 - 20, 30, 40, 1.5, "F");
+
+    // "ZURIVA" header
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14);
+    doc.setTextColor(200, 162, 77);
+    doc.text("ZURIVA", w / 2, 42, { align: "center" });
+
+    doc.setFontSize(8);
+    doc.setTextColor(200, 162, 77);
+    doc.text("academy", w / 2 + 22, 42, { align: "left" });
+
+    // "ZERTIFIKAT" title
+    doc.setFontSize(10);
+    doc.setTextColor(200, 162, 77);
+    doc.text("Z E R T I F I K A T", w / 2, 58, { align: "center" });
+
+    // Gold line below title
+    doc.setFillColor(200, 162, 77);
+    doc.rect(w / 2 - 30, 63, 60, 0.5, "F");
+
+    // Certificate title
+    doc.setFontSize(28);
+    doc.setTextColor(255, 255, 255);
+    doc.text(cert.title, w / 2, 82, { align: "center" });
+
+    // "verliehen an"
+    doc.setFontSize(10);
+    doc.setTextColor(150, 160, 180);
+    doc.text("verliehen an", w / 2, 96, { align: "center" });
+
+    // User name
+    doc.setFontSize(22);
+    doc.setTextColor(255, 255, 255);
+    doc.text("Laura Meier", w / 2, 110, { align: "center" });
+
+    // Gold line
+    doc.setFillColor(200, 162, 77);
+    doc.rect(w / 2 - 25, 117, 50, 0.5, "F");
+
+    // Details
+    doc.setFontSize(9);
+    doc.setTextColor(150, 160, 180);
+    doc.text(`Kurs: ${cert.course}`, w / 2, 130, { align: "center" });
+
+    // Score & Credits row
+    doc.setFontSize(11);
+    doc.setTextColor(200, 162, 77);
+    doc.text(`Score: ${cert.score}%`, w / 2 - 30, 142, { align: "center" });
+    doc.text(`Credits: ${cert.credits}`, w / 2 + 30, 142, { align: "center" });
+
+    // Date
+    doc.setFontSize(9);
+    doc.setTextColor(150, 160, 180);
+    doc.text(`Ausgestellt am ${cert.date}`, w / 2, 155, { align: "center" });
+
+    // Verified badge
+    if (cert.verified) {
+      doc.setFontSize(8);
+      doc.setTextColor(15, 164, 160);
+      doc.text("Verifiziert", w / 2, 163, { align: "center" });
+    }
+
+    // Footer
+    doc.setFontSize(7);
+    doc.setTextColor(100, 110, 130);
+    doc.text("Zuriva GmbH  ·  Duebendorf, Zuerich  ·  FINMA-registriert  ·  zuriva.ch", w / 2, h - 22, { align: "center" });
+
+    // Certificate ID
+    doc.setFontSize(6);
+    doc.setTextColor(80, 90, 110);
+    doc.text(`Zertifikat-Nr: ZA-${cert.id.toString().padStart(4, "0")}-2026`, w / 2, h - 17, { align: "center" });
+
+    doc.save(`Zuriva_Zertifikat_${cert.title.replace(/\s+/g, "_")}.pdf`);
+  }, []);
+
   return (
     <DashboardLayout title="Meine Zertifikate" subtitle={`${certs.length} Zertifikate erhalten`}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, maxWidth: 900 }}>
@@ -38,7 +139,7 @@ export default function Zertifikate() {
                   {cert.verified && <span className="z-badge" style={{ background: "rgba(15,164,160,0.08)", color: "#0FA4A0", padding: "5px 12px" }}>Verifiziert</span>}
                 </div>
               </div>
-              <button className="z-btn z-btn-primary" style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+              <button onClick={() => generatePDF(cert)} className="z-btn z-btn-primary" style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
                 PDF herunterladen
               </button>
