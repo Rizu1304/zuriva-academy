@@ -1,9 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import {
+  LayoutDashboard, BookOpen, Map, MessageSquare, Clock, Award, Settings, Gamepad2,
+  Bell, Users,
+} from "lucide-react";
 
 const h = "var(--font-cormorant, 'Cormorant Garamond', serif)";
 const b = "var(--font-dm-sans, 'DM Sans', sans-serif)";
+
+const marine = "#022350";
+const marineMid = "#0E3057";
+const bgColor = "#E4E8F0";
+const glass = {
+  background: "rgba(255,255,255,0.85)",
+  backdropFilter: "blur(18px)",
+  WebkitBackdropFilter: "blur(18px)",
+  borderRadius: 22,
+  border: "1px solid rgba(255,255,255,0.6)",
+  boxShadow: "0 2px 20px rgba(2,35,80,0.06)",
+} as const;
+
+const sideNavItems = [
+  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+  { icon: BookOpen, label: "Kurse", href: "/courses" },
+  { icon: Map, label: "Lernpfade", href: "/lernpfade" },
+  { icon: MessageSquare, label: "Forum", href: "/forum" },
+  { icon: Clock, label: "Prüfungen", href: "/pruefungen" },
+  { icon: Award, label: "Zertifikate", href: "/zertifikate" },
+];
+
+const sideAdminItems = [
+  { icon: Settings, label: "Admin", href: "/admin" },
+  { icon: Gamepad2, label: "Kahoot", href: "/kahoot" },
+];
 
 type TeamMember = {
   id: number;
@@ -97,55 +127,57 @@ export default function TeamPage() {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: b, background: "#FAF8F5", overflow: "hidden" }}>
-      {/* Sidebar */}
-      <aside style={{ width: 248, minWidth: 248, background: "white", borderRight: "1px solid #F0ECE6", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "24px 22px 20px", borderBottom: "1px solid #F0ECE6", display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ fontSize: 22, fontWeight: 400, letterSpacing: "0.18em", color: "#022350", fontFamily: h }}>ZURIVA</span>
-          <span style={{ fontSize: 12, fontWeight: 500, color: "#C8A24D" }}>academy</span>
+    <div style={{ display: "flex", height: "100vh", fontFamily: b, background: bgColor, overflow: "hidden" }}>
+
+      {/* ICON SIDEBAR */}
+      <aside style={{ width: 64, minWidth: 64, display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 20, paddingBottom: 16, gap: 4 }}>
+        <div style={{ width: 42, height: 42, borderRadius: 14, background: marine, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, boxShadow: "0 2px 12px rgba(2,35,80,0.25)" }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: "white", fontFamily: h, letterSpacing: "0.1em" }}>Z</span>
         </div>
-        <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", padding: "18px 22px 6px" }}>LERNEN</div>
-        {[
-          { name: "Dashboard", href: "/dashboard" },
-          { name: "Kurse", href: "/courses" },
-          { name: "Lernpfade", href: "/lernpfade" },
-          { name: "Prüfungen", href: "/pruefungen" },
-          { name: "Zertifikate", href: "/zertifikate" },
-          { name: "Forum", href: "/forum" },
-        ].map((item) => (
-          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: "#4A4A5A", background: "transparent", borderLeft: "2px solid transparent", fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
-        ))}
-        <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "#C8A24D", padding: "18px 22px 6px" }}>ADMIN</div>
-        {[
-          { name: "Übersicht", href: "/admin" },
-          { name: "Kurseditor", href: "/admin/kurse" },
-          { name: "Lernpfadeditor", href: "/admin/lernpfade" },
-          { name: "Prüfungseditor", href: "/admin/pruefungen" },
-          { name: "Kahoot-Editor", href: "/admin/kahoot" },
-          { name: "Team", href: "/admin/team", active: true },
-        ].map((item) => (
-          <a key={item.name} href={item.href} style={{ padding: "9px 22px", color: item.active ? "#022350" : "#4A4A5A", background: item.active ? "#FAF8F5" : "transparent", borderLeft: item.active ? "2px solid #C8A24D" : "2px solid transparent", fontWeight: item.active ? 500 : 400, fontSize: 13, textDecoration: "none", display: "block" }}>{item.name}</a>
-        ))}
-        <div style={{ flex: 1 }} />
-        <div style={{ padding: "14px 22px", borderTop: "1px solid #F0ECE6", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#022350", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>LM</div>
-          <div><div style={{ fontSize: 12.5, fontWeight: 500, color: "#022350" }}>Laura Meier</div><div style={{ fontSize: 11, color: "#9A9AAA" }}>Admin</div></div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}>
+          {sideNavItems.map((item) => (
+            <a key={item.label} href={item.href} title={item.label} style={{
+              width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center",
+              background: "transparent",
+              textDecoration: "none", color: "#8090A0", transition: "all 0.2s",
+            }}><item.icon size={20} strokeWidth={1.8} /></a>
+          ))}
+          <div style={{ height: 1, background: "rgba(2,35,80,0.08)", margin: "8px 8px" }} />
+          {sideAdminItems.map((item) => {
+            const isActive = item.href === "/admin";
+            return (
+              <a key={item.label} href={item.href} title={item.label} style={{
+                width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center",
+                background: isActive ? "rgba(255,255,255,0.9)" : "transparent",
+                boxShadow: isActive ? "0 2px 10px rgba(2,35,80,0.08)" : "none",
+                textDecoration: "none", color: isActive ? marine : "#8090A0", transition: "all 0.2s",
+                position: "relative",
+              }}>
+                <item.icon size={20} strokeWidth={isActive ? 2.2 : 1.8} />
+                {isActive && <span style={{ position: "absolute", bottom: 2, left: "50%", transform: "translateX(-50%)", fontSize: 7, fontWeight: 700, color: marine, letterSpacing: "0.05em" }}>ADM</span>}
+              </a>
+            );
+          })}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", color: "#8090A0", cursor: "pointer" }}><Bell size={20} /></div>
+          <div style={{ width: 40, height: 40, borderRadius: 14, background: `linear-gradient(135deg, ${marine}, ${marineMid})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, color: "white", cursor: "pointer", boxShadow: "0 2px 8px rgba(2,35,80,0.2)" }}>LM</div>
         </div>
       </aside>
 
       {/* Main */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ background: "white", borderBottom: "1px solid #F0ECE6", height: 60, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+        <div style={{ padding: "20px 36px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <div>
-            <div style={{ fontSize: 22, fontWeight: 400, color: "#022350", fontFamily: h }}>Team</div>
-            <div style={{ fontSize: 12, color: "#9A9AAA" }}>Teammitglieder verwalten und Rollen zuweisen</div>
+            <div style={{ fontSize: 28, fontWeight: 700, color: marine, fontFamily: h }}>Team</div>
+            <div style={{ fontSize: 12, color: "#8090A0" }}>Teammitglieder verwalten und Rollen zuweisen</div>
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={openAdd} style={{ padding: "8px 16px", background: "#022350", color: "white", borderRadius: 9, fontSize: 12.5, fontWeight: 500, border: "none", cursor: "pointer", fontFamily: b }}>+ Neues Mitglied</button>
+            <button onClick={openAdd} style={{ padding: "8px 16px", background: marine, color: "white", borderRadius: 12, fontSize: 12.5, fontWeight: 500, border: "none", cursor: "pointer", fontFamily: b }}>+ Neues Mitglied</button>
           </div>
         </div>
 
-        <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "0 36px 36px" }}>
           {/* Stats */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 24 }}>
             {[
@@ -154,8 +186,8 @@ export default function TeamPage() {
               { label: "Instruktoren", value: counts.instructors, color: "#C8A24D" },
               { label: "Lernende", value: members.filter((m) => m.role === "Lernender").length, color: "#6366f1" },
             ].map((s, i) => (
-              <div key={i} style={{ background: "white", borderRadius: 14, border: "1px solid #F0ECE6", padding: "20px 22px" }}>
-                <div style={{ fontSize: 36, fontWeight: 700, color: s.color, lineHeight: 1, fontFamily: h }}>{s.value}</div>
+              <div key={i} style={{ ...glass, padding: "20px 22px" }}>
+                <div style={{ fontSize: 36, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.value}</div>
                 <div style={{ fontSize: 12.5, color: "#4A4A5A", marginTop: 6 }}>{s.label}</div>
               </div>
             ))}
@@ -167,7 +199,7 @@ export default function TeamPage() {
               placeholder="Mitglied suchen..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ padding: "8px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, width: 260, outline: "none", fontFamily: b }}
+              style={{ padding: "8px 14px", borderRadius: 12, border: "1px solid rgba(0,0,0,0.06)", background: "rgba(255,255,255,0.6)", fontSize: 13, width: 260, outline: "none", fontFamily: b }}
             />
             {["ALL", "Admin", "Instruktor", "Vermittler", "Lernender"].map((r) => (
               <button
@@ -175,12 +207,12 @@ export default function TeamPage() {
                 onClick={() => setRoleFilter(r)}
                 style={{
                   padding: "6px 14px",
-                  borderRadius: 8,
+                  borderRadius: 20,
                   fontSize: 12,
                   fontWeight: 500,
-                  border: "1px solid #F0ECE6",
+                  border: "1px solid rgba(0,0,0,0.06)",
                   cursor: "pointer",
-                  background: roleFilter === r ? "#022350" : "white",
+                  background: roleFilter === r ? marine : "rgba(255,255,255,0.6)",
                   color: roleFilter === r ? "white" : "#4A4A5A",
                   fontFamily: b,
                 }}
@@ -191,10 +223,10 @@ export default function TeamPage() {
           </div>
 
           {/* Table */}
-          <div style={{ background: "white", borderRadius: 14, border: "1px solid #F0ECE6", overflow: "hidden" }}>
+          <div style={{ ...glass, overflow: "hidden" }}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
-                <tr style={{ background: "#f8f9fb" }}>
+                <tr style={{ background: "rgba(0,0,0,0.02)" }}>
                   {["Name", "E-Mail", "Rolle", "Fortschritt", "Credits", "Zuletzt aktiv", "Status", "Aktionen"].map((col) => (
                     <th key={col} style={{ padding: "10px 24px", textAlign: "left", fontSize: 11, fontWeight: 600, color: "#9A9AAA", letterSpacing: "0.05em", textTransform: "uppercase" }}>{col}</th>
                   ))}
@@ -209,10 +241,10 @@ export default function TeamPage() {
                   </tr>
                 ) : (
                   filtered.map((member) => (
-                    <tr key={member.id} style={{ borderTop: "1px solid #F0ECE6" }}>
+                    <tr key={member.id} style={{ borderTop: "1px solid rgba(0,0,0,0.04)" }}>
                       <td style={{ padding: "14px 24px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#022350", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white", flexShrink: 0 }}>
+                          <div style={{ width: 32, height: 32, borderRadius: 12, background: `linear-gradient(135deg, ${marine}, ${marineMid})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white", flexShrink: 0 }}>
                             {getInitials(member.name)}
                           </div>
                           <div style={{ fontSize: 13.5, fontWeight: 500, color: "#022350" }}>{member.name}</div>
@@ -256,7 +288,7 @@ export default function TeamPage() {
                       <td style={{ padding: "14px 24px" }}>
                         <button
                           onClick={() => openEditRole(member)}
-                          style={{ padding: "5px 12px", borderRadius: 7, border: "1px solid #F0ECE6", background: "white", fontSize: 12, cursor: "pointer", color: "#022350", fontFamily: b }}
+                          style={{ padding: "5px 12px", borderRadius: 12, border: "1px solid rgba(0,0,0,0.06)", background: "rgba(255,255,255,0.6)", fontSize: 12, cursor: "pointer", color: marine, fontFamily: b }}
                         >
                           Bearbeiten
                         </button>
@@ -273,7 +305,7 @@ export default function TeamPage() {
       {/* Modal */}
       {showModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 }}>
-          <div style={{ background: "white", borderRadius: 16, padding: "32px 32px 28px", width: 420, boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
+          <div style={{ ...glass, borderRadius: 22, padding: "32px 32px 28px", width: 420, boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
             <div style={{ fontSize: 22, fontWeight: 400, color: "#022350", marginBottom: 24, fontFamily: h }}>
               {editingId !== null ? "Rolle bearbeiten" : "Neues Teammitglied"}
             </div>
@@ -288,12 +320,12 @@ export default function TeamPage() {
                 style={{
                   width: "100%",
                   padding: "10px 14px",
-                  borderRadius: 9,
-                  border: "1px solid #F0ECE6",
+                  borderRadius: 12,
+                  border: "1px solid rgba(0,0,0,0.06)",
                   fontSize: 13,
                   outline: "none",
                   boxSizing: "border-box",
-                  background: editingId !== null ? "#f8f9fb" : "white",
+                  background: editingId !== null ? "rgba(0,0,0,0.02)" : "rgba(255,255,255,0.6)",
                   color: editingId !== null ? "#9A9AAA" : "#022350",
                   fontFamily: b,
                 }}
@@ -310,12 +342,12 @@ export default function TeamPage() {
                 style={{
                   width: "100%",
                   padding: "10px 14px",
-                  borderRadius: 9,
-                  border: "1px solid #F0ECE6",
+                  borderRadius: 12,
+                  border: "1px solid rgba(0,0,0,0.06)",
                   fontSize: 13,
                   outline: "none",
                   boxSizing: "border-box",
-                  background: editingId !== null ? "#f8f9fb" : "white",
+                  background: editingId !== null ? "rgba(0,0,0,0.02)" : "rgba(255,255,255,0.6)",
                   color: editingId !== null ? "#9A9AAA" : "#022350",
                   fontFamily: b,
                 }}
@@ -327,7 +359,7 @@ export default function TeamPage() {
               <select
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value as TeamMember["role"] })}
-                style={{ width: "100%", padding: "10px 14px", borderRadius: 9, border: "1px solid #F0ECE6", fontSize: 13, outline: "none", background: "white", boxSizing: "border-box", fontFamily: b }}
+                style={{ width: "100%", padding: "10px 14px", borderRadius: 12, border: "1px solid rgba(0,0,0,0.06)", fontSize: 13, outline: "none", background: "rgba(255,255,255,0.6)", boxSizing: "border-box", fontFamily: b }}
               >
                 <option value="Admin">Admin</option>
                 <option value="Instruktor">Instruktor</option>
@@ -339,7 +371,7 @@ export default function TeamPage() {
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
               <button
                 onClick={() => { setShowModal(false); setEditingId(null); }}
-                style={{ padding: "10px 20px", borderRadius: 9, border: "1px solid #F0ECE6", background: "white", fontSize: 13, cursor: "pointer", color: "#4A4A5A", fontFamily: b }}
+                style={{ padding: "10px 20px", borderRadius: 12, border: "1px solid rgba(0,0,0,0.06)", background: "rgba(255,255,255,0.6)", fontSize: 13, cursor: "pointer", color: "#4A4A5A", fontFamily: b }}
               >
                 Abbrechen
               </button>
@@ -348,12 +380,12 @@ export default function TeamPage() {
                 disabled={editingId === null && (!form.name.trim() || !form.email.trim())}
                 style={{
                   padding: "10px 24px",
-                  borderRadius: 9,
+                  borderRadius: 12,
                   border: "none",
                   fontSize: 13,
                   fontWeight: 500,
                   cursor: "pointer",
-                  background: (editingId === null && (!form.name.trim() || !form.email.trim())) ? "#F0ECE6" : "#022350",
+                  background: (editingId === null && (!form.name.trim() || !form.email.trim())) ? "rgba(0,0,0,0.06)" : marine,
                   color: (editingId === null && (!form.name.trim() || !form.email.trim())) ? "#9A9AAA" : "white",
                   fontFamily: b,
                 }}
