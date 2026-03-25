@@ -44,7 +44,7 @@ export async function GET(request: Request) {
   });
 
   const total = lessons.length;
-  const completed = lessons.filter(l => l.progress.some(p => p.completed)).length;
+  const completed = lessons.filter((l: { progress: { completed: boolean }[] }) => l.progress.some((p: { completed: boolean }) => p.completed)).length;
 
   return Response.json({ total, completed, percent: total > 0 ? Math.round((completed / total) * 100) : 0 });
 }
