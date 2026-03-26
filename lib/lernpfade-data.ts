@@ -34,11 +34,12 @@ import mu5 from "./curriculum/muendlich/mu5-muendlich-test";
 export interface LektionContent {
   type: "text";
   paragraphs: string[];
+  image?: string;
 }
 
 export interface SlideContent {
   type: "slides";
-  slides: { title: string; content: string; bulletPoints?: string[]; speakText: string }[];
+  slides: { title: string; content: string; bulletPoints?: string[]; speakText: string; image?: string }[];
 }
 
 export interface QuizContent {
@@ -51,6 +52,7 @@ export interface VideoContent {
   type: "video";
   description: string;
   speakText: string;
+  image?: string;
 }
 
 export type ContentData = LektionContent | SlideContent | QuizContent | VideoContent;
