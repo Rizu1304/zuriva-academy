@@ -380,7 +380,7 @@ export default function KIStudio() {
                         className="z-btn z-btn-ghost"
                         style={{ width: "100%", fontSize: 12, padding: "7px 0" }}
                       >
-                        {isPlaying ? "■ Stoppen" : "▶ Anhoeren"}
+                        {isPlaying ? <><Square size={12} /> Stoppen</> : <><Play size={12} /> Anhoeren</>}
                       </button>
                     )}
                   </div>
@@ -409,7 +409,7 @@ export default function KIStudio() {
             </div>
           ) : avatars.length === 0 ? (
             <div className="z-card-static" style={{ padding: 40, textAlign: "center" }}>
-              <div style={{ fontSize: 36, marginBottom: 12 }}>🧑</div>
+              <div style={{ fontSize: 36, marginBottom: 12, display: "flex", justifyContent: "center" }}><User size={36} /></div>
               <div style={{ fontSize: 14, color: "#9A9AAA", marginBottom: 16 }}>Keine Avatare gefunden. Pruefe den HeyGen API Key.</div>
               <div style={{ fontSize: 12, color: "#4A4A5A" }}>Du kannst trotzdem fortfahren - es wird der Standard-Avatar verwendet.</div>
             </div>
@@ -439,7 +439,7 @@ export default function KIStudio() {
                         )}
                       </div>
                     ) : (
-                      <div style={{ height: 160, background: "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 }}>🧑</div>
+                      <div style={{ height: 160, background: "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center" }}><User size={48} /></div>
                     )}
                     <div style={{ padding: "12px 16px" }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{avatar.avatar_name}</div>
@@ -496,7 +496,7 @@ export default function KIStudio() {
                         transition: "all 0.2s",
                       }}
                     >
-                      <div style={{ fontSize: 24, marginBottom: 6 }}>{s.icon}</div>
+                      {s.icon && <div style={{ fontSize: 24, marginBottom: 6 }}>{s.icon}</div>}
                       <div style={{ fontSize: 12, fontWeight: 600, color: "#022350" }}>{s.label}</div>
                       <div style={{ fontSize: 10, color: "#9A9AAA", marginTop: 2 }}>{s.desc}</div>
                     </div>
@@ -537,7 +537,7 @@ export default function KIStudio() {
                           fontSize: 12,
                         }}
                       >
-                        <span>{a.icon}</span> {a.label}
+                        {a.label}
                       </div>
                     ))}
                   </div>
@@ -551,7 +551,7 @@ export default function KIStudio() {
                 className="z-btn z-btn-primary"
                 style={{ width: "100%", padding: "14px", fontSize: 14, marginBottom: 16 }}
               >
-                {scriptLoading ? "KI generiert Skript..." : "🤖 Skript mit KI generieren"}
+                {scriptLoading ? "KI generiert Skript..." : <><Sparkles size={16} /> Skript mit KI generieren</>}
               </button>
 
               {/* Script editor */}
@@ -565,7 +565,7 @@ export default function KIStudio() {
                       className="z-btn z-btn-ghost"
                       style={{ fontSize: 12, padding: "6px 14px" }}
                     >
-                      {ttsLoading ? "Laden..." : ttsPlaying ? "■ Stoppen" : "▶ Anhoeren"}
+                      {ttsLoading ? "Laden..." : ttsPlaying ? <><Square size={12} /> Stoppen</> : <><Play size={12} /> Anhoeren</>}
                     </button>
                   </div>
                   <textarea
@@ -595,7 +595,7 @@ export default function KIStudio() {
                   <div style={{ fontSize: 10, fontWeight: 700, color: "#C8A24D", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>Stimme</div>
                   {selectedVoice ? (
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #C8A24D, #E0B95F)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🎙️</div>
+                      <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #C8A24D, #E0B95F)", display: "flex", alignItems: "center", justifyContent: "center", color: "white" }}><Mic size={14} /></div>
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{selectedVoice.name}</div>
                     </div>
                   ) : (

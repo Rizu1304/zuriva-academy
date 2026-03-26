@@ -4,6 +4,7 @@ import { use } from "react";
 import LessonSlides from "../../../../components/LessonSlides";
 import type { Slide } from "../../../../components/LessonSlides";
 import AvatarVideo from "../../../../components/AvatarVideo";
+import { BookOpen, Film } from "lucide-react";
 
 interface CourseData {
   title: string;
@@ -336,7 +337,7 @@ export default function CoursePlayer({ params }: { params: Promise<{ id: string 
                 fontFamily: "inherit",
               }}
             >
-              📖 Slides + Stimme
+              <BookOpen size={14} style={{ display: "inline", verticalAlign: "middle" }} /> Slides + Stimme
             </button>
             <button
               onClick={() => setViewMode("avatar")}
@@ -353,7 +354,7 @@ export default function CoursePlayer({ params }: { params: Promise<{ id: string 
                 fontFamily: "inherit",
               }}
             >
-              🎬 KI-Avatar Video
+              <Film size={14} style={{ display: "inline", verticalAlign: "middle" }} /> KI-Avatar Video
             </button>
           </div>
         </div>
