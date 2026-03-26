@@ -1,103 +1,156 @@
 "use client";
+import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { Users, BookOpen, Award, TrendingUp, Search, ChevronRight, AlertTriangle, Download } from "lucide-react";
 
-const stats = [
-  { label: "Mitarbeitende", value: "24", color: "#022350", trend: "+2 diesen Monat" },
-  { label: "Aktive Kurse", value: "18", color: "#0FA4A0", trend: "+3 neu" },
-  { label: "Pruefungen diese Woche", value: "7", color: "#C8A24D", trend: "3 ausstehend" },
-  { label: "Ø Fortschritt Team", value: "61%", color: "#1B6FC2", trend: "+4% vs. letzter Monat" },
+interface Learner {
+  id: string;
+  name: string;
+  avatar: string;
+  email: string;
+  role: string;
+  credits: number;
+  progress: number;
+  streak: number;
+  lastActive: string;
+  status: "aktiv" | "inaktiv" | "gefährdet";
+  lernpfad: string;
+  currentModule: string;
+}
+
+const learners: Learner[] = [
+  { id: "1", name: "Anna Schneider", avatar: "AS", email: "anna@zuriva.ch", role: "Instruktorin", credits: 580, progress: 97, streak: 22, lastActive: "Heute 10:30", status: "aktiv", lernpfad: "VBV Grundausbildung", currentModule: "Abschlussprüfung" },
+  { id: "2", name: "Thomas Mueller", avatar: "TM", email: "thomas@zuriva.ch", role: "Vermittler", credits: 428, progress: 71, streak: 8, lastActive: "Heute 09:15", status: "aktiv", lernpfad: "VBV Grundausbildung", currentModule: "Haftpflicht" },
+  { id: "3", name: "Laura Meier", avatar: "LM", email: "laura@zuriva.ch", role: "Vermittlerin", credits: 342, progress: 57, streak: 12, lastActive: "Heute 08:42", status: "aktiv", lernpfad: "VBV Grundausbildung", currentModule: "Sachversicherung" },
+  { id: "4", name: "Petra Koch", avatar: "PK", email: "petra@zuriva.ch", role: "Vermittlerin", credits: 276, progress: 46, streak: 5, lastActive: "Gestern 16:00", status: "aktiv", lernpfad: "VBV Grundausbildung", currentModule: "Lebensversicherung" },
+  { id: "5", name: "Marco Brunner", avatar: "MB", email: "marco@zuriva.ch", role: "Vermittler", credits: 195, progress: 33, streak: 0, lastActive: "Vor 5 Tagen", status: "gefährdet", lernpfad: "VBV Grundausbildung", currentModule: "Sachversicherung" },
+  { id: "6", name: "Sandra Frei", avatar: "SF", email: "sandra@zuriva.ch", role: "Vermittlerin", credits: 120, progress: 20, streak: 0, lastActive: "Vor 2 Wochen", status: "inaktiv", lernpfad: "Trainee Grundausbildung", currentModule: "Grundlagen" },
+  { id: "7", name: "Beat Keller", avatar: "BK", email: "beat@zuriva.ch", role: "Vermittler", credits: 410, progress: 68, streak: 3, lastActive: "Heute 07:30", status: "aktiv", lernpfad: "VBV Grundausbildung", currentModule: "Compliance" },
+  { id: "8", name: "Nina Weber", avatar: "NW", email: "nina@zuriva.ch", role: "Vermittlerin", credits: 88, progress: 15, streak: 1, lastActive: "Gestern 11:00", status: "gefährdet", lernpfad: "Trainee Grundausbildung", currentModule: "Erste Schritte" },
 ];
 
-const team = [
-  { name: "Anna Schneider", role: "Instruktorin", progress: 95, credits: 580, lastActive: "Heute", avatar: "AS" },
-  { name: "Thomas Mueller", role: "Vermittler", progress: 72, credits: 428, lastActive: "Heute", avatar: "TM" },
-  { name: "Laura Meier", role: "Vermittlerin", progress: 57, credits: 342, lastActive: "Heute", avatar: "LM" },
-  { name: "Petra Koch", role: "Vermittlerin", progress: 48, credits: 276, lastActive: "Di 24.03.", avatar: "PK" },
-  { name: "Beat Keller", role: "Vermittler", progress: 34, credits: 198, lastActive: "Mo 23.03.", avatar: "BK" },
-  { name: "Marco Bianchi", role: "Lernender", progress: 12, credits: 64, lastActive: "Fr 20.03.", avatar: "MB" },
-];
+const statusColor = (s: string) => s === "aktiv" ? "#0FA4A0" : s === "gefährdet" ? "#C8A24D" : "#C0392B";
+const statusLabel = (s: string) => s === "aktiv" ? "Aktiv" : s === "gefährdet" ? "Gefährdet" : "Inaktiv";
 
-export default function Admin() {
+export default function AdminDashboard() {
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("alle");
+  const [selectedLearner, setSelectedLearner] = useState<Learner | null>(null);
+
+  const filtered = learners.filter(l => {
+    if (filterStatus !== "alle" && l.status !== filterStatus) return false;
+    if (search && !l.name.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  const avgProgress = Math.round(learners.reduce((s, l) => s + l.progress, 0) / learners.length);
+  const totalCredits = learners.reduce((s, l) => s + l.credits, 0);
+  const activeCount = learners.filter(l => l.status === "aktiv").length;
+  const atRiskCount = learners.filter(l => l.status !== "aktiv").length;
+
   return (
-    <DashboardLayout title="Admin Uebersicht" subtitle="Zuriva Academy — Verwaltung" actions={
-      <button className="z-btn z-btn-primary" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-        Neuer Kurs
-      </button>
-    }>
+    <DashboardLayout title="Admin Dashboard" subtitle={`${learners.length} Lernende verwalten`}>
+
+      {/* Stats */}
       <div className="z-grid-4" style={{ marginBottom: 24 }}>
-        {stats.map((s, i) => (
-          <div key={i} className={`z-card animate-fade-in-up stagger-${i + 1}`} style={{ padding: "22px 24px" }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: `${s.color}0D`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: s.color }} />
+        {[
+          { label: "Lernende", value: learners.length, sub: `${activeCount} aktiv`, icon: <Users size={18} />, color: "#022350" },
+          { label: "Ø Fortschritt", value: `${avgProgress}%`, sub: "Durchschnitt", icon: <TrendingUp size={18} />, color: "#0FA4A0" },
+          { label: "Credits gesamt", value: totalCredits.toLocaleString(), sub: "alle Lernende", icon: <Award size={18} />, color: "#C8A24D" },
+          { label: "Gefährdet", value: atRiskCount, sub: "brauchen Aufmerksamkeit", icon: <AlertTriangle size={18} />, color: "#C0392B" },
+        ].map((s, i) => (
+          <div key={i} className={`z-card animate-fade-in-up stagger-${i + 1}`} style={{ padding: "22px", display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 14, background: `${s.color}10`, display: "flex", alignItems: "center", justifyContent: "center", color: s.color }}>{s.icon}</div>
+            <div>
+              <div className="font-heading" style={{ fontSize: 26, fontWeight: 700, color: "#022350" }}>{s.value}</div>
+              <div style={{ fontSize: 11, color: "#9CA3AF" }}>{s.label} · {s.sub}</div>
             </div>
-            <div className="font-heading" style={{ fontSize: 36, fontWeight: 500, color: "#022350", lineHeight: 1, marginBottom: 4 }}>{s.value}</div>
-            <div style={{ fontSize: 12.5, color: "#9A9AAA", marginBottom: 6 }}>{s.label}</div>
-            <div style={{ fontSize: 11, fontWeight: 600, color: s.color }}>{s.trend}</div>
           </div>
         ))}
       </div>
 
-      <div className="z-grid-2" style={{ gap: 14, marginBottom: 20 }}>
-        <a href="/admin/kurse" className="z-card" style={{ padding: "22px 24px", textDecoration: "none", display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 12, background: "rgba(15,164,160,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0FA4A0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
+      {/* Filter + Search */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        <div style={{ display: "flex", gap: 6 }}>
+          {[["alle", "Alle"], ["aktiv", "Aktiv"], ["gefährdet", "Gefährdet"], ["inaktiv", "Inaktiv"]].map(([id, label]) => (
+            <button key={id} onClick={() => setFilterStatus(id)} style={{ padding: "6px 14px", borderRadius: 20, border: "1px solid", borderColor: filterStatus === id ? "#022350" : "rgba(2,35,80,0.08)", background: filterStatus === id ? "#022350" : "transparent", color: filterStatus === id ? "white" : "#4A5568", fontSize: 12, fontWeight: filterStatus === id ? 600 : 400, cursor: "pointer", fontFamily: "inherit" }}>{label}</button>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 12, background: "rgba(255,255,255,0.50)", border: "1px solid rgba(2,35,80,0.08)" }}>
+            <Search size={14} color="#9CA3AF" />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Suchen..." style={{ border: "none", background: "transparent", outline: "none", fontSize: 13, fontFamily: "inherit", width: 160, color: "#022350" }} />
           </div>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: "#022350", marginBottom: 2 }}>Kurseditor</div>
-            <div style={{ fontSize: 12.5, color: "#9A9AAA" }}>Kurse erstellen, bearbeiten und verwalten</div>
-          </div>
-        </a>
-        <a href="/admin/pruefungen" className="z-card" style={{ padding: "22px 24px", textDecoration: "none", display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 12, background: "rgba(200,162,77,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8A24D" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14,2 14,8 20,8" /></svg>
-          </div>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: "#022350", marginBottom: 2 }}>Pruefungseditor</div>
-            <div style={{ fontSize: 12.5, color: "#9A9AAA" }}>Pruefungen und Fragen verwalten</div>
-          </div>
-        </a>
+          <button className="z-btn z-btn-ghost" style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}><Download size={14} /> Export</button>
+        </div>
       </div>
 
-      <div className="z-card-static animate-fade-in-up stagger-6" style={{ overflow: "hidden" }}>
-        <div style={{ padding: "18px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #F0ECE6" }}>
-          <div className="font-heading" style={{ fontSize: 18, fontWeight: 500, color: "#022350" }}>Team Uebersicht</div>
-          <a href="/admin/team" style={{ fontSize: 12.5, color: "#0FA4A0", fontWeight: 600, textDecoration: "none" }}>Alle anzeigen →</a>
+      {/* Learner Table */}
+      <div className="z-card" style={{ padding: 0, overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1.2fr 0.8fr 1fr 0.8fr 60px", padding: "14px 24px", background: "rgba(2,35,80,0.02)", borderBottom: "1px solid rgba(2,35,80,0.06)", fontSize: 11, fontWeight: 600, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: 0.5 }}>
+          <div>Person</div><div>Lernpfad</div><div>Credits</div><div>Fortschritt</div><div>Status</div><div></div>
         </div>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ background: "#FAF8F5" }}>
-              {["Name", "Rolle", "Fortschritt", "Credits", "Zuletzt aktiv"].map((h) => (
-                <th key={h} style={{ padding: "12px 24px", textAlign: "left", fontSize: 10, fontWeight: 700, color: "#C8A24D", letterSpacing: "0.1em", textTransform: "uppercase" }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {team.map((m, i) => {
-              const pColor = m.progress >= 70 ? "#0FA4A0" : m.progress >= 40 ? "#C8A24D" : "#C0392B";
-              return (
-                <tr key={i} style={{ borderTop: "1px solid #F0ECE6" }}>
-                  <td style={{ padding: "14px 24px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: 8, background: "#022350", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 600, color: "white" }}>{m.avatar}</div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{m.name}</div>
-                    </div>
-                  </td>
-                  <td style={{ padding: "14px 24px", fontSize: 13, color: "#4A4A5A" }}>{m.role}</td>
-                  <td style={{ padding: "14px 24px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div className="z-progress" style={{ width: 80 }}><div className="z-progress-bar" style={{ width: m.progress + "%", background: pColor }} /></div>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: pColor }}>{m.progress}%</span>
-                    </div>
-                  </td>
-                  <td style={{ padding: "14px 24px", fontSize: 13, fontWeight: 700, color: "#C8A24D" }}>{m.credits}</td>
-                  <td style={{ padding: "14px 24px", fontSize: 12, color: "#9A9AAA" }}>{m.lastActive}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+
+        {filtered.map(l => (
+          <div key={l.id} onClick={() => setSelectedLearner(selectedLearner?.id === l.id ? null : l)} style={{ display: "grid", gridTemplateColumns: "2fr 1.2fr 0.8fr 1fr 0.8fr 60px", padding: "16px 24px", borderBottom: "1px solid rgba(2,35,80,0.04)", cursor: "pointer", background: selectedLearner?.id === l.id ? "rgba(200,162,77,0.04)" : "transparent", transition: "all 0.15s", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: "50%", background: l.status === "aktiv" ? "linear-gradient(135deg, #C8A24D, #E0B95F)" : "rgba(2,35,80,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: l.status === "aktiv" ? "#022350" : "#9CA3AF" }}>{l.avatar}</div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{l.name}</div>
+                <div style={{ fontSize: 11, color: "#9CA3AF" }}>{l.role} · {l.lastActive}</div>
+              </div>
+            </div>
+            <div style={{ fontSize: 12, color: "#4A5568" }}>{l.currentModule}</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#022350" }}>{l.credits}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div className="z-progress" style={{ flex: 1, height: 4 }}>
+                <div className="z-progress-bar" style={{ width: `${l.progress}%`, background: l.progress > 70 ? "#0FA4A0" : l.progress > 40 ? "#C8A24D" : "#C0392B" }} />
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#022350", width: 32 }}>{l.progress}%</span>
+            </div>
+            <div><span className="z-badge" style={{ background: `${statusColor(l.status)}10`, color: statusColor(l.status) }}>{statusLabel(l.status)}</span></div>
+            <div style={{ textAlign: "right" }}><ChevronRight size={14} color="#9CA3AF" /></div>
+          </div>
+        ))}
       </div>
+
+      {/* Detail Panel */}
+      {selectedLearner && (
+        <div className="z-card animate-fade-in-up" style={{ marginTop: 16, padding: "28px 32px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+            <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #C8A24D, #E0B95F)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "#022350" }}>{selectedLearner.avatar}</div>
+              <div>
+                <div className="font-heading" style={{ fontSize: 22, fontWeight: 700, color: "#022350" }}>{selectedLearner.name}</div>
+                <div style={{ fontSize: 13, color: "#9CA3AF" }}>{selectedLearner.email} · {selectedLearner.role}</div>
+              </div>
+            </div>
+            <span className="z-badge" style={{ background: `${statusColor(selectedLearner.status)}10`, color: statusColor(selectedLearner.status), fontSize: 13, padding: "6px 16px" }}>{statusLabel(selectedLearner.status)}</span>
+          </div>
+          <div className="z-grid-4" style={{ marginBottom: 20 }}>
+            {[
+              { label: "Credits", value: selectedLearner.credits, color: "#C8A24D" },
+              { label: "Fortschritt", value: `${selectedLearner.progress}%`, color: "#022350" },
+              { label: "Streak", value: `${selectedLearner.streak} Tage`, color: "#C0392B" },
+              { label: "Letzte Aktivität", value: selectedLearner.lastActive, color: "#0FA4A0" },
+            ].map((s, i) => (
+              <div key={i} style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(2,35,80,0.02)" }}>
+                <div style={{ fontSize: 11, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>{s.label}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: s.color }}>{s.value}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ fontSize: 13, color: "#4A5568" }}>
+              Lernpfad: <span style={{ fontWeight: 600, color: "#022350" }}>{selectedLearner.lernpfad}</span> · Modul: <span style={{ fontWeight: 600, color: "#022350" }}>{selectedLearner.currentModule}</span>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button className="z-btn z-btn-ghost" style={{ fontSize: 12 }}>Nachricht</button>
+              <button className="z-btn z-btn-primary" style={{ fontSize: 12 }}>Details</button>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }
