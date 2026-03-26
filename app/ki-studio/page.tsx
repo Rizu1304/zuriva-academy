@@ -700,7 +700,9 @@ export default function KIStudio() {
                 )}
 
                 {videoStatus === "completed" && videoUrl && (
-                  <video src={videoUrl} controls autoPlay style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 16 }} />
+                  <div style={{ width: "100%", height: "100%", position: "relative" }}>
+                    <video src={videoUrl} controls autoPlay style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 16 }} />
+                  </div>
                 )}
 
                 {videoStatus === "error" && (
@@ -713,6 +715,30 @@ export default function KIStudio() {
                   </div>
                 )}
               </div>
+
+              {/* Video platzieren */}
+              {videoStatus === "completed" && (
+                <div className="z-card" style={{ padding: "22px 26px", marginBottom: 16, borderLeft: "3px solid #C8A24D" }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "#022350", marginBottom: 12 }}>Video platzieren</div>
+                  <div style={{ fontSize: 12, color: "#4A5568", marginBottom: 14 }}>Wähle wo dieses Video angezeigt werden soll:</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {[
+                      { label: "VBV Grundausbildung", sub: "Sachversicherung → Einführung" },
+                      { label: "VBV Grundausbildung", sub: "Lebensversicherung → Einführung" },
+                      { label: "VBV Grundausbildung", sub: "Beratungskompetenz → Einführung" },
+                      { label: "Trainee Grundausbildung", sub: "Willkommen → Begrüssung" },
+                      { label: "Dashboard", sub: "Begrüssungsvideo" },
+                    ].map((slot, i) => (
+                      <button key={i} onClick={() => alert(`Video wird in "${slot.label} → ${slot.sub}" platziert!`)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 12, border: "1px solid rgba(2,35,80,0.06)", background: "rgba(255,255,255,0.50)", cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "all 0.2s" }}>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{slot.label}</div>
+                          <div style={{ fontSize: 11, color: "#9CA3AF" }}>{slot.sub}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Script preview */}
               <div className="z-card-static" style={{ padding: "22px 26px" }}>

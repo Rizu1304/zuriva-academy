@@ -21,7 +21,7 @@ const navSections = [
     label: "Lernen",
     items: [
       { name: "Dashboard", href: "/dashboard", icon: DashboardIcon },
-      { name: "Kurse", href: "/courses", icon: CoursesIcon },
+      { name: "Module", href: "/courses", icon: CoursesIcon },
       { name: "Lernpfade", href: "/lernpfade", icon: PathIcon },
       { name: "Pruefungen", href: "/pruefungen", icon: ExamIcon },
       { name: "Zertifikate", href: "/zertifikate", icon: CertIcon },
