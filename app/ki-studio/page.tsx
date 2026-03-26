@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Mic, User, FileText, Film, Play, Square, Loader2, ChevronRight, ChevronLeft, Sparkles, Volume2, Search } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 
 interface Voice {
@@ -20,10 +21,10 @@ interface Avatar {
 }
 
 const videoStyles = [
-  { id: "professional", label: "Professionell", icon: "💼", desc: "Sachlich und serioes" },
-  { id: "friendly", label: "Freundlich", icon: "😊", desc: "Warm und zugaenglich" },
-  { id: "energetic", label: "Energisch", icon: "⚡", desc: "Motivierend und dynamisch" },
-  { id: "educational", label: "Lehrreich", icon: "📚", desc: "Erklaerend und detailliert" },
+  { id: "professional", label: "Professionell", icon: "", desc: "Sachlich und serioes" },
+  { id: "friendly", label: "Freundlich", icon: "", desc: "Warm und zugaenglich" },
+  { id: "energetic", label: "Energisch", icon: "", desc: "Motivierend und dynamisch" },
+  { id: "educational", label: "Lehrreich", icon: "", desc: "Erklaerend und detailliert" },
 ];
 
 const videoDurations = [
@@ -33,11 +34,11 @@ const videoDurations = [
 ];
 
 const animationStyles = [
-  { id: "none", label: "Keine", icon: "▬", desc: "Ohne Animation" },
-  { id: "fade", label: "Fade In/Out", icon: "✨", desc: "Sanfter Übergang" },
-  { id: "slide", label: "Slide", icon: "➡️", desc: "Seitlicher Eingang" },
-  { id: "zoom", label: "Zoom", icon: "🔍", desc: "Heranzoomen" },
-  { id: "bounce", label: "Bounce", icon: "🏀", desc: "Springender Effekt" },
+  { id: "none", label: "Keine", icon: "", desc: "Ohne Animation" },
+  { id: "fade", label: "Fade In/Out", icon: "", desc: "Sanfter Übergang" },
+  { id: "slide", label: "Slide", icon: "", desc: "Seitlicher Eingang" },
+  { id: "zoom", label: "Zoom", icon: "", desc: "Heranzoomen" },
+  { id: "bounce", label: "Bounce", icon: "", desc: "Springender Effekt" },
 ];
 
 type Tab = "voices" | "avatar" | "script" | "generate";

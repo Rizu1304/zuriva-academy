@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Play, Square, Loader2, ChevronLeft, ChevronRight, Check } from "lucide-react";
 
 export interface Slide {
   title: string;
@@ -162,9 +163,9 @@ export default function LessonSlides({ slides, courseTitle, onComplete }: Lesson
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                style={{ fontSize: 48, marginBottom: 16 }}
+                style={{ marginBottom: 16 }}
               >
-                {slide.icon}
+                <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg, #022350, #0FA4A0)" }} />
               </motion.div>
             )}
 
