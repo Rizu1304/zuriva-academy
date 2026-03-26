@@ -168,16 +168,36 @@ export default function LektionPlayer() {
         {/* VIDEO */}
         {content?.type === "video" && (
           <div>
-            <div style={{ background: "#022350", borderRadius: 16, aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, position: "relative" }}>
-              <div style={{ position: "absolute", top: 14, left: 16, display: "flex", alignItems: "baseline", gap: 5 }}>
+            <div style={{ background: "#022350", borderRadius: 16, aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, position: "relative", overflow: "hidden" }}>
+              {/* Background image */}
+              {(content as VideoContent).image && (
+                <img src={(content as VideoContent).image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.25) saturate(0.7)" }} />
+              )}
+              {/* ZURIVA Logo */}
+              <div style={{ position: "absolute", top: 14, left: 16, display: "flex", alignItems: "baseline", gap: 5, zIndex: 2 }}>
                 <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.1em", color: "white", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>ZURIVA</span>
                 <span style={{ fontSize: 9, fontWeight: 500, color: "#C8A24D", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>academy</span>
               </div>
-              <button onClick={() => isPlaying ? stopAudio() : playTTS((content as VideoContent).speakText)} disabled={isLoading} style={{ width: 72, height: 72, borderRadius: "50%", background: "rgba(200,162,77,0.2)", border: "2px solid rgba(200,162,77,0.4)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-                {isLoading ? <Loader2 size={28} color="#C8A24D" style={{ animation: "spin 0.8s linear infinite" }} /> : isPlaying ? <Square size={24} color="#C8A24D" /> : <Play size={28} color="#C8A24D" />}
-              </button>
+              {/* Play button */}
+              <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
+                <button onClick={() => isPlaying ? stopAudio() : playTTS((content as VideoContent).speakText)} disabled={isLoading} style={{ width: 80, height: 80, borderRadius: "50%", background: isPlaying ? "rgba(192,57,43,0.8)" : "rgba(200,162,77,0.25)", border: `3px solid ${isPlaying ? "rgba(192,57,43,0.6)" : "rgba(200,162,77,0.5)"}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: isLoading ? "wait" : "pointer", transition: "all 0.3s", backdropFilter: "blur(8px)" }}>
+                  {isLoading ? <Loader2 size={32} color="white" style={{ animation: "spin 0.8s linear infinite" }} /> : isPlaying ? <Square size={28} color="white" /> : <Play size={32} color="white" style={{ marginLeft: 4 }} />}
+                </button>
+                <div style={{ marginTop: 12, fontSize: 14, color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>
+                  {isLoading ? "Wird geladen..." : isPlaying ? "Klicke zum Stoppen" : "Klicke zum Abspielen"}
+                </div>
+              </div>
+              {/* Audio wave animation when playing */}
+              {isPlaying && (
+                <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 3, zIndex: 2 }}>
+                  {[1,2,3,4,5,6,7].map(i => (
+                    <div key={i} style={{ width: 4, borderRadius: 2, background: "#C8A24D", animation: `wave ${0.5 + i * 0.1}s ease-in-out infinite alternate`, height: 8 + Math.random() * 16 }} />
+                  ))}
+                </div>
+              )}
             </div>
             <div style={{ background: "rgba(255,255,255,0.50)", borderRadius: 14, padding: "24px 28px", marginBottom: 24 }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 700, color: "#022350", marginBottom: 10 }}>{lektion.title}</div>
               <div style={{ fontSize: 15, color: "#4A5568", lineHeight: 1.8 }}>{(content as VideoContent).description}</div>
             </div>
             <button onClick={goNext} style={{ width: "100%", padding: "14px", borderRadius: 12, border: "none", background: "#022350", color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
@@ -201,7 +221,15 @@ export default function LektionPlayer() {
 
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div key={currentSlide} custom={direction} initial={{ x: direction > 0 ? 300 : -300, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: direction > 0 ? -300 : 300, opacity: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }}>
-                  <div style={{ background: "rgba(255,255,255,0.50)", borderRadius: 16, padding: "36px 40px", marginBottom: 24 }}>
+                  <div style={{ background: "rgba(255,255,255,0.50)", borderRadius: 16, overflow: "hidden", marginBottom: 24 }}>
+                    {/* Slide Image */}
+                    {slide.image && (
+                      <div style={{ height: 220, overflow: "hidden", position: "relative" }}>
+                        <img src={slide.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 50%, rgba(255,255,255,0.90) 100%)" }} />
+                      </div>
+                    )}
+                    <div style={{ padding: "28px 40px 36px" }}>
                     <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 700, color: "#022350", marginBottom: 14 }}>{slide.title}</div>
                     <div style={{ fontSize: 15, color: "#4A5568", lineHeight: 1.7, marginBottom: slide.bulletPoints ? 20 : 0 }}>{slide.content}</div>
                     {slide.bulletPoints && (
@@ -214,6 +242,7 @@ export default function LektionPlayer() {
                         ))}
                       </div>
                     )}
+                    </div>
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -324,7 +353,7 @@ export default function LektionPlayer() {
           );
         })()}
       </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } } @keyframes wave { 0% { height: 8px; } 100% { height: 24px; } }`}</style>
     </div>
   );
 }
