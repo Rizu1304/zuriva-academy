@@ -55,12 +55,20 @@ export interface VideoContent {
   image?: string;
 }
 
-export type ContentData = LektionContent | SlideContent | QuizContent | VideoContent;
+export interface InteractiveContent {
+  type: "interactive";
+  component: string; // name of the component to render
+  speakText: string;
+  description: string;
+  image?: string;
+}
+
+export type ContentData = LektionContent | SlideContent | QuizContent | VideoContent | InteractiveContent;
 
 export interface Lektion {
   id: string;
   title: string;
-  type: "video" | "slides" | "text" | "quiz";
+  type: "video" | "slides" | "text" | "quiz" | "interactive";
   duration: string;
   completed: boolean;
   content?: ContentData;

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Play, Square, Loader2, Check, CheckCircle, XCircle, BookOpen, Target, Volume2, ArrowLeft, Award } from "lucide-react";
 import { getLektion } from "@/lib/lernpfade-data";
-import type { SlideContent, QuizContent, VideoContent, LektionContent } from "@/lib/lernpfade-data";
+import type { SlideContent, QuizContent, VideoContent, LektionContent, InteractiveContent } from "@/lib/lernpfade-data";
+import { ThreePillarSystem, AnimatedBarChart, AnimatedDonut, AnimatedTimeline, AnimatedCounter, AnimatedStatCard, ComparisonTable } from "@/components/AnimatedGraphics";
 
 export default function LektionPlayer() {
   const params = useParams();
@@ -283,6 +284,69 @@ export default function LektionPlayer() {
             </button>
           </div>
         )}
+
+        {/* INTERACTIVE */}
+        {content?.type === "interactive" && (() => {
+          const ic = content as InteractiveContent;
+          const componentMap: Record<string, React.ReactNode> = {
+            "ThreePillarSystem": <ThreePillarSystem />,
+            "MarktBarChart": <AnimatedBarChart data={[
+              { label: "Zurich", value: 66.1, color: "#022350", suffix: " Mrd." },
+              { label: "Swiss Life", value: 29.2, color: "#0FA4A0", suffix: " Mrd." },
+              { label: "AXA", value: 6.6, color: "#C8A24D", suffix: " Mrd." },
+              { label: "Mobiliar", value: 4.8, color: "#1B6FC2", suffix: " Mrd." },
+              { label: "Helvetia", value: 4.5, color: "#C0392B", suffix: " Mrd." },
+              { label: "Baloise", value: 3.8, color: "#4A5568", suffix: " Mrd." },
+            ]} height={220} />,
+            "SozialversicherungDonut": <AnimatedDonut size={200} segments={[
+              { value: 10.6, color: "#C0392B", label: "AHV/IV/EO" },
+              { value: 2.2, color: "#022350", label: "ALV" },
+              { value: 12, color: "#0FA4A0", label: "BVG" },
+              { value: 2.3, color: "#C8A24D", label: "UVG" },
+              { value: 2, color: "#1B6FC2", label: "FAK" },
+            ]} centerText="~29%" centerSub="Total AG+AN" />,
+            "AHVTimeline": <AnimatedTimeline items={[
+              { year: "1948", title: "Einführung der AHV", color: "#C0392B" },
+              { year: "1985", title: "BVG-Obligatorium", color: "#022350" },
+              { year: "1996", title: "KVG-Obligatorium", color: "#0FA4A0" },
+              { year: "2024", title: "Revidiertes VAG in Kraft", color: "#C8A24D" },
+              { year: "2026", title: "13. AHV-Rente + Neue VBV-Prüfung", color: "#C0392B" },
+            ]} />,
+            "FranchiseVergleich": <ComparisonTable headers={["Franchise", "Prämie/Mt.", "Max. Eigenkosten", "Empfehlung"]} rows={[
+              { cells: ["CHF 300", "CHF 450", "CHF 1'000/Jahr", "Oft krank"] },
+              { cells: ["CHF 500", "CHF 420", "CHF 1'200/Jahr", "Gelegentlich"] },
+              { cells: ["CHF 1'000", "CHF 370", "CHF 1'700/Jahr", "Selten krank"] },
+              { cells: ["CHF 1'500", "CHF 330", "CHF 2'200/Jahr", "Sehr selten"] },
+              { cells: ["CHF 2'500", "CHF 280", "CHF 3'200/Jahr", "Fast nie krank"], highlight: true },
+            ]} />,
+            "BVGAltersgutschriften": <AnimatedBarChart data={[
+              { label: "25-34", value: 7, color: "#0FA4A0", suffix: "%" },
+              { label: "35-44", value: 10, color: "#022350", suffix: "%" },
+              { label: "45-54", value: 15, color: "#C8A24D", suffix: "%" },
+              { label: "55-65", value: 18, color: "#C0392B", suffix: "%" },
+            ]} height={180} />,
+          };
+          return (
+            <div>
+              <div style={{ background: "rgba(255,255,255,0.50)", borderRadius: 16, padding: "36px 40px", marginBottom: 24 }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 700, color: "#022350", marginBottom: 8 }}>{lektion.title}</div>
+                <div style={{ fontSize: 14, color: "#9CA3AF", marginBottom: 24 }}>{ic.description}</div>
+                <div style={{ display: "flex", justifyContent: "center", padding: "20px 0 32px" }}>
+                  {componentMap[ic.component] || <div style={{ color: "#9CA3AF" }}>Grafik wird geladen...</div>}
+                </div>
+              </div>
+              {/* TTS Button */}
+              <div style={{ display: "flex", gap: 12, marginBottom: 24 }}>
+                <button onClick={() => isPlaying ? stopAudio() : playTTS(ic.speakText)} disabled={isLoading} style={{ flex: 1, padding: "12px", borderRadius: 12, border: "none", background: isPlaying ? "#C0392B" : "#022350", color: "white", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.2s" }}>
+                  {isLoading ? <><Loader2 size={14} style={{ animation: "spin 0.8s linear infinite" }} /> Laden...</> : isPlaying ? <><Square size={14} /> Stoppen</> : <><Volume2 size={14} /> Erklärung anhören</>}
+                </button>
+              </div>
+              <button onClick={goNext} style={{ width: "100%", padding: "14px", borderRadius: 12, border: "none", background: "#022350", color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                Lektion abschliessen <Check size={16} />
+              </button>
+            </div>
+          );
+        })()}
 
         {/* QUIZ */}
         {content?.type === "quiz" && (() => {
