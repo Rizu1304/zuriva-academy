@@ -1,5 +1,6 @@
 "use client";
 import DashboardLayout from "@/components/DashboardLayout";
+import { Hash, MessageSquare } from "lucide-react";
 
 const stats = [
   { value: "4", label: "Aktive Kurse", trend: "+1 diese Woche", up: true, color: "#0FA4A0" },
@@ -194,6 +195,39 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* LIVE FORUM FEED */}
+      <div style={{ marginTop: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+          <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350" }}>Forum Live</div>
+          <a href="/forum" style={{ fontSize: 12.5, color: "#C8A24D", fontWeight: 600, textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
+            Zum Forum
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </a>
+        </div>
+        <div className="z-card animate-fade-in-up stagger-8" style={{ padding: "20px 24px" }}>
+          {[
+            { channel: "Sachversicherung", author: "Laura Meier", avatar: "LM", msg: "Super erklärt! Ich hatte letzte Woche einen ähnlichen Fall.", time: "09:14", own: true, color: "#022350" },
+            { channel: "Lebensversicherung", author: "Laura Meier", avatar: "LM", msg: "Am besten holst du den genauen Wert bei der Versicherung ein.", time: "07:42", own: true, color: "#0FA4A0" },
+            { channel: "Compliance", author: "Laura Meier", avatar: "LM", msg: "Welches Tool verwendet ihr für die Dokumentation?", time: "Gestern", own: true, color: "#C0392B" },
+            { channel: "Sachversicherung", author: "Anna Schneider", avatar: "AS", msg: "Das UVG deckt Berufsunfälle und Berufskrankheiten ab.", time: "08:45", own: false, color: "#022350" },
+            { channel: "Beratungstipps", author: "Thomas Mueller", avatar: "TM", msg: "Immer konkrete Schadenbeispiele bringen. Das macht den Nutzen greifbar.", time: "Fr", own: false, color: "#C8A24D" },
+          ].map((item, i) => (
+            <a href="/forum" key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "10px 0", borderBottom: i < 4 ? "1px solid rgba(2,35,80,0.04)" : "none", textDecoration: "none", color: "inherit", transition: "all 0.2s" }}>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: item.own ? "linear-gradient(135deg, #C8A24D, #E0B95F)" : "rgba(2,35,80,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: item.own ? "#022350" : "#4A5568", flexShrink: 0 }}>{item.avatar}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
+                  <Hash size={11} color={item.color} />
+                  <span style={{ fontSize: 11, fontWeight: 600, color: item.color }}>{item.channel}</span>
+                  <span style={{ fontSize: 11, color: "#9CA3AF" }}>{item.author}</span>
+                  <span style={{ fontSize: 10, color: "#9CA3AF", marginLeft: "auto" }}>{item.time}</span>
+                </div>
+                <div style={{ fontSize: 13, color: "#4A5568", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.msg}</div>
+              </div>
+            </a>
+          ))}
         </div>
       </div>
     </DashboardLayout>
