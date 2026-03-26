@@ -1,11 +1,13 @@
 import type { Modul } from "../../lernpfade-data";
-const m: Modul = { id: "mu5", title: "VBV Mündliche Prüfung", description: "Prüfungssimulation mündlich", credits: 20, lektionen: [
-  { id: "mu5-1", title: "Einführung: VBV Mündliche Prüfung", type: "slides", duration: "20 Min.", completed: false, content: { type: "slides", slides: [
-    { title: "VBV Mündliche Prüfung", content: "Prüfungssimulation mündlich - Detaillierter Inhalt wird geladen.", bulletPoints: ["Modul wird aktuell mit Inhalten befüllt", "Alle Themen basieren auf aktuellem VBV-Prüfungsstoff 2026", "Echte Schweizer Zahlen und Fakten", "Praxisnahe Beispiele und Übungen"], speakText: "Willkommen zum Modul VBV Mündliche Prüfung. Prüfungssimulation mündlich." },
+const m: Modul = { id: "mu5", title: "VBV Mündliche Prüfung", description: "Prüfungssimulation mündlich 30 Min. Bern", credits: 25, lektionen: [
+  { id: "mu5-1", title: "Einführung: VBV Mündliche Prüfung", type: "slides", duration: "25 Min.", completed: false, content: { type: "slides", slides: [
+    { title: "VBV Mündliche Prüfung", content: "Prüfungssimulation mündlich 30 Min. Bern", bulletPoints: ["Praxisorientierte Vorbereitung auf die mündliche Prüfung", "Rollenspiele mit realistischen Kundenszenarien", "Tipps von erfahrenen Prüfungsexperten", "Feedback und Verbesserungsvorschläge"], speakText: "Willkommen zum Modul VBV Mündliche Prüfung. Prüfungssimulation mündlich 30 Min. Bern. Dieses Modul bereitet dich auf die mündliche VBV-Prüfung vor Ort in Bern vor." },
   ] } },
-  { id: "mu5-2", title: "Vertiefung: VBV Mündliche Prüfung", type: "text", duration: "25 Min.", completed: false, content: { type: "text", paragraphs: ["Dieses Modul behandelt Prüfungssimulation mündlich.", "Der Inhalt wird laufend mit aktuellem VBV-Prüfungsstoff 2026 ergänzt.", "Alle Zahlen und Fakten entsprechen dem aktuellen Stand der Schweizer Versicherungsbranche.", "Am Ende des Moduls wartet ein Quiz zur Lernkontrolle."] } },
+  { id: "mu5-2", title: "Vertiefung: VBV Mündliche Prüfung", type: "text", duration: "30 Min.", completed: false, content: { type: "text", paragraphs: ["Dieses Modul behandelt Prüfungssimulation mündlich 30 Min. Bern.", "Die mündliche Prüfung dauert 30 Minuten und findet vor Ort in Bern statt. Kosten: CHF 200.", "Ein Experte spielt den Kunden, ein zweiter protokolliert. Die Fallbeschreibung kommt aus dem Bereich Privater Haushalt oder kleine Unternehmen.", "Du musst Fach-, Methoden- und Sozialkompetenz unter Beweis stellen."] } },
   { id: "mu5-3", title: "Quiz: VBV Mündliche Prüfung", type: "quiz", duration: "15 Min.", completed: false, content: { type: "quiz", passingScore: 70, questions: [
-    { text: "Welches Thema behandelt dieses Modul?", options: ["Kochrezepte", "VBV Mündliche Prüfung", "Astronomie", "Sportregeln"], correctIndex: 1, explanation: "Dieses Modul behandelt VBV Mündliche Prüfung." },
+    { text: "Wo findet die mündliche VBV-Prüfung statt?", options: ["Online", "Zürich", "Bern", "Basel"], correctIndex: 2, explanation: "Die mündliche Prüfung findet vor Ort in Bern statt." },
+    { text: "Wie lange dauert die mündliche Prüfung?", options: ["15 Min.", "30 Min.", "60 Min.", "90 Min."], correctIndex: 1, explanation: "Die mündliche Prüfung dauert 30 Minuten." },
+    { text: "Was ist der erste Schritt im Beratungsgespräch?", options: ["Produkt verkaufen", "Bedarfsanalyse", "Vertrag unterschreiben", "Prämie berechnen"], correctIndex: 1, explanation: "Die Bedarfsanalyse steht immer am Anfang." },
   ] } },
 ] };
 export default m;
