@@ -245,14 +245,14 @@ export default function Lernpfade() {
                         {isCurrentModule && (
                           <div style={{ marginTop: 10, paddingLeft: 34, display: "flex", flexDirection: "column", gap: 4 }}>
                             {modul.lektionen.map(lek => (
-                              <div key={lek.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", fontSize: 12 }}>
+                              <Link key={lek.id} href={`/lernpfade/${pfad.id}/modul/${modul.id}/lektion/${lek.id}`} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", fontSize: 12, textDecoration: "none", color: "inherit", borderRadius: 8, transition: "all 0.15s" }}>
                                 {lek.completed ? <CheckCircle size={14} color="#0FA4A0" /> : <div style={{ width: 14, height: 14, borderRadius: "50%", border: "1.5px solid rgba(2,35,80,0.15)" }} />}
                                 <span style={{ color: lek.completed ? "#9CA3AF" : "#022350", textDecoration: lek.completed ? "line-through" : "none" }}>{lek.title}</span>
                                 <span style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4, color: "#9CA3AF" }}>
                                   {typeIcon(lek.type)}
                                   <span style={{ fontSize: 10 }}>{typeLabel(lek.type)} · {lek.duration}</span>
                                 </span>
-                              </div>
+                              </Link>
                             ))}
                           </div>
                         )}
