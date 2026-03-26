@@ -1,9 +1,35 @@
+// Curriculum module imports
 import m1 from "./curriculum/m1-versicherungswirtschaft";
 import m2 from "./curriculum/m2-recht";
 import m3 from "./curriculum/m3-sachversicherung";
 import m4 from "./curriculum/m4-personenversicherung";
 import m5 from "./curriculum/m5-beratung";
 import m6 from "./curriculum/m6-pruefung";
+
+// New path-specific modules
+import trainee1 from "./curriculum/trainee/t1-willkommen";
+import trainee2 from "./curriculum/trainee/t2-versicherungswelt";
+import trainee3 from "./curriculum/trainee/t3-kundenumgang";
+import trainee4 from "./curriculum/trainee/t4-produkte-basis";
+import trainee5 from "./curriculum/trainee/t5-tools-systeme";
+import trainee6 from "./curriculum/trainee/t6-trainee-test";
+
+import kk1 from "./curriculum/krankenkasse/kk1-kvg-grundlagen";
+import kk2 from "./curriculum/krankenkasse/kk2-zusatzversicherungen";
+import kk3 from "./curriculum/krankenkasse/kk3-verkauf-kranken";
+import kk4 from "./curriculum/krankenkasse/kk4-krankenkasse-test";
+
+import sv1 from "./curriculum/sachverm/sv1-gebaeudeversicherung";
+import sv2 from "./curriculum/sachverm/sv2-hausrat-haftpflicht";
+import sv3 from "./curriculum/sachverm/sv3-motorfahrzeug";
+import sv4 from "./curriculum/sachverm/sv4-gewerbe-betrieb";
+import sv5 from "./curriculum/sachverm/sv5-sachverm-test";
+
+import mu1 from "./curriculum/muendlich/mu1-gespraechsfuehrung";
+import mu2 from "./curriculum/muendlich/mu2-bedarfsanalyse";
+import mu3 from "./curriculum/muendlich/mu3-einwand-abschluss";
+import mu4 from "./curriculum/muendlich/mu4-rollenspiel";
+import mu5 from "./curriculum/muendlich/mu5-muendlich-test";
 
 export interface LektionContent {
   type: "text";
@@ -53,41 +79,85 @@ export interface Lernpfad {
   color: string;
   status: "done" | "active" | "locked";
   credits: number;
+  hours: number;
   prerequisite?: string;
   module: Modul[];
   zertifikat?: string;
+  examInfo?: string;
 }
 
 export const lernpfade: Lernpfad[] = [
+  // ========== 1. TRAINEE GRUNDAUSBILDUNG (20h) ==========
   {
-    id: 1, title: "Trainee Grundausbildung", description: "Der perfekte Einstieg für neue Mitarbeitende.", color: "#0FA4A0", status: "done", credits: 40, zertifikat: "Trainee Zertifikat",
-    module: [
-      { id: "m1", title: "Willkommen bei Zuriva", description: "Einführung in die Zuriva Academy", credits: 5, lektionen: [
-        { id: "l1", title: "Begrüssung von Mark", type: "video", duration: "3 Min.", completed: true, content: { type: "video", description: "Mark begrüsst dich persönlich in der Zuriva Academy.", speakText: "Hallo! Ich bin Mark, dein persönlicher Begleiter hier bei Zuriva. Schön, dass du da bist. Du bist jetzt Teil von etwas Besonderem. Die Zuriva Academy wurde für dich gebaut. Hier lernst du alles, was du als Versicherungsprofi brauchst. Schritt für Schritt. In deinem Tempo." } },
-        { id: "l2", title: "So funktioniert die Academy", type: "slides", duration: "5 Min.", completed: true, content: { type: "slides", slides: [
-          { title: "Dein Lernweg", content: "Die Academy ist in Lernpfade unterteilt. Jeder Lernpfad besteht aus Modulen, und jedes Modul aus einzelnen Lektionen.", bulletPoints: ["Lernpfade zeigen dir den roten Faden", "Module sind thematische Blöcke", "Lektionen sind einzelne Lerneinheiten", "Am Ende jedes Moduls wartet ein Quiz"], speakText: "Die Academy ist in Lernpfade unterteilt. Jeder Lernpfad besteht aus Modulen, und jedes Modul aus einzelnen Lektionen." },
-          { title: "Lektionsarten", content: "Es gibt verschiedene Arten von Lektionen:", bulletPoints: ["Videos: Erklärungen von Mark", "Slides: Interaktive Folien zum Durchklicken", "Texte: Vertiefende Informationen", "Quizzes: Teste dein Wissen"], speakText: "Es gibt Videos, interaktive Slides, vertiefende Texte und Quizzes." },
-        ] } },
-        { id: "l3", title: "Dein Lernplan", type: "text", duration: "3 Min.", completed: true, content: { type: "text", paragraphs: ["Willkommen zu deinem persönlichen Lernplan. Hier erfährst du, wie du die Academy optimal nutzt.", "Dein Ziel ist die VBV-Zertifizierung 2026. Dafür brauchst du 600 Credits. Jedes Modul bringt dir Credits, die du durch das Abschliessen von Lektionen und Quizzes erhältst.", "Wir empfehlen dir, täglich 30-60 Minuten zu lernen. So schaffst du die Zertifizierung entspannt vor der Frist.", "Nutze die Gamification-Features: Sammle XP, halte deinen Streak aufrecht und verdiene Badges. Das motiviert und macht Spass!", "Bei Fragen steht dir Aura, unsere KI-Assistentin, jederzeit zur Verfügung. Klicke einfach auf das Aura-Symbol unten rechts."] } },
-      ]},
-      { id: "m2", title: "Grundlagen Versicherung", description: "Die Schweizer Versicherungslandschaft verstehen", credits: 10, lektionen: [
-        { id: "l4", title: "Das 3-Säulen-System", type: "video", duration: "12 Min.", completed: true, content: { type: "video", description: "Erklärung des Schweizer 3-Säulen-Systems.", speakText: "Das Schweizer Vorsorgesystem basiert auf drei Säulen. Die erste Säule ist die AHV, die staatliche Vorsorge. Die zweite Säule ist die berufliche Vorsorge über die Pensionskasse. Und die dritte Säule ist die private Vorsorge, unterteilt in Säule 3a und 3b." } },
-        { id: "l5", title: "Versicherungsarten Überblick", type: "slides", duration: "8 Min.", completed: true, content: { type: "slides", slides: [
-          { title: "Personenversicherung", content: "Versicherungen die Personen schützen:", bulletPoints: ["Lebensversicherung", "Krankenversicherung", "Unfallversicherung", "Erwerbsunfähigkeitsversicherung"], speakText: "Personenversicherungen schützen Menschen gegen Risiken wie Tod, Krankheit, Unfall und Erwerbsunfähigkeit." },
-          { title: "Sachversicherung", content: "Versicherungen die Sachen schützen:", bulletPoints: ["Gebäudeversicherung", "Hausratversicherung", "Motorfahrzeugversicherung", "Transportversicherung"], speakText: "Sachversicherungen schützen materielle Güter wie Gebäude, Hausrat, Fahrzeuge und Waren." },
-          { title: "Haftpflichtversicherung", content: "Schutz wenn du anderen Schaden zufügst:", bulletPoints: ["Privathaftpflicht", "Betriebshaftpflicht", "Berufshaftpflicht", "Motorfahrzeughaftpflicht"], speakText: "Haftpflichtversicherungen schützen dich, wenn du anderen einen Schaden zufügst und dafür haften musst." },
-        ] } },
-        { id: "l6", title: "Quiz: Grundbegriffe", type: "quiz", duration: "5 Min.", completed: true, content: { type: "quiz", passingScore: 70, questions: [
-          { text: "Wie viele Säulen hat das Schweizer Vorsorgesystem?", options: ["2", "3", "4", "5"], correctIndex: 1, explanation: "Das Schweizer Vorsorgesystem basiert auf 3 Säulen." },
-          { text: "Was ist die AHV?", options: ["Private Vorsorge", "Berufliche Vorsorge", "Staatliche Vorsorge", "Zusatzversicherung"], correctIndex: 2, explanation: "Die AHV ist die 1. Säule - die staatliche Alters- und Hinterlassenenversicherung." },
-          { text: "Welche Versicherung schützt Gebäude?", options: ["Personenversicherung", "Sachversicherung", "Haftpflichtversicherung", "Krankenversicherung"], correctIndex: 1, explanation: "Die Gebäudeversicherung gehört zu den Sachversicherungen." },
-        ] } },
-      ]},
-    ],
+    id: 1,
+    title: "Trainee Grundausbildung",
+    description: "Der komplette Einstieg für neue Mitarbeitende. 20 Stunden Grundwissen über die Versicherungsbranche, Produkte, Kundenkontakt und interne Systeme.",
+    color: "#0FA4A0",
+    status: "active",
+    credits: 120,
+    hours: 20,
+    zertifikat: "Trainee Zertifikat",
+    module: [trainee1, trainee2, trainee3, trainee4, trainee5, trainee6],
   },
+
+  // ========== 2. VBV GRUNDAUSBILDUNG (30h) ==========
   {
-    id: 2, title: "VBV Grundausbildung", description: "Pflichtausbildung für die VBV-Zertifizierung 2026. 6 Module, 20+ Stunden Lernstoff.", color: "#022350", status: "active", credits: 200,
+    id: 2,
+    title: "VBV Grundausbildung",
+    description: "Pflichtausbildung für die VBV-Zertifizierung 2026. 30 Stunden Lernstoff: Versicherungswirtschaft, Recht, Sachversicherung, Personenversicherung, Beratung und Abschlussprüfung.",
+    color: "#022350",
+    status: "locked",
+    credits: 200,
+    hours: 30,
+    prerequisite: "Trainee Grundausbildung",
+    zertifikat: "VBV Grundausbildung Zertifikat",
+    examInfo: "Online-Prüfung mit Proctoring, 30 Min., CHF 400",
     module: [m1, m2, m3, m4, m5, m6],
+  },
+
+  // ========== 3. VBV KRANKENKASSENZUSATZ (20h) ==========
+  {
+    id: 3,
+    title: "VBV Krankenkassenzusatz",
+    description: "Spezialisierung Krankenzusatzversicherung. 20 Stunden: KVG-Grundlagen, Zusatzversicherungen, Spitalzusatz, Alternativmedizin, Verkauf und VBV-Prüfung.",
+    color: "#1B6FC2",
+    status: "locked",
+    credits: 150,
+    hours: 20,
+    prerequisite: "VBV Grundausbildung",
+    zertifikat: "VBV Krankenzusatz Zertifikat",
+    examInfo: "Online-Prüfung mit Proctoring, 30 Min., CHF 100",
+    module: [kk1, kk2, kk3, kk4],
+  },
+
+  // ========== 4. VBV SACH- UND VERMÖGENSVERSICHERUNG (20h) ==========
+  {
+    id: 4,
+    title: "VBV Sach- und Vermögensversicherung",
+    description: "Spezialisierung Nicht-Leben. 20 Stunden: Gebäude, Hausrat, Haftpflicht, Motorfahrzeug, Gewerbe, Cyber und VBV-Prüfung.",
+    color: "#C8A24D",
+    status: "locked",
+    credits: 150,
+    hours: 20,
+    prerequisite: "VBV Grundausbildung",
+    zertifikat: "VBV Sach & Vermögen Zertifikat",
+    examInfo: "Online-Prüfung mit Proctoring, 60 Min., CHF 100",
+    module: [sv1, sv2, sv3, sv4, sv5],
+  },
+
+  // ========== 5. VBV MÜNDLICHE PRÜFUNG (20h) ==========
+  {
+    id: 5,
+    title: "VBV Mündliche Prüfung",
+    description: "Vorbereitung auf die mündliche VBV-Prüfung. 20 Stunden: Gesprächsführung, Bedarfsanalyse, Einwandbehandlung, Rollenspiele und Prüfungssimulation.",
+    color: "#C0392B",
+    status: "locked",
+    credits: 150,
+    hours: 20,
+    prerequisite: "VBV Grundausbildung",
+    zertifikat: "VBV Mündlich Zertifikat",
+    examInfo: "Mündliche Prüfung vor Ort in Bern, 30 Min., CHF 200",
+    module: [mu1, mu2, mu3, mu4, mu5],
   },
 ];
 
