@@ -665,7 +665,7 @@ export default function KIStudio() {
                 </div>
                 {videoStatus === "idle" && (
                   <div style={{ textAlign: "center", padding: 32 }}>
-                    <div style={{ fontSize: 56, marginBottom: 16 }}>🎬</div>
+                    <div style={{ marginBottom: 16, color: "rgba(255,255,255,0.5)" }}><Film size={56} /></div>
                     <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "white", marginBottom: 8 }}>Bereit zum Erstellen</div>
                     <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 24, maxWidth: 400 }}>
                       Dein KI-Avatar wird das Skript mit der gewaehlten Stimme und Animation als Video aufnehmen.
@@ -680,7 +680,7 @@ export default function KIStudio() {
                         fontFamily: "inherit",
                       }}
                     >
-                      🎬 Video jetzt generieren
+                      Video jetzt generieren
                     </button>
                   </div>
                 )}
@@ -705,7 +705,7 @@ export default function KIStudio() {
 
                 {videoStatus === "error" && (
                   <div style={{ textAlign: "center", padding: 32 }}>
-                    <div style={{ fontSize: 42, marginBottom: 12 }}>⚠️</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#C0392B", marginBottom: 12 }}>Fehler</div>
                     <div style={{ fontSize: 14, color: "#C0392B", fontWeight: 500, marginBottom: 16 }}>{videoError}</div>
                     <button onClick={generateVideo} className="z-btn" style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)" }}>
                       Erneut versuchen
