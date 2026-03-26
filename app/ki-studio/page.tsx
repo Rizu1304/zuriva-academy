@@ -611,7 +611,7 @@ export default function KIStudio() {
                       {selectedAvatar.preview_image_url ? (
                         <img src={selectedAvatar.preview_image_url} alt="" style={{ width: 32, height: 32, borderRadius: 8, objectFit: "cover" }} />
                       ) : (
-                        <div style={{ width: 32, height: 32, borderRadius: 8, background: "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🧑</div>
+                        <div style={{ width: 32, height: 32, borderRadius: 8, background: "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center" }}><User size={14} /></div>
                       )}
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{selectedAvatar.avatar_name}</div>
                     </div>
@@ -624,7 +624,7 @@ export default function KIStudio() {
                 <div style={{ borderTop: "1px solid #F0ECE6", paddingTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
                     <span style={{ color: "#9A9AAA" }}>Stil</span>
-                    <span style={{ color: "#022350", fontWeight: 600 }}>{videoStyles.find(s => s.id === style)?.icon} {videoStyles.find(s => s.id === style)?.label}</span>
+                    <span style={{ color: "#022350", fontWeight: 600 }}>{videoStyles.find(s => s.id === style)?.label}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
                     <span style={{ color: "#9A9AAA" }}>Laenge</span>
@@ -632,7 +632,7 @@ export default function KIStudio() {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
                     <span style={{ color: "#9A9AAA" }}>Animation</span>
-                    <span style={{ color: "#022350", fontWeight: 600 }}>{animationStyles.find(a => a.id === animation)?.icon} {animationStyles.find(a => a.id === animation)?.label}</span>
+                    <span style={{ color: "#022350", fontWeight: 600 }}>{animationStyles.find(a => a.id === animation)?.label}</span>
                   </div>
                 </div>
               </div>
@@ -657,7 +657,7 @@ export default function KIStudio() {
           <div className="z-grid-main">
             <div>
               {/* Video player area */}
-              <div className="z-card-navy" style={{ aspectRatio: "16/9", maxWidth: 800, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+              <div className="z-glass-card" style={{ aspectRatio: "16/9", maxWidth: 800, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, background: "#022350" }}>
                 {/* ZURIVA academy logo overlay */}
                 <div style={{ position: "absolute", top: 16, left: 18, zIndex: 10, display: "flex", alignItems: "baseline", gap: 5, pointerEvents: "none" }}>
                   <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: "0.1em", color: "white", textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}>ZURIVA</span>
