@@ -52,7 +52,7 @@ export default function Dashboard() {
       </div>
 
       {/* VBV CERTIFICATION BANNER */}
-      <div className="z-card-navy animate-fade-in-up stagger-5" style={{ padding: "36px 40px", marginBottom: 28 }}>
+      <div className="z-glass-card animate-fade-in-up stagger-5" style={{ padding: "36px 40px", marginBottom: 28 }}>
         {/* Decorative orbs */}
         <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle, rgba(200,162,77,0.08), transparent 70%)" }} />
         <div style={{ position: "absolute", bottom: -40, left: "30%", width: 160, height: 160, borderRadius: "50%", background: "radial-gradient(circle, rgba(15,164,160,0.06), transparent 70%)" }} />
@@ -105,9 +105,9 @@ export default function Dashboard() {
 
           <div className="z-grid-courses">
             {courses.map((c, i) => (
-              <div key={i} className={`animate-scale-in stagger-${i + 1}`} style={{ borderRadius: 16, overflow: "hidden", position: "relative", minHeight: 220, cursor: "pointer", boxShadow: "0 4px 20px rgba(2,35,80,0.08)" }}>
-                <img src={c.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, filter: "brightness(0.35) saturate(0.8)" }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(2,35,80,0.95) 0%, rgba(2,35,80,0.2) 45%, transparent 100%)" }} />
+              <div key={i} className={`z-card animate-scale-in stagger-${i + 1}`} style={{ borderRadius: 16, overflow: "hidden", position: "relative", minHeight: 220, cursor: "pointer", padding: 0 }}>
+                <img src={c.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, filter: "brightness(0.55) saturate(0.9)" }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(2,35,80,0.85) 0%, rgba(2,35,80,0.1) 45%, transparent 100%)" }} />
                 <div style={{ position: "absolute", inset: 0, padding: "16px 18px 18px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <span style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>{c.tag}</span>
@@ -160,7 +160,7 @@ export default function Dashboard() {
         {/* RIGHT SIDEBAR */}
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           {/* Activities */}
-          <div className="z-card-static animate-fade-in-up stagger-3" style={{ padding: "24px 22px" }}>
+          <div className="z-card animate-fade-in-up stagger-3" style={{ padding: "24px 22px" }}>
             <div className="font-heading" style={{ fontSize: 20, fontWeight: 400, color: "#022350", marginBottom: 4 }}>Letzte Aktivitaeten</div>
             <div className="z-gold-line" style={{ marginBottom: 16 }} />
             {activities.map((a, i) => (
@@ -175,7 +175,7 @@ export default function Dashboard() {
           </div>
 
           {/* Leaderboard */}
-          <div className="z-card-static animate-fade-in-up stagger-5" style={{ padding: "24px 22px" }}>
+          <div className="z-card animate-fade-in-up stagger-5" style={{ padding: "24px 22px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
               <div className="font-heading" style={{ fontSize: 20, fontWeight: 400, color: "#022350" }}>Rangliste</div>
               <span style={{ fontSize: 10, color: "#C8A24D", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>Credits</span>

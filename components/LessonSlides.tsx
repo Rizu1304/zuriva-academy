@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Play, Square, Loader2, ChevronLeft, ChevronRight, Check } from "lucide-react";
 
 export interface Slide {
   title: string;
@@ -162,9 +163,9 @@ export default function LessonSlides({ slides, courseTitle, onComplete }: Lesson
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                style={{ fontSize: 48, marginBottom: 16 }}
+                style={{ marginBottom: 16 }}
               >
-                {slide.icon}
+                <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg, #022350, #0FA4A0)" }} />
               </motion.div>
             )}
 
@@ -234,7 +235,7 @@ export default function LessonSlides({ slides, courseTitle, onComplete }: Lesson
             fontFamily: "inherit",
           }}
         >
-          &#8592; Zurueck
+          <ChevronLeft size={14} /> Zurueck
         </button>
 
         {/* Voice Button */}
@@ -259,13 +260,13 @@ export default function LessonSlides({ slides, courseTitle, onComplete }: Lesson
         >
           {isLoading ? (
             <>
-              <span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "white", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+              <Loader2 size={14} style={{ animation: "spin 0.8s linear infinite" }} />
               Wird geladen...
             </>
           ) : isPlaying ? (
-            <>&#9724; Stoppen</>
+            <><Square size={14} /> Stoppen</>
           ) : (
-            <>&#9654; Vorlesen lassen</>
+            <><Play size={14} /> Vorlesen lassen</>
           )}
         </button>
 
@@ -283,7 +284,7 @@ export default function LessonSlides({ slides, courseTitle, onComplete }: Lesson
             fontFamily: "inherit",
           }}
         >
-          {currentSlide === slides.length - 1 ? "Abschliessen ✓" : "Weiter →"}
+          {currentSlide === slides.length - 1 ? (<>Abschliessen <Check size={14} /></>) : (<>Weiter <ChevronRight size={14} /></>)}
         </button>
       </div>
 

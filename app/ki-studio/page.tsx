@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Mic, User, FileText, Film, Play, Square, Loader2, ChevronRight, ChevronLeft, Sparkles, Volume2, Search } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 
 interface Voice {
@@ -20,10 +21,10 @@ interface Avatar {
 }
 
 const videoStyles = [
-  { id: "professional", label: "Professionell", icon: "💼", desc: "Sachlich und serioes" },
-  { id: "friendly", label: "Freundlich", icon: "😊", desc: "Warm und zugaenglich" },
-  { id: "energetic", label: "Energisch", icon: "⚡", desc: "Motivierend und dynamisch" },
-  { id: "educational", label: "Lehrreich", icon: "📚", desc: "Erklaerend und detailliert" },
+  { id: "professional", label: "Professionell", icon: "", desc: "Sachlich und serioes" },
+  { id: "friendly", label: "Freundlich", icon: "", desc: "Warm und zugaenglich" },
+  { id: "energetic", label: "Energisch", icon: "", desc: "Motivierend und dynamisch" },
+  { id: "educational", label: "Lehrreich", icon: "", desc: "Erklaerend und detailliert" },
 ];
 
 const videoDurations = [
@@ -33,11 +34,11 @@ const videoDurations = [
 ];
 
 const animationStyles = [
-  { id: "none", label: "Keine", icon: "▬", desc: "Ohne Animation" },
-  { id: "fade", label: "Fade In/Out", icon: "✨", desc: "Sanfter Übergang" },
-  { id: "slide", label: "Slide", icon: "➡️", desc: "Seitlicher Eingang" },
-  { id: "zoom", label: "Zoom", icon: "🔍", desc: "Heranzoomen" },
-  { id: "bounce", label: "Bounce", icon: "🏀", desc: "Springender Effekt" },
+  { id: "none", label: "Keine", icon: "", desc: "Ohne Animation" },
+  { id: "fade", label: "Fade In/Out", icon: "", desc: "Sanfter Übergang" },
+  { id: "slide", label: "Slide", icon: "", desc: "Seitlicher Eingang" },
+  { id: "zoom", label: "Zoom", icon: "", desc: "Heranzoomen" },
+  { id: "bounce", label: "Bounce", icon: "", desc: "Springender Effekt" },
 ];
 
 type Tab = "voices" | "avatar" | "script" | "generate";
@@ -240,11 +241,11 @@ export default function KIStudio() {
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, []);
 
-  const tabs: { id: Tab; label: string; icon: string; num: number }[] = [
-    { id: "voices", label: "Stimme", icon: "🎙️", num: 1 },
-    { id: "avatar", label: "Avatar", icon: "🧑", num: 2 },
-    { id: "script", label: "Skript & Aufgabe", icon: "📝", num: 3 },
-    { id: "generate", label: "Video erstellen", icon: "🎬", num: 4 },
+  const tabs: { id: Tab; label: string; icon: React.ReactNode; num: number }[] = [
+    { id: "voices", label: "Stimme", icon: <Mic size={14} />, num: 1 },
+    { id: "avatar", label: "Avatar", icon: <User size={14} />, num: 2 },
+    { id: "script", label: "Skript & Aufgabe", icon: <FileText size={14} />, num: 3 },
+    { id: "generate", label: "Video erstellen", icon: <Film size={14} />, num: 4 },
   ];
 
   return (
@@ -266,7 +267,7 @@ export default function KIStudio() {
               fontSize: 11, fontWeight: 700,
               color: activeTab === tab.id ? "white" : "#4A4A5A",
             }}>{tab.num}</span>
-            <span>{tab.icon} {tab.label}</span>
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>{tab.icon} {tab.label}</span>
           </button>
         ))}
       </div>
@@ -343,8 +344,8 @@ export default function KIStudio() {
                       </div>
                     )}
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 10, background: isSelected ? "linear-gradient(135deg, #C8A24D, #E0B95F)" : "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
-                        🎙️
+                      <div style={{ width: 40, height: 40, borderRadius: 10, background: isSelected ? "linear-gradient(135deg, #C8A24D, #E0B95F)" : "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", color: isSelected ? "white" : "#4A4A5A" }}>
+                        <Mic size={18} />
                       </div>
                       <div>
                         <div style={{ fontSize: 14, fontWeight: 600, color: "#022350" }}>{voice.name}</div>
@@ -354,7 +355,7 @@ export default function KIStudio() {
                     <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 }}>
                       {isGerman && (
                         <span className="z-badge" style={{ background: "rgba(15,164,160,0.06)", color: "#0FA4A0", border: "1px solid rgba(15,164,160,0.15)" }}>
-                          🇩🇪 Deutsch
+                          DE Deutsch
                         </span>
                       )}
                       {voice.labels?.gender && (
@@ -379,7 +380,7 @@ export default function KIStudio() {
                         className="z-btn z-btn-ghost"
                         style={{ width: "100%", fontSize: 12, padding: "7px 0" }}
                       >
-                        {isPlaying ? "■ Stoppen" : "▶ Anhoeren"}
+                        {isPlaying ? <><Square size={12} /> Stoppen</> : <><Play size={12} /> Anhoeren</>}
                       </button>
                     )}
                   </div>
@@ -408,7 +409,7 @@ export default function KIStudio() {
             </div>
           ) : avatars.length === 0 ? (
             <div className="z-card-static" style={{ padding: 40, textAlign: "center" }}>
-              <div style={{ fontSize: 36, marginBottom: 12 }}>🧑</div>
+              <div style={{ fontSize: 36, marginBottom: 12, display: "flex", justifyContent: "center" }}><User size={36} /></div>
               <div style={{ fontSize: 14, color: "#9A9AAA", marginBottom: 16 }}>Keine Avatare gefunden. Pruefe den HeyGen API Key.</div>
               <div style={{ fontSize: 12, color: "#4A4A5A" }}>Du kannst trotzdem fortfahren - es wird der Standard-Avatar verwendet.</div>
             </div>
@@ -438,7 +439,7 @@ export default function KIStudio() {
                         )}
                       </div>
                     ) : (
-                      <div style={{ height: 160, background: "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 }}>🧑</div>
+                      <div style={{ height: 160, background: "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center" }}><User size={48} /></div>
                     )}
                     <div style={{ padding: "12px 16px" }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{avatar.avatar_name}</div>
@@ -495,7 +496,7 @@ export default function KIStudio() {
                         transition: "all 0.2s",
                       }}
                     >
-                      <div style={{ fontSize: 24, marginBottom: 6 }}>{s.icon}</div>
+                      {s.icon && <div style={{ fontSize: 24, marginBottom: 6 }}>{s.icon}</div>}
                       <div style={{ fontSize: 12, fontWeight: 600, color: "#022350" }}>{s.label}</div>
                       <div style={{ fontSize: 10, color: "#9A9AAA", marginTop: 2 }}>{s.desc}</div>
                     </div>
@@ -536,7 +537,7 @@ export default function KIStudio() {
                           fontSize: 12,
                         }}
                       >
-                        <span>{a.icon}</span> {a.label}
+                        {a.label}
                       </div>
                     ))}
                   </div>
@@ -550,7 +551,7 @@ export default function KIStudio() {
                 className="z-btn z-btn-primary"
                 style={{ width: "100%", padding: "14px", fontSize: 14, marginBottom: 16 }}
               >
-                {scriptLoading ? "KI generiert Skript..." : "🤖 Skript mit KI generieren"}
+                {scriptLoading ? "KI generiert Skript..." : <><Sparkles size={16} /> Skript mit KI generieren</>}
               </button>
 
               {/* Script editor */}
@@ -564,7 +565,7 @@ export default function KIStudio() {
                       className="z-btn z-btn-ghost"
                       style={{ fontSize: 12, padding: "6px 14px" }}
                     >
-                      {ttsLoading ? "Laden..." : ttsPlaying ? "■ Stoppen" : "▶ Anhoeren"}
+                      {ttsLoading ? "Laden..." : ttsPlaying ? <><Square size={12} /> Stoppen</> : <><Play size={12} /> Anhoeren</>}
                     </button>
                   </div>
                   <textarea
@@ -594,7 +595,7 @@ export default function KIStudio() {
                   <div style={{ fontSize: 10, fontWeight: 700, color: "#C8A24D", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>Stimme</div>
                   {selectedVoice ? (
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #C8A24D, #E0B95F)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🎙️</div>
+                      <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #C8A24D, #E0B95F)", display: "flex", alignItems: "center", justifyContent: "center", color: "white" }}><Mic size={14} /></div>
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{selectedVoice.name}</div>
                     </div>
                   ) : (
@@ -610,7 +611,7 @@ export default function KIStudio() {
                       {selectedAvatar.preview_image_url ? (
                         <img src={selectedAvatar.preview_image_url} alt="" style={{ width: 32, height: 32, borderRadius: 8, objectFit: "cover" }} />
                       ) : (
-                        <div style={{ width: 32, height: 32, borderRadius: 8, background: "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🧑</div>
+                        <div style={{ width: 32, height: 32, borderRadius: 8, background: "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center" }}><User size={14} /></div>
                       )}
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#022350" }}>{selectedAvatar.avatar_name}</div>
                     </div>
@@ -623,7 +624,7 @@ export default function KIStudio() {
                 <div style={{ borderTop: "1px solid #F0ECE6", paddingTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
                     <span style={{ color: "#9A9AAA" }}>Stil</span>
-                    <span style={{ color: "#022350", fontWeight: 600 }}>{videoStyles.find(s => s.id === style)?.icon} {videoStyles.find(s => s.id === style)?.label}</span>
+                    <span style={{ color: "#022350", fontWeight: 600 }}>{videoStyles.find(s => s.id === style)?.label}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
                     <span style={{ color: "#9A9AAA" }}>Laenge</span>
@@ -631,7 +632,7 @@ export default function KIStudio() {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12 }}>
                     <span style={{ color: "#9A9AAA" }}>Animation</span>
-                    <span style={{ color: "#022350", fontWeight: 600 }}>{animationStyles.find(a => a.id === animation)?.icon} {animationStyles.find(a => a.id === animation)?.label}</span>
+                    <span style={{ color: "#022350", fontWeight: 600 }}>{animationStyles.find(a => a.id === animation)?.label}</span>
                   </div>
                 </div>
               </div>
@@ -656,7 +657,7 @@ export default function KIStudio() {
           <div className="z-grid-main">
             <div>
               {/* Video player area */}
-              <div className="z-card-navy" style={{ aspectRatio: "16/9", maxWidth: 800, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+              <div className="z-glass-card" style={{ aspectRatio: "16/9", maxWidth: 800, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, background: "#022350" }}>
                 {/* ZURIVA academy logo overlay */}
                 <div style={{ position: "absolute", top: 16, left: 18, zIndex: 10, display: "flex", alignItems: "baseline", gap: 5, pointerEvents: "none" }}>
                   <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: "0.1em", color: "white", textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}>ZURIVA</span>
@@ -664,7 +665,7 @@ export default function KIStudio() {
                 </div>
                 {videoStatus === "idle" && (
                   <div style={{ textAlign: "center", padding: 32 }}>
-                    <div style={{ fontSize: 56, marginBottom: 16 }}>🎬</div>
+                    <div style={{ marginBottom: 16, color: "rgba(255,255,255,0.5)" }}><Film size={56} /></div>
                     <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "white", marginBottom: 8 }}>Bereit zum Erstellen</div>
                     <div style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", marginBottom: 24, maxWidth: 400 }}>
                       Dein KI-Avatar wird das Skript mit der gewaehlten Stimme und Animation als Video aufnehmen.
@@ -679,7 +680,7 @@ export default function KIStudio() {
                         fontFamily: "inherit",
                       }}
                     >
-                      🎬 Video jetzt generieren
+                      Video jetzt generieren
                     </button>
                   </div>
                 )}
@@ -704,7 +705,7 @@ export default function KIStudio() {
 
                 {videoStatus === "error" && (
                   <div style={{ textAlign: "center", padding: 32 }}>
-                    <div style={{ fontSize: 42, marginBottom: 12 }}>⚠️</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#C0392B", marginBottom: 12 }}>Fehler</div>
                     <div style={{ fontSize: 14, color: "#C0392B", fontWeight: 500, marginBottom: 16 }}>{videoError}</div>
                     <button onClick={generateVideo} className="z-btn" style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)" }}>
                       Erneut versuchen
