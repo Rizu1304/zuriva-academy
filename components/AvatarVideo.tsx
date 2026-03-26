@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { Film, AlertTriangle, Play } from "lucide-react";
 
 interface AvatarVideoProps {
   text: string;
@@ -111,7 +112,7 @@ export default function AvatarVideo({ text, autoGenerate = false }: AvatarVideoP
           gap: 16,
           padding: 32,
         }}>
-          <div style={{ fontSize: 48 }}>🎬</div>
+          <Film size={48} style={{ color: "white" }} />
           <div style={{ color: "white", fontSize: 16, fontWeight: 600, textAlign: "center" }}>
             KI-Avatar Erklaerung
           </div>

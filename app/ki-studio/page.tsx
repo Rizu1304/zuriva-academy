@@ -241,11 +241,11 @@ export default function KIStudio() {
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, []);
 
-  const tabs: { id: Tab; label: string; icon: string; num: number }[] = [
-    { id: "voices", label: "Stimme", icon: "🎙️", num: 1 },
-    { id: "avatar", label: "Avatar", icon: "🧑", num: 2 },
-    { id: "script", label: "Skript & Aufgabe", icon: "📝", num: 3 },
-    { id: "generate", label: "Video erstellen", icon: "🎬", num: 4 },
+  const tabs: { id: Tab; label: string; icon: React.ReactNode; num: number }[] = [
+    { id: "voices", label: "Stimme", icon: <Mic size={14} />, num: 1 },
+    { id: "avatar", label: "Avatar", icon: <User size={14} />, num: 2 },
+    { id: "script", label: "Skript & Aufgabe", icon: <FileText size={14} />, num: 3 },
+    { id: "generate", label: "Video erstellen", icon: <Film size={14} />, num: 4 },
   ];
 
   return (
@@ -267,7 +267,7 @@ export default function KIStudio() {
               fontSize: 11, fontWeight: 700,
               color: activeTab === tab.id ? "white" : "#4A4A5A",
             }}>{tab.num}</span>
-            <span>{tab.icon} {tab.label}</span>
+            <span style={{ display: "flex", alignItems: "center", gap: 4 }}>{tab.icon} {tab.label}</span>
           </button>
         ))}
       </div>
@@ -344,8 +344,8 @@ export default function KIStudio() {
                       </div>
                     )}
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 10, background: isSelected ? "linear-gradient(135deg, #C8A24D, #E0B95F)" : "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
-                        🎙️
+                      <div style={{ width: 40, height: 40, borderRadius: 10, background: isSelected ? "linear-gradient(135deg, #C8A24D, #E0B95F)" : "#F0ECE6", display: "flex", alignItems: "center", justifyContent: "center", color: isSelected ? "white" : "#4A4A5A" }}>
+                        <Mic size={18} />
                       </div>
                       <div>
                         <div style={{ fontSize: 14, fontWeight: 600, color: "#022350" }}>{voice.name}</div>
@@ -355,7 +355,7 @@ export default function KIStudio() {
                     <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 }}>
                       {isGerman && (
                         <span className="z-badge" style={{ background: "rgba(15,164,160,0.06)", color: "#0FA4A0", border: "1px solid rgba(15,164,160,0.15)" }}>
-                          🇩🇪 Deutsch
+                          DE Deutsch
                         </span>
                       )}
                       {voice.labels?.gender && (

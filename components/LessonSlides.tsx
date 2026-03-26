@@ -235,7 +235,7 @@ export default function LessonSlides({ slides, courseTitle, onComplete }: Lesson
             fontFamily: "inherit",
           }}
         >
-          &#8592; Zurueck
+          <ChevronLeft size={14} /> Zurueck
         </button>
 
         {/* Voice Button */}
@@ -260,13 +260,13 @@ export default function LessonSlides({ slides, courseTitle, onComplete }: Lesson
         >
           {isLoading ? (
             <>
-              <span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "white", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+              <Loader2 size={14} style={{ animation: "spin 0.8s linear infinite" }} />
               Wird geladen...
             </>
           ) : isPlaying ? (
-            <>&#9724; Stoppen</>
+            <><Square size={14} /> Stoppen</>
           ) : (
-            <>&#9654; Vorlesen lassen</>
+            <><Play size={14} /> Vorlesen lassen</>
           )}
         </button>
 
@@ -284,7 +284,7 @@ export default function LessonSlides({ slides, courseTitle, onComplete }: Lesson
             fontFamily: "inherit",
           }}
         >
-          {currentSlide === slides.length - 1 ? "Abschliessen ✓" : "Weiter →"}
+          {currentSlide === slides.length - 1 ? (<>Abschliessen <Check size={14} /></>) : (<>Weiter <ChevronRight size={14} /></>)}
         </button>
       </div>
 
