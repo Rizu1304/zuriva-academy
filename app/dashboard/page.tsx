@@ -97,9 +97,9 @@ export default function Dashboard() {
       <div className="z-grid-main">
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 18 }}>
-            <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350" }}>Aktuelle Kurse</div>
-            <a href="/courses" style={{ fontSize: 12.5, color: "#C8A24D", fontWeight: 600, textDecoration: "none", display: "flex", alignItems: "center", gap: 4, letterSpacing: "0.02em" }}>
-              Alle ansehen
+            <div className="font-heading" style={{ fontSize: 24, fontWeight: 400, color: "#022350" }}>Aktuelle Module</div>
+            <a href="/lernpfade" style={{ fontSize: 12.5, color: "#C8A24D", fontWeight: 600, textDecoration: "none", display: "flex", alignItems: "center", gap: 4, letterSpacing: "0.02em" }}>
+              Zum Lernpfad
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
             </a>
           </div>
