@@ -1,3 +1,6 @@
+import m1 from "./curriculum/m1-versicherungswirtschaft";
+import m2 from "./curriculum/m2-recht";
+
 export interface LektionContent {
   type: "text";
   paragraphs: string[];
@@ -79,8 +82,8 @@ export const lernpfade: Lernpfad[] = [
     ],
   },
   {
-    id: 2, title: "VBV Grundausbildung", description: "Pflichtausbildung für die VBV-Zertifizierung 2026.", color: "#022350", status: "active", credits: 120,
-    module: [
+    id: 2, title: "VBV Grundausbildung", description: "Pflichtausbildung für die VBV-Zertifizierung 2026. 6 Module, 20+ Stunden Lernstoff.", color: "#022350", status: "active", credits: 200,
+    module: [m1, m2,
       { id: "m1", title: "Sachversicherung", description: "Gebäude-, Hausrat- und Betriebsversicherung", credits: 20, lektionen: [
         { id: "l1", title: "Einführung Sachversicherung", type: "video", duration: "12 Min.", completed: true, content: { type: "video", description: "Überblick über die Sachversicherung in der Schweiz.", speakText: "Die Sachversicherung schützt materielle Güter gegen Schäden durch unvorhergesehene Ereignisse. Sie ist eine der ältesten Versicherungsformen und bildet das Rückgrat des Versicherungsgeschäfts in der Schweiz." } },
         { id: "l2", title: "Gebäudeversicherung Schweiz", type: "slides", duration: "10 Min.", completed: true, content: { type: "slides", slides: [
